@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hub de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=15" />
+    <link rel="stylesheet" href="./styles.css?v=16" />
   </head>
   <body>
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -53,6 +53,23 @@
             </div>
             <button id="open-police-game" class="primary-button" type="button">
               Entrar em Polícia e Ladrão
+            </button>
+          </article>
+
+          <article class="hub-card hub-card-whoami">
+            <p class="panel-label">Teste da testa</p>
+            <h2>Quem sou eu?</h2>
+            <p class="support-copy">
+              Escolha a categoria, coloque o celular na testa e revele um
+              personagem em tela branca.
+            </p>
+            <div class="hub-meta">
+              <span class="hub-pill">Categorias</span>
+              <span class="hub-pill">Trocar personagem</span>
+              <span class="hub-pill">Tela branca total</span>
+            </div>
+            <button id="open-whoami-game" class="primary-button" type="button">
+              Entrar no Quem sou eu?
             </button>
           </article>
         </div>
@@ -345,6 +362,94 @@
         </div>
       </section>
 
+      <section
+        id="whoami-setup-screen"
+        class="screen"
+        aria-labelledby="whoami-setup-title"
+      >
+        <div class="setup-stage">
+          <div class="setup-copy">
+            <p class="panel-label">Quem sou eu?</p>
+            <h2 id="whoami-setup-title">Escolha a categoria</h2>
+            <p class="setup-description">
+              Defina a categoria, entregue o celular para quem vai jogar e
+              deixe outra pessoa tocar no botão para revelar o personagem.
+            </p>
+            <div class="setup-badges" aria-label="Resumo da rodada">
+              <span class="setup-badge">Tela branca total</span>
+              <span class="setup-badge">Personagem aleatório</span>
+              <span class="setup-badge">Trocar se repetir</span>
+              <span class="setup-badge">Sem categoria na tela final</span>
+            </div>
+            <div class="setup-points">
+              <article class="setup-point">
+                <strong>Feito para a testa</strong>
+                <p>Quem estiver jogando coloca o celular na testa antes do clique.</p>
+              </article>
+              <article class="setup-point">
+                <strong>Troca rápida</strong>
+                <p>Se o personagem vier repetido, é só tocar em trocar na tela branca.</p>
+              </article>
+            </div>
+          </div>
+
+          <form id="whoami-setup-form" class="setup-form setup-card">
+            <label class="field-group" for="whoami-category">
+              <span class="field-label">Categoria</span>
+              <select id="whoami-category" class="select-input">
+                <option value="geral">Categoria: Geral</option>
+                <option value="filmes-series">Categoria: Filmes e series</option>
+                <option value="desenhos-animes">Categoria: Desenhos e animes</option>
+                <option value="super-herois">Categoria: Super-herois</option>
+                <option value="famosos">Categoria: Famosos</option>
+                <option value="games">Categoria: Games</option>
+              </select>
+            </label>
+
+            <p class="field-hint">
+              A categoria fica aqui no setup. Na tela do personagem vai aparecer
+              apenas o nome, em fundo branco.
+            </p>
+            <p id="whoami-setup-feedback" class="feedback" aria-live="polite"></p>
+
+            <div class="action-row">
+              <button id="start-whoami-game" class="primary-button" type="submit">
+                Mostrar personagem
+              </button>
+              <button id="go-hub-from-whoami" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section
+        id="whoami-reveal-screen"
+        class="screen"
+        aria-labelledby="whoami-character-name"
+      >
+        <div class="whoami-reveal">
+          <button
+            id="whoami-close"
+            class="whoami-close"
+            type="button"
+            aria-label="Sair do personagem"
+          >
+            X
+          </button>
+
+          <div class="whoami-name-wrap">
+            <p class="whoami-label">Quem sou eu?</p>
+            <h2 id="whoami-character-name" class="whoami-character-name">Personagem</h2>
+          </div>
+
+          <button id="whoami-reroll" class="whoami-reroll" type="button">
+            Trocar personagem
+          </button>
+        </div>
+      </section>
+
       <section id="turn-screen" class="screen" aria-labelledby="turn-progress">
         <div id="turn-panel" class="panel turn-panel is-prep">
           <div class="turn-topbar">
@@ -408,6 +513,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=8"></script>
+    <script src="./script.js?v=10"></script>
   </body>
 </html>

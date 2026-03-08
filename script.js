@@ -116,6 +116,584 @@ const wordPools = {
   },
 };
 
+const whoAmIFilmesSeries = [
+  "Harry Potter",
+  "Hermione Granger",
+  "Ron Weasley",
+  "Dumbledore",
+  "Snape",
+  "Draco Malfoy",
+  "Voldemort",
+  "Hagrid",
+  "Sirius Black",
+  "Bellatrix Lestrange",
+  "Darth Vader",
+  "Luke Skywalker",
+  "Leia Organa",
+  "Han Solo",
+  "Yoda",
+  "Obi-Wan Kenobi",
+  "Rey",
+  "Kylo Ren",
+  "Chewbacca",
+  "Grogu",
+  "Din Djarin",
+  "Ahsoka Tano",
+  "Jack Sparrow",
+  "Will Turner",
+  "Elizabeth Swann",
+  "Barbossa",
+  "Davy Jones",
+  "Indiana Jones",
+  "Marty McFly",
+  "Doc Brown",
+  "Rocky Balboa",
+  "Rambo",
+  "John McClane",
+  "Ellen Ripley",
+  "Sarah Connor",
+  "Terminator",
+  "Neo",
+  "Morpheus",
+  "Trinity",
+  "Forrest Gump",
+  "Jenny Curran",
+  "Vito Corleone",
+  "Michael Corleone",
+  "Tony Montana",
+  "Maximus",
+  "Commodus",
+  "Katniss Everdeen",
+  "Peeta Mellark",
+  "Haymitch Abernathy",
+  "Eleven",
+  "Mike Wheeler",
+  "Dustin Henderson",
+  "Jim Hopper",
+  "Steve Harrington",
+  "Vecna",
+  "Walter White",
+  "Jesse Pinkman",
+  "Saul Goodman",
+  "Gus Fring",
+  "Jon Snow",
+  "Daenerys Targaryen",
+  "Tyrion Lannister",
+  "Arya Stark",
+  "Sansa Stark",
+  "Cersei Lannister",
+  "Jaime Lannister",
+  "Sheldon Cooper",
+  "Leonard Hofstadter",
+  "Penny",
+  "Amy Farrah Fowler",
+  "Rachel Green",
+  "Ross Geller",
+  "Monica Geller",
+  "Chandler Bing",
+  "Joey Tribbiani",
+  "Phoebe Buffay",
+  "Michael Scott",
+  "Dwight Schrute",
+  "Jim Halpert",
+  "Pam Beesly",
+  "Thomas Shelby",
+  "Arthur Shelby",
+  "Sherlock Holmes",
+  "John Watson",
+  "Geralt de Rivia",
+  "Yennefer",
+  "Ciri",
+  "House",
+  "Meredith Grey",
+  "Cristina Yang",
+  "Beth Harmon",
+  "Ted Lasso",
+  "Barney Stinson",
+  "Ted Mosby",
+  "Robin Scherbatsky",
+  "Lily Aldrin",
+  "Marshall Eriksen",
+  "Buffy Summers",
+  "Spike",
+  "Damon Salvatore",
+  "Elena Gilbert",
+  "Stefan Salvatore",
+  "Spock",
+  "James T Kirk",
+  "Jean-Luc Picard",
+  "Mr Bean",
+  "Wednesday Addams",
+  "Morticia Addams",
+  "Gomez Addams",
+  "Raymond Reddington",
+];
+
+const whoAmIDesenhosAnimes = [
+  "Goku",
+  "Vegeta",
+  "Gohan",
+  "Piccolo",
+  "Frieza",
+  "Cell",
+  "Majin Boo",
+  "Naruto Uzumaki",
+  "Sasuke Uchiha",
+  "Sakura Haruno",
+  "Kakashi Hatake",
+  "Itachi Uchiha",
+  "Hinata Hyuga",
+  "Gaara",
+  "Luffy",
+  "Zoro",
+  "Nami",
+  "Sanji",
+  "Usopp",
+  "Chopper",
+  "Robin",
+  "Brook",
+  "Franky",
+  "Ace",
+  "Mickey Mouse",
+  "Minnie Mouse",
+  "Donald Duck",
+  "Daisy Duck",
+  "Pateta",
+  "Pluto",
+  "Tio Patinhas",
+  "Scooby-Doo",
+  "Shaggy",
+  "Velma",
+  "Fred Jones",
+  "Daphne Blake",
+  "Tom",
+  "Jerry",
+  "Bob Esponja",
+  "Patrick Star",
+  "Lula Molusco",
+  "Sr Siriguejo",
+  "Sandy Bochechas",
+  "Gary",
+  "Pernalonga",
+  "Patolino",
+  "Piu-Piu",
+  "Frajola",
+  "Papa-Leguas",
+  "Coiote",
+  "He-Man",
+  "She-Ra",
+  "Ben 10",
+  "Gwen Tennyson",
+  "Kevin Levin",
+  "Max Tennyson",
+  "Dexter",
+  "Dee Dee",
+  "Johnny Bravo",
+  "Samurai Jack",
+  "Coragem",
+  "Muriel Bagge",
+  "Eustace Bagge",
+  "Ed",
+  "Edd",
+  "Eddy",
+  "Finn",
+  "Jake",
+  "Marceline",
+  "Princesa Jujuba",
+  "Rei Gelado",
+  "Gumball",
+  "Darwin",
+  "Anais",
+  "Steven Universo",
+  "Garnet",
+  "Amethyst",
+  "Pearl",
+  "Connie Maheswaran",
+  "Ash Ketchum",
+  "Pikachu",
+  "Misty",
+  "Brock",
+  "Jessie",
+  "James",
+  "Meowth",
+  "Dora",
+  "Boots",
+  "Peppa Pig",
+  "George Pig",
+  "Masha",
+  "Pocoyo",
+  "Timmy Turner",
+  "Cosmo",
+  "Wanda",
+  "Jimmy Neutron",
+  "Danny Phantom",
+  "Kim Possible",
+  "Rufus",
+  "Aang",
+  "Katara",
+  "Sokka",
+  "Toph",
+  "Zuko",
+  "Korra",
+  "Ladybug",
+  "Cat Noir",
+  "Marinette",
+  "Adrien",
+  "Sailor Moon",
+];
+
+const whoAmISuperHerois = [
+  "Superman",
+  "Batman",
+  "Mulher-Maravilha",
+  "Flash",
+  "Aquaman",
+  "Cyborg",
+  "Lanterna Verde",
+  "Shazam",
+  "Supergirl",
+  "Batgirl",
+  "Robin",
+  "Asa Noturna",
+  "Arqueiro Verde",
+  "Canario Negro",
+  "Constantine",
+  "Zatanna",
+  "Ravena",
+  "Estelar",
+  "Mutano",
+  "Besouro Azul",
+  "Gaviao Negro",
+  "Doutor Fate",
+  "Cacador de Marte",
+  "Coringa",
+  "Lex Luthor",
+  "Arlequina",
+  "Pinguim",
+  "Charada",
+  "Mulher-Gato",
+  "Duas-Caras",
+  "Bane",
+  "Exterminador",
+  "Homem-Aranha",
+  "Homem de Ferro",
+  "Capitao America",
+  "Thor",
+  "Hulk",
+  "Viuva Negra",
+  "Gaviao Arqueiro",
+  "Pantera Negra",
+  "Doutor Estranho",
+  "Homem-Formiga",
+  "Vespa",
+  "Feiticeira Escarlate",
+  "Visao",
+  "Falcao",
+  "Soldado Invernal",
+  "Captain Marvel",
+  "Wolverine",
+  "Tempestade",
+  "Ciclope",
+  "Jean Grey",
+  "Professor Xavier",
+  "Magneto",
+  "Deadpool",
+  "Cable",
+  "Noturno",
+  "Vampira",
+  "Gambit",
+  "Demolidor",
+  "Justiceiro",
+  "Luke Cage",
+  "Jessica Jones",
+  "Punho de Ferro",
+  "Cavaleiro da Lua",
+  "Motoqueiro Fantasma",
+  "Senhor Fantastico",
+  "Mulher Invisivel",
+  "Tocha Humana",
+  "Coisa",
+  "Surfista Prateado",
+  "Namor",
+  "Loki",
+  "Thanos",
+  "Ultron",
+  "Venom",
+  "Carnificina",
+  "Duende Verde",
+  "Doutor Octopus",
+  "Mystique",
+  "Doutor Destino",
+  "Galactus",
+  "Shang-Chi",
+  "Ms Marvel",
+  "Nova",
+  "Adam Warlock",
+  "She-Hulk",
+  "X-23",
+  "Elektra",
+  "Blade",
+  "Morbius",
+  "Super Choque",
+  "Spawn",
+  "Hellboy",
+  "Invencivel",
+  "Omni-Man",
+  "Atom Eve",
+  "Homelander",
+  "Billy Butcher",
+  "Starlight",
+  "Maeve",
+  "A-Train",
+  "The Deep",
+  "Peacemaker",
+  "Rorschach",
+  "Nite Owl",
+  "Silk Spectre",
+  "Doutor Manhattan",
+  "Rocket Raccoon",
+];
+
+const whoAmIFamosos = [
+  "Neymar",
+  "Messi",
+  "Cristiano Ronaldo",
+  "Pele",
+  "Ronaldinho Gaucho",
+  "Marta",
+  "Serena Williams",
+  "LeBron James",
+  "Michael Jordan",
+  "Ayrton Senna",
+  "Lewis Hamilton",
+  "Usain Bolt",
+  "Michael Phelps",
+  "Roger Federer",
+  "Rafael Nadal",
+  "Novak Djokovic",
+  "Anitta",
+  "Taylor Swift",
+  "Beyonce",
+  "Rihanna",
+  "Lady Gaga",
+  "Adele",
+  "Shakira",
+  "Dua Lipa",
+  "Bruno Mars",
+  "The Weeknd",
+  "Billie Eilish",
+  "Justin Bieber",
+  "Selena Gomez",
+  "Ariana Grande",
+  "Ed Sheeran",
+  "Elton John",
+  "Madonna",
+  "Michael Jackson",
+  "Elvis Presley",
+  "Freddie Mercury",
+  "Paul McCartney",
+  "John Lennon",
+  "Mick Jagger",
+  "David Bowie",
+  "Marilia Mendonca",
+  "Ivete Sangalo",
+  "Gusttavo Lima",
+  "Caetano Veloso",
+  "Gilberto Gil",
+  "Roberto Carlos",
+  "Xuxa",
+  "Silvio Santos",
+  "Fausto Silva",
+  "Ana Maria Braga",
+  "Luciano Huck",
+  "Fernanda Montenegro",
+  "Wagner Moura",
+  "Selton Mello",
+  "Rodrigo Santoro",
+  "Bruna Marquezine",
+  "Tata Werneck",
+  "Juliette",
+  "Virginia Fonseca",
+  "Felipe Neto",
+  "Whindersson Nunes",
+  "Oprah Winfrey",
+  "Ellen DeGeneres",
+  "Kim Kardashian",
+  "Kylie Jenner",
+  "Kendall Jenner",
+  "Gisele Bundchen",
+  "Naomi Campbell",
+  "Angelina Jolie",
+  "Brad Pitt",
+  "Leonardo DiCaprio",
+  "Tom Cruise",
+  "Tom Hanks",
+  "Morgan Freeman",
+  "Will Smith",
+  "Denzel Washington",
+  "Keanu Reeves",
+  "Scarlett Johansson",
+  "Jennifer Lawrence",
+  "Emma Stone",
+  "Margot Robbie",
+  "Meryl Streep",
+  "Sandra Bullock",
+  "Julia Roberts",
+  "Johnny Depp",
+  "Robert Downey Jr",
+  "Chris Hemsworth",
+  "Chris Evans",
+  "Zendaya",
+  "Timothee Chalamet",
+  "Pedro Pascal",
+  "Jenna Ortega",
+  "Elon Musk",
+  "Bill Gates",
+  "Mark Zuckerberg",
+  "Steve Jobs",
+  "Barack Obama",
+  "Donald Trump",
+  "Lula",
+  "Michelle Obama",
+  "Papa Francisco",
+  "Greta Thunberg",
+  "Malala Yousafzai",
+  "Albert Einstein",
+  "Frida Kahlo",
+  "Pablo Picasso",
+  "Marilyn Monroe",
+  "Audrey Hepburn",
+  "Charlie Chaplin",
+];
+
+const whoAmIGames = [
+  "Mario",
+  "Luigi",
+  "Princesa Peach",
+  "Bowser",
+  "Yoshi",
+  "Donkey Kong",
+  "Diddy Kong",
+  "Link",
+  "Zelda",
+  "Ganondorf",
+  "Samus Aran",
+  "Kirby",
+  "Fox McCloud",
+  "Pikachu",
+  "Jigglypuff",
+  "Mewtwo",
+  "Sonic",
+  "Tails",
+  "Knuckles",
+  "Shadow",
+  "Dr Eggman",
+  "Crash Bandicoot",
+  "Coco Bandicoot",
+  "Aku Aku",
+  "Spyro",
+  "Lara Croft",
+  "Nathan Drake",
+  "Kratos",
+  "Atreus",
+  "Aloy",
+  "Joel",
+  "Ellie",
+  "Solid Snake",
+  "Raiden",
+  "Big Boss",
+  "Master Chief",
+  "Cortana",
+  "Marcus Fenix",
+  "Commander Shepard",
+  "Garrus Vakarian",
+  "Tali",
+  "Geralt of Rivia",
+  "Ciri",
+  "Yennefer",
+  "Triss Merigold",
+  "Arthur Morgan",
+  "John Marston",
+  "Trevor Philips",
+  "Franklin Clinton",
+  "Michael De Santa",
+  "CJ",
+  "Sub-Zero",
+  "Scorpion",
+  "Liu Kang",
+  "Kitana",
+  "Chun-Li",
+  "Ryu",
+  "Ken Masters",
+  "Cammy",
+  "Guile",
+  "Blanka",
+  "Dhalsim",
+  "Pac-Man",
+  "Mega Man",
+  "Zero",
+  "Dante",
+  "Vergil",
+  "Leon Kennedy",
+  "Jill Valentine",
+  "Chris Redfield",
+  "Ada Wong",
+  "Albert Wesker",
+  "Ezio Auditore",
+  "Altair",
+  "Connor Kenway",
+  "Kassandra",
+  "Bayek",
+  "Sora",
+  "Riku",
+  "Kairi",
+  "Cloud Strife",
+  "Sephiroth",
+  "Tifa Lockhart",
+  "Aerith",
+  "Barret Wallace",
+  "Noctis",
+  "Tidus",
+  "Yuna",
+  "Claptrap",
+  "Handsome Jack",
+  "Vault Boy",
+  "Steve",
+  "Alex",
+  "Creeper",
+  "Agent 47",
+  "Gordon Freeman",
+  "Chell",
+  "GLaDOS",
+  "Zagreus",
+  "Cuphead",
+  "Sans",
+  "Frisk",
+  "Princesa Daisy",
+  "Wario",
+  "Waluigi",
+  "Isabelle",
+  "Tom Nook",
+  "Villager",
+];
+
+const whoAmIGeral = [
+  ...whoAmIFilmesSeries.slice(0, 22),
+  ...whoAmIDesenhosAnimes.slice(0, 22),
+  ...whoAmISuperHerois.slice(0, 22),
+  ...whoAmIFamosos.slice(0, 22),
+  ...whoAmIGames.slice(0, 22),
+];
+
+const whoAmIPools = {
+  geral: whoAmIGeral,
+  "filmes-series": whoAmIFilmesSeries,
+  "desenhos-animes": whoAmIDesenhosAnimes,
+  "super-herois": whoAmISuperHerois,
+  famosos: whoAmIFamosos,
+  games: whoAmIGames,
+};
+
 const heroContent = {
   hub: {
     eyebrow: "Jogos locais",
@@ -135,12 +713,23 @@ const heroContent = {
     copy:
       "Escolha quantos serão policiais, ladrões e vítimas e deixe o app embaralhar os papéis.",
   },
+  whoamiSetup: {
+    eyebrow: "Quem sou eu?",
+    title: "Escolha a categoria",
+    copy:
+      "Selecione a categoria antes e depois revele um personagem em tela branca para jogar com o celular na testa.",
+  },
 };
 
 const state = {
   currentScreen: "hub",
   currentPlayer: 0,
   currentGame: null,
+  whoami: {
+    category: "geral",
+    currentCharacter: "",
+    usedCharacters: [],
+  },
 };
 
 const elements = {
@@ -151,11 +740,14 @@ const elements = {
     hub: document.getElementById("hub-screen"),
     impostorSetup: document.getElementById("impostor-setup-screen"),
     policeSetup: document.getElementById("police-setup-screen"),
+    whoamiSetup: document.getElementById("whoami-setup-screen"),
+    whoamiReveal: document.getElementById("whoami-reveal-screen"),
     turn: document.getElementById("turn-screen"),
     end: document.getElementById("end-screen"),
   },
   openImpostorGame: document.getElementById("open-impostor-game"),
   openPoliceGame: document.getElementById("open-police-game"),
+  openWhoAmIGame: document.getElementById("open-whoami-game"),
   impostor: {
     form: document.getElementById("impostor-setup-form"),
     playerCount: document.getElementById("impostor-player-count"),
@@ -184,6 +776,15 @@ const elements = {
     roleSummary: document.getElementById("police-role-summary"),
     feedback: document.getElementById("police-setup-feedback"),
     goHub: document.getElementById("go-hub-from-police"),
+  },
+  whoami: {
+    form: document.getElementById("whoami-setup-form"),
+    category: document.getElementById("whoami-category"),
+    feedback: document.getElementById("whoami-setup-feedback"),
+    goHub: document.getElementById("go-hub-from-whoami"),
+    characterName: document.getElementById("whoami-character-name"),
+    reroll: document.getElementById("whoami-reroll"),
+    close: document.getElementById("whoami-close"),
   },
   turn: {
     panel: document.getElementById("turn-panel"),
@@ -298,6 +899,7 @@ function shuffleArray(items) {
 
 function setActiveScreen(screen) {
   state.currentScreen = screen;
+  document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   Object.entries(elements.screens).forEach(([key, element]) => {
     element.classList.toggle("is-active", key === screen);
   });
@@ -314,6 +916,11 @@ function setActiveScreen(screen) {
 
   if (screen === "policeSetup") {
     setHero(heroContent.policeSetup);
+    return;
+  }
+
+  if (screen === "whoamiSetup") {
+    setHero(heroContent.whoamiSetup);
   }
 }
 
@@ -352,6 +959,10 @@ function updatePoliceFeedback(message = "") {
   elements.police.feedback.textContent = message;
 }
 
+function updateWhoAmIFeedback(message = "") {
+  elements.whoami.feedback.textContent = message;
+}
+
 function syncImpostorPlayerInput(nextValue) {
   const safeValue = clampPlayers(nextValue);
   elements.impostor.playerCount.value = safeValue;
@@ -379,6 +990,50 @@ function getWordFromCategory(category, difficulty) {
   const categoryPool = wordPools[category] ?? wordPools.geral;
   const words = categoryPool[difficulty] ?? wordPools.geral.medio;
   return words[randomIndex(words.length)];
+}
+
+function syncWhoAmICategoryInput(nextValue) {
+  const safeCategory = Object.prototype.hasOwnProperty.call(whoAmIPools, nextValue)
+    ? nextValue
+    : "geral";
+
+  if (state.whoami.category !== safeCategory) {
+    state.whoami.usedCharacters = [];
+    state.whoami.currentCharacter = "";
+  }
+
+  state.whoami.category = safeCategory;
+  elements.whoami.category.value = safeCategory;
+  return safeCategory;
+}
+
+function getWhoAmICharacter(category) {
+  const pool = whoAmIPools[category] ?? whoAmIPools.geral;
+  let candidates = pool.filter(
+    (character) =>
+      !state.whoami.usedCharacters.includes(character) &&
+      character !== state.whoami.currentCharacter,
+  );
+
+  if (candidates.length === 0) {
+    state.whoami.usedCharacters = state.whoami.currentCharacter
+      ? [state.whoami.currentCharacter]
+      : [];
+    candidates = pool.filter((character) => character !== state.whoami.currentCharacter);
+  }
+
+  if (candidates.length === 0) {
+    candidates = [...pool];
+  }
+
+  const nextCharacter = candidates[randomIndex(candidates.length)];
+
+  state.whoami.currentCharacter = nextCharacter;
+  if (!state.whoami.usedCharacters.includes(nextCharacter)) {
+    state.whoami.usedCharacters.push(nextCharacter);
+  }
+
+  return nextCharacter;
 }
 
 function syncPoliceRoleInputs(preferredRole = "victim", nextValue = null) {
@@ -579,6 +1234,26 @@ function openPoliceSetup() {
   setActiveScreen("policeSetup");
 }
 
+function openWhoAmISetup() {
+  state.currentGame = {
+    type: "whoami",
+    name: "Quem sou eu?",
+  };
+  state.currentPlayer = 0;
+  syncWhoAmICategoryInput(elements.whoami.category.value);
+  updateWhoAmIFeedback("");
+  setActiveScreen("whoamiSetup");
+}
+
+function renderWhoAmICharacter() {
+  const category = syncWhoAmICategoryInput(elements.whoami.category.value);
+  const character = getWhoAmICharacter(category);
+
+  elements.whoami.characterName.textContent = character;
+  updateWhoAmIFeedback("");
+  setActiveScreen("whoamiReveal");
+}
+
 function renderPreparation() {
   const playerNumber = state.currentPlayer + 1;
 
@@ -678,6 +1353,11 @@ function restartCurrentGame() {
     return;
   }
 
+  if (state.currentGame.type === "whoami") {
+    openWhoAmISetup();
+    return;
+  }
+
   openPoliceSetup();
 }
 
@@ -713,8 +1393,14 @@ function startPoliceGame() {
   renderPreparation();
 }
 
+function startWhoAmIGame() {
+  syncWhoAmICategoryInput(elements.whoami.category.value);
+  renderWhoAmICharacter();
+}
+
 elements.openImpostorGame.addEventListener("click", openImpostorSetup);
 elements.openPoliceGame.addEventListener("click", openPoliceSetup);
+elements.openWhoAmIGame.addEventListener("click", openWhoAmISetup);
 
 elements.impostor.decreasePlayers.addEventListener("click", () => {
   syncImpostorPlayerInput(Number(elements.impostor.playerCount.value) - 1);
@@ -800,6 +1486,19 @@ elements.police.form.addEventListener("submit", (event) => {
 
 elements.police.goHub.addEventListener("click", openHub);
 
+elements.whoami.category.addEventListener("change", (event) => {
+  syncWhoAmICategoryInput(event.target.value);
+});
+
+elements.whoami.form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  startWhoAmIGame();
+});
+
+elements.whoami.reroll.addEventListener("click", renderWhoAmICharacter);
+elements.whoami.close.addEventListener("click", openWhoAmISetup);
+elements.whoami.goHub.addEventListener("click", openHub);
+
 elements.turn.revealRole.addEventListener("click", renderReveal);
 
 elements.turn.nextPlayer.addEventListener("click", () => {
@@ -824,4 +1523,5 @@ syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
 setImpostorWordVisibility(false);
 syncPoliceRoleInputs();
+syncWhoAmICategoryInput(elements.whoami.category.value);
 setActiveScreen("hub");

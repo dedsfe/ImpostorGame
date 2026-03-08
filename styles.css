@@ -37,6 +37,10 @@ body {
   overflow: hidden;
 }
 
+body.is-whoami-reveal {
+  background: #ffffff;
+}
+
 button,
 input {
   font: inherit;
@@ -67,6 +71,10 @@ input {
   animation-duration: 12s;
 }
 
+body.is-whoami-reveal .ambient {
+  display: none;
+}
+
 .shell {
   width: min(100%, 72rem);
   margin: 0 auto;
@@ -78,6 +86,14 @@ input {
   position: relative;
 }
 
+body.is-whoami-reveal .shell {
+  width: 100%;
+  min-height: 100svh;
+  max-width: none;
+  padding: 0;
+  gap: 0;
+}
+
 .hero {
   display: grid;
   gap: 0.55rem;
@@ -86,6 +102,10 @@ input {
   text-align: center;
   padding: 0;
   animation: rise-in 500ms ease;
+}
+
+body.is-whoami-reveal .hero {
+  display: none;
 }
 
 .eyebrow,
@@ -141,8 +161,13 @@ h2 {
 
 #hub-screen,
 #impostor-setup-screen,
-#police-setup-screen {
+#police-setup-screen,
+#whoami-setup-screen {
   place-items: center;
+}
+
+#whoami-reveal-screen {
+  place-items: stretch;
 }
 
 #turn-screen,
@@ -167,7 +192,7 @@ h2 {
 .hub-grid {
   width: min(100%, 60rem);
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
   gap: 1rem;
 }
 
@@ -184,6 +209,10 @@ h2 {
 
 .hub-card-police {
   background: rgba(241, 248, 255, 0.9);
+}
+
+.hub-card-whoami {
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .hub-meta {
@@ -354,6 +383,82 @@ h2 {
 
 #end-screen .summary-grid {
   width: 100%;
+}
+
+.whoami-reveal {
+  width: 100%;
+  min-height: 100svh;
+  padding: clamp(1rem, 2.5vw, 1.4rem);
+  background: #ffffff;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.whoami-close {
+  justify-self: end;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(22, 50, 74, 0.14);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.whoami-close:hover {
+  transform: translateY(-1px);
+}
+
+.whoami-name-wrap {
+  display: grid;
+  gap: 0.8rem;
+  align-self: center;
+  justify-items: center;
+  text-align: center;
+  width: min(100%, 62rem);
+}
+
+.whoami-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: rgba(22, 50, 74, 0.45);
+}
+
+.whoami-character-name {
+  margin: 0;
+  max-width: 12ch;
+  color: #0f1720;
+  font-size: clamp(3.2rem, 11vw, 8rem);
+  line-height: 0.9;
+  text-wrap: balance;
+}
+
+.whoami-reroll {
+  min-height: 3rem;
+  padding: 0.8rem 1.1rem;
+  border: 1px solid rgba(22, 50, 74, 0.14);
+  border-radius: 999px;
+  background: #f6f7f8;
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    background-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.whoami-reroll:hover {
+  transform: translateY(-1px);
+  background: #eef1f3;
 }
 
 .turn-panel.is-reveal {
@@ -727,7 +832,8 @@ h2 {
 
   #hub-screen,
   #impostor-setup-screen,
-  #police-setup-screen {
+  #police-setup-screen,
+  #whoami-setup-screen {
     align-content: start;
   }
 
@@ -827,6 +933,18 @@ h2 {
   #turn-screen .word-card {
     min-height: 6rem;
     font-size: 1.35rem;
+  }
+
+  .whoami-reveal {
+    padding: 0.75rem;
+  }
+
+  .whoami-character-name {
+    font-size: clamp(2.6rem, 13vw, 4.6rem);
+  }
+
+  .whoami-reroll {
+    width: 100%;
   }
 }
 
