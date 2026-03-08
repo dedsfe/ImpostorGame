@@ -139,7 +139,9 @@ h2 {
   animation: rise-in 300ms ease;
 }
 
-#setup-screen {
+#hub-screen,
+#impostor-setup-screen,
+#police-setup-screen {
   place-items: center;
 }
 
@@ -160,6 +162,47 @@ h2 {
   align-content: start;
   gap: clamp(0.65rem, 1.4vh, 1rem);
   overflow: hidden;
+}
+
+.hub-grid {
+  width: min(100%, 60rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.hub-card {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(22, 50, 74, 0.1);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 18px 34px rgba(22, 50, 74, 0.08);
+}
+
+.hub-card-police {
+  background: rgba(241, 248, 255, 0.9);
+}
+
+.hub-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.hub-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(22, 50, 74, 0.08);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .setup-stage {
@@ -251,6 +294,25 @@ h2 {
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
+.action-row,
+.topbar-actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.action-row {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+.action-row .primary-button {
+  flex: 1 1 auto;
+}
+
+.action-row .ghost-button {
+  flex: 0 0 auto;
+}
+
 #turn-panel,
 #end-screen .panel {
   width: min(100%, 31rem);
@@ -301,6 +363,21 @@ h2 {
 .turn-panel.is-impostor {
   background: #ffe0eb;
   border-color: rgba(217, 58, 109, 0.28);
+}
+
+.turn-panel.is-police {
+  background: #e8f6ff;
+  border-color: rgba(78, 203, 255, 0.34);
+}
+
+.turn-panel.is-thief {
+  background: #fff0df;
+  border-color: rgba(255, 159, 28, 0.34);
+}
+
+.turn-panel.is-victim {
+  background: #fff7cc;
+  border-color: rgba(255, 217, 61, 0.4);
 }
 
 .setup-form,
@@ -503,6 +580,48 @@ h2 {
   color: #8c4961;
 }
 
+.turn-panel.is-police .status-pill {
+  background: #ccefff;
+  color: #0c5d7c;
+}
+
+.turn-panel.is-police .turn-progress,
+.turn-panel.is-police h2 {
+  color: #0f5d7c;
+}
+
+.turn-panel.is-police .support-copy {
+  color: #34687e;
+}
+
+.turn-panel.is-thief .status-pill {
+  background: #ffe2bf;
+  color: #8d4b00;
+}
+
+.turn-panel.is-thief .turn-progress,
+.turn-panel.is-thief h2 {
+  color: #8b4700;
+}
+
+.turn-panel.is-thief .support-copy {
+  color: #915d24;
+}
+
+.turn-panel.is-victim .status-pill {
+  background: #fff0a6;
+  color: #7f6200;
+}
+
+.turn-panel.is-victim .turn-progress,
+.turn-panel.is-victim h2 {
+  color: #7a5a00;
+}
+
+.turn-panel.is-victim .support-copy {
+  color: #8b7421;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -531,6 +650,24 @@ h2 {
   background: var(--pink);
   border-color: #d93a6d;
   color: #fff8fb;
+}
+
+.word-card.is-police {
+  background: var(--sky);
+  border-color: #2f9bc5;
+  color: #063647;
+}
+
+.word-card.is-thief {
+  background: var(--orange);
+  border-color: #cf7300;
+  color: #fff8ef;
+}
+
+.word-card.is-victim {
+  background: #ffd93d;
+  border-color: #d2a900;
+  color: #5b4300;
 }
 
 .summary-grid {
@@ -588,13 +725,20 @@ h2 {
     min-height: auto;
   }
 
-  #setup-screen {
+  #hub-screen,
+  #impostor-setup-screen,
+  #police-setup-screen {
     align-content: start;
   }
 
   #turn-screen,
   #end-screen {
     align-content: start;
+  }
+
+  .hub-grid {
+    width: min(100%, 34rem);
+    grid-template-columns: 1fr;
   }
 
   .setup-stage {
@@ -646,8 +790,15 @@ h2 {
 }
 
 @media (max-width: 560px) {
+  .action-row,
+  .topbar-actions,
   .setup-select-grid {
     grid-template-columns: 1fr;
+  }
+
+  .action-row,
+  .topbar-actions {
+    flex-direction: column;
   }
 
   .turn-topbar {

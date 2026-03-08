@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Impostor</title>
-    <link rel="stylesheet" href="./styles.css?v=13" />
+    <title>Hub de Jogos</title>
+    <link rel="stylesheet" href="./styles.css?v=15" />
   </head>
   <body>
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -12,19 +12,61 @@
 
     <main class="shell">
       <header class="hero">
-        <p class="eyebrow">Jogo local para passar o celular</p>
-        <h1>Impostor</h1>
-        <p class="hero-copy">
-          Configure a rodada, sorteie um impostor e revele o papel de cada
-          jogador em segurança.
+        <p id="hero-eyebrow" class="eyebrow">Jogos locais</p>
+        <h1 id="hero-title">Hub de Jogos</h1>
+        <p id="hero-copy" class="hero-copy">
+          Escolha um jogo, monte a rodada e distribua os papéis passando o
+          celular de jogador para jogador.
         </p>
       </header>
 
-      <section id="setup-screen" class="screen is-active" aria-labelledby="setup-title">
+      <section id="hub-screen" class="screen is-active" aria-labelledby="hero-title">
+        <div class="hub-grid">
+          <article class="hub-card hub-card-impostor">
+            <p class="panel-label">Palavra secreta</p>
+            <h2>Impostor</h2>
+            <p class="support-copy">
+              Um jogador não recebe a palavra e precisa blefar durante a
+              conversa.
+            </p>
+            <div class="hub-meta">
+              <span class="hub-pill">1 impostor</span>
+              <span class="hub-pill">Categoria + dificuldade</span>
+              <span class="hub-pill">Passa o celular</span>
+            </div>
+            <button id="open-impostor-game" class="primary-button" type="button">
+              Entrar no Impostor
+            </button>
+          </article>
+
+          <article class="hub-card hub-card-police">
+            <p class="panel-label">Papéis secretos</p>
+            <h2>Polícia e Ladrão</h2>
+            <p class="support-copy">
+              O app distribui aleatoriamente quem é polícia, ladrão e vítima na
+              rodada.
+            </p>
+            <div class="hub-meta">
+              <span class="hub-pill">Papéis configuráveis</span>
+              <span class="hub-pill">Polícia, ladrão e vítima</span>
+              <span class="hub-pill">Mesmo fluxo</span>
+            </div>
+            <button id="open-police-game" class="primary-button" type="button">
+              Entrar em Polícia e Ladrão
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="impostor-setup-screen"
+        class="screen"
+        aria-labelledby="impostor-setup-title"
+      >
         <div class="setup-stage">
           <div class="setup-copy">
-            <p class="panel-label">Configuração</p>
-            <h2 id="setup-title">Monte a rodada</h2>
+            <p class="panel-label">Impostor</p>
+            <h2 id="impostor-setup-title">Monte a rodada</h2>
             <p class="setup-description">
               Escolha a quantidade de jogadores, defina categoria e dificuldade
               e prepare a palavra secreta para a rodada.
@@ -32,7 +74,7 @@
             <div class="setup-badges" aria-label="Resumo da rodada">
               <span class="setup-badge">3 a 20 jogadores</span>
               <span class="setup-badge">1 impostor</span>
-              <span class="setup-badge">Facil ao dificil</span>
+              <span class="setup-badge">Fácil ao difícil</span>
               <span class="setup-badge">Passa o celular</span>
             </div>
             <div class="setup-points">
@@ -47,12 +89,12 @@
             </div>
           </div>
 
-          <form id="setup-form" class="setup-form setup-card">
-            <label class="field-group" for="player-count">
+          <form id="impostor-setup-form" class="setup-form setup-card">
+            <label class="field-group" for="impostor-player-count">
               <span class="field-label">Número de jogadores</span>
               <div class="stepper">
                 <button
-                  id="decrease-players"
+                  id="impostor-decrease-players"
                   class="stepper-button"
                   type="button"
                   aria-label="Diminuir jogadores"
@@ -60,7 +102,7 @@
                   -
                 </button>
                 <input
-                  id="player-count"
+                  id="impostor-player-count"
                   class="stepper-input"
                   type="number"
                   inputmode="numeric"
@@ -69,7 +111,7 @@
                   value="4"
                 />
                 <button
-                  id="increase-players"
+                  id="impostor-increase-players"
                   class="stepper-button"
                   type="button"
                   aria-label="Aumentar jogadores"
@@ -79,20 +121,20 @@
               </div>
             </label>
 
-            <label class="field-group" for="secret-word">
+            <label class="field-group" for="impostor-secret-word">
               <span class="field-label">Categoria e dificuldade</span>
               <div class="setup-select-grid">
-                <select id="word-category" class="select-input">
+                <select id="impostor-word-category" class="select-input">
                   <option value="geral">Categoria: Geral</option>
                   <option value="animais">Categoria: Animais</option>
                   <option value="comidas">Categoria: Comidas</option>
                   <option value="objetos">Categoria: Objetos</option>
                   <option value="lugares">Categoria: Lugares</option>
                 </select>
-                <select id="word-difficulty" class="select-input">
-                  <option value="facil">Dificuldade: Facil</option>
-                  <option value="medio" selected>Dificuldade: Media</option>
-                  <option value="dificil">Dificuldade: Dificil</option>
+                <select id="impostor-word-difficulty" class="select-input">
+                  <option value="facil">Dificuldade: Fácil</option>
+                  <option value="medio" selected>Dificuldade: Média</option>
+                  <option value="dificil">Dificuldade: Difícil</option>
                 </select>
               </div>
               <p class="field-hint">
@@ -102,7 +144,7 @@
               <span class="field-label">Palavra secreta</span>
               <div class="word-input-row">
                 <input
-                  id="secret-word"
+                  id="impostor-secret-word"
                   class="text-input"
                   type="password"
                   maxlength="40"
@@ -110,7 +152,7 @@
                   autocomplete="off"
                 />
                 <button
-                  id="toggle-word-visibility"
+                  id="impostor-toggle-word-visibility"
                   class="icon-button"
                   type="button"
                   aria-label="Mostrar palavra secreta"
@@ -138,19 +180,167 @@
                       stroke-width="1.8"
                     />
                   </svg>
-                  <span id="toggle-word-label">Mostrar</span>
+                  <span id="impostor-toggle-word-label">Mostrar</span>
                 </button>
-                <button id="random-word" class="secondary-button" type="button">
+                <button id="impostor-random-word" class="secondary-button" type="button">
                   Sortear palavra
                 </button>
               </div>
             </label>
 
-            <p id="setup-feedback" class="feedback" aria-live="polite"></p>
+            <p id="impostor-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <button id="start-game" class="primary-button" type="submit">
-              Iniciar rodada
-            </button>
+            <div class="action-row">
+              <button id="start-impostor-game" class="primary-button" type="submit">
+                Iniciar rodada
+              </button>
+              <button id="go-hub-from-impostor" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section
+        id="police-setup-screen"
+        class="screen"
+        aria-labelledby="police-setup-title"
+      >
+        <div class="setup-stage">
+          <div class="setup-copy">
+            <p class="panel-label">Polícia e Ladrão</p>
+            <h2 id="police-setup-title">Distribua os papéis</h2>
+            <p class="setup-description">
+              Escolha quantos serão policiais, ladrões e vítimas. O app
+              embaralha os papéis e revela um por vez no mesmo fluxo do
+              Impostor.
+            </p>
+            <div class="setup-badges" aria-label="Resumo da rodada">
+              <span class="setup-badge">3 a 20 jogadores</span>
+              <span class="setup-badge">Papéis configuráveis</span>
+              <span class="setup-badge">Ao menos 1 por papel</span>
+              <span class="setup-badge">Papéis aleatórios</span>
+            </div>
+            <div class="setup-points">
+              <article class="setup-point">
+                <strong>Configuração livre</strong>
+                <p>Você define a composição completa da rodada antes de começar.</p>
+              </article>
+              <article class="setup-point">
+                <strong>Distribuição no mesmo estilo</strong>
+                <p>Preparar, revelar o papel e passar o celular para o próximo.</p>
+              </article>
+            </div>
+          </div>
+
+          <form id="police-setup-form" class="setup-form setup-card">
+            <label class="field-group" for="police-count">
+              <span class="field-label">Quantidade de policiais</span>
+              <div class="stepper">
+                <button
+                  id="police-decrease-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir policiais"
+                >
+                  -
+                </button>
+                <input
+                  id="police-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="20"
+                  value="1"
+                />
+                <button
+                  id="police-increase-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar policiais"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <label class="field-group" for="thief-count">
+              <span class="field-label">Quantidade de ladrões</span>
+              <div class="stepper">
+                <button
+                  id="thief-decrease-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir ladrões"
+                >
+                  -
+                </button>
+                <input
+                  id="thief-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="20"
+                  value="2"
+                />
+                <button
+                  id="thief-increase-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar ladrões"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <label class="field-group" for="victim-count">
+              <span class="field-label">Quantidade de vítimas</span>
+              <div class="stepper">
+                <button
+                  id="victim-decrease-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir vítimas"
+                >
+                  -
+                </button>
+                <input
+                  id="victim-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="20"
+                  value="1"
+                />
+                <button
+                  id="victim-increase-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar vítimas"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <p id="police-role-summary" class="field-hint">
+              Total: 4 jogadores. Serão 1 policial, 2 ladrões e 1 vítima.
+            </p>
+            <p id="police-setup-feedback" class="feedback" aria-live="polite"></p>
+
+            <div class="action-row">
+              <button id="start-police-game" class="primary-button" type="submit">
+                Iniciar rodada
+              </button>
+              <button id="go-hub-from-police" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
           </form>
         </div>
       </section>
@@ -159,19 +349,24 @@
         <div id="turn-panel" class="panel turn-panel is-prep">
           <div class="turn-topbar">
             <div>
-              <p class="panel-label">Distribuição</p>
+              <p id="turn-game-label" class="panel-label">Distribuição</p>
               <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
             </div>
-            <button id="restart-turn" class="ghost-button" type="button">
-              Reiniciar
-            </button>
+            <div class="topbar-actions">
+              <button id="go-hub-turn" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+              <button id="restart-turn" class="ghost-button" type="button">
+                Reiniciar
+              </button>
+            </div>
           </div>
 
           <div id="prep-view" class="turn-view is-active">
             <p class="status-pill">Tela de preparação</p>
             <h2 id="prep-title">Prepare o Jogador 1</h2>
             <p id="prep-description" class="support-copy">
-              Passe o celular para o próximo jogador e toque no botão apenas
+              Passe o celular para o próximo jogador e toque em mostrar apenas
               quando ele estiver pronto.
             </p>
             <button id="reveal-role" class="primary-button" type="button">
@@ -181,7 +376,7 @@
 
           <div id="reveal-view" class="turn-view">
             <p id="role-badge" class="status-pill">Papel revelado</p>
-            <h2 id="role-title">Você recebeu uma palavra</h2>
+            <h2 id="role-title">Você recebeu um papel</h2>
             <p id="role-description" class="support-copy"></p>
             <div id="word-card" class="word-card"></div>
             <button id="next-player" class="primary-button" type="button">
@@ -193,31 +388,26 @@
 
       <section id="end-screen" class="screen" aria-labelledby="end-title">
         <div class="panel end-panel">
-          <p class="panel-label">Rodada pronta</p>
+          <p id="end-label" class="panel-label">Rodada pronta</p>
           <h2 id="end-title">Todos já receberam seus papéis</h2>
-          <p class="support-copy">
-            Agora afastem o celular e comecem a conversa para descobrir quem é
-            o impostor.
+          <p id="end-description" class="support-copy">
+            Agora afastem o celular e comecem a rodada.
           </p>
 
-          <div class="summary-grid">
-            <article class="summary-card">
-              <span class="summary-label">Jogadores</span>
-              <strong id="end-players">4</strong>
-            </article>
-            <article class="summary-card">
-              <span class="summary-label">Impostores</span>
-              <strong>1</strong>
-            </article>
-          </div>
+          <div id="end-summary-grid" class="summary-grid"></div>
 
-          <button id="play-again" class="primary-button" type="button">
-            Nova partida
-          </button>
+          <div class="action-row">
+            <button id="play-again" class="primary-button" type="button">
+              Nova partida
+            </button>
+            <button id="go-hub-end" class="ghost-button" type="button">
+              Hub de jogos
+            </button>
+          </div>
         </div>
       </section>
     </main>
 
-    <script src="./script.js?v=6"></script>
+    <script src="./script.js?v=8"></script>
   </body>
 </html>
