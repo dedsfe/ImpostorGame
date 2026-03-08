@@ -1,62 +1,126 @@
 const wordPools = {
-  geral: [
-    "astronauta",
-    "abacaxi",
-    "castelo",
-    "violino",
-    "pirata",
-    "tempestade",
-    "labirinto",
-    "sorvete",
-    "vulcao",
-    "lanterna",
-  ],
-  animais: [
-    "girafa",
-    "tartaruga",
-    "golfinho",
-    "capivara",
-    "pinguim",
-    "leopardo",
-    "jacare",
-    "coruja",
-  ],
-  comidas: [
-    "lasanha",
-    "brigadeiro",
-    "hamburguer",
-    "coxinha",
-    "panqueca",
-    "pipoca",
-    "sushi",
-    "taco",
-  ],
-  objetos: [
-    "mochila",
-    "guarda-chuva",
-    "controle",
-    "tesoura",
-    "espelho",
-    "lanterna",
-    "violao",
-    "caderno",
-  ],
-  lugares: [
-    "praia",
-    "museu",
-    "biblioteca",
-    "aeroporto",
-    "acampamento",
-    "restaurante",
-    "cinema",
-    "estadio",
-  ],
+  geral: {
+    facil: ["bola", "casa", "pao", "sol", "carro", "flor", "mesa", "praia"],
+    medio: [
+      "astronauta",
+      "abacaxi",
+      "castelo",
+      "violino",
+      "pirata",
+      "labirinto",
+      "sorvete",
+      "lanterna",
+    ],
+    dificil: [
+      "constelacao",
+      "metamorfose",
+      "helicoptero",
+      "criptografia",
+      "ampulheta",
+      "termodinamica",
+      "paralelepipedo",
+      "caleidoscopio",
+    ],
+  },
+  animais: {
+    facil: ["gato", "cachorro", "pato", "vaca", "leao", "urso", "coelho", "cobra"],
+    medio: [
+      "girafa",
+      "tartaruga",
+      "golfinho",
+      "capivara",
+      "pinguim",
+      "leopardo",
+      "jacare",
+      "coruja",
+    ],
+    dificil: [
+      "ornitorrinco",
+      "suricata",
+      "pangolim",
+      "narval",
+      "tamandua-bandeira",
+      "axolote",
+      "caracal",
+      "alce",
+    ],
+  },
+  comidas: {
+    facil: ["pizza", "bolo", "arroz", "feijao", "pao", "queijo", "suco", "uva"],
+    medio: [
+      "lasanha",
+      "brigadeiro",
+      "hamburguer",
+      "coxinha",
+      "panqueca",
+      "pipoca",
+      "sushi",
+      "taco",
+    ],
+    dificil: [
+      "ratatouille",
+      "croissant",
+      "bruschetta",
+      "ceviche",
+      "yakisoba",
+      "gnocchi",
+      "bouillabaisse",
+      "carbonara",
+    ],
+  },
+  objetos: {
+    facil: ["lapis", "copo", "chave", "cadeira", "livro", "bola", "prato", "toalha"],
+    medio: [
+      "mochila",
+      "guarda-chuva",
+      "controle",
+      "tesoura",
+      "espelho",
+      "lanterna",
+      "violao",
+      "caderno",
+    ],
+    dificil: [
+      "microscopio",
+      "estetoscopio",
+      "cronometro",
+      "termostato",
+      "binoculo",
+      "bumerangue",
+      "amplificador",
+      "retroprojetor",
+    ],
+  },
+  lugares: {
+    facil: ["praia", "escola", "parque", "casa", "loja", "cinema", "igreja", "ponte"],
+    medio: [
+      "museu",
+      "biblioteca",
+      "aeroporto",
+      "acampamento",
+      "restaurante",
+      "estadio",
+      "aquario",
+      "mercado",
+    ],
+    dificil: [
+      "observatorio",
+      "planetario",
+      "anfiteatro",
+      "mausoleu",
+      "catedral",
+      "embaixada",
+      "laboratorio",
+      "arquipelago",
+    ],
+  },
 };
 
 const state = {
   totalPlayers: 4,
   secretWord: "",
   selectedCategory: "geral",
+  selectedDifficulty: "medio",
   impostorIndex: null,
   currentPlayer: 0,
   phase: "setup",
@@ -72,6 +136,7 @@ const elements = {
   playerCount: document.getElementById("player-count"),
   secretWord: document.getElementById("secret-word"),
   wordCategory: document.getElementById("word-category"),
+  wordDifficulty: document.getElementById("word-difficulty"),
   toggleWordVisibility: document.getElementById("toggle-word-visibility"),
   toggleWordLabel: document.getElementById("toggle-word-label"),
   setupFeedback: document.getElementById("setup-feedback"),
@@ -180,8 +245,19 @@ function syncCategoryInput(nextValue) {
   return safeCategory;
 }
 
-function getWordFromCategory(category) {
-  const words = wordPools[category] ?? wordPools.geral;
+function syncDifficultyInput(nextValue) {
+  const safeDifficulty =
+    nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
+      ? nextValue
+      : "medio";
+  state.selectedDifficulty = safeDifficulty;
+  elements.wordDifficulty.value = safeDifficulty;
+  return safeDifficulty;
+}
+
+function getWordFromCategory(category, difficulty) {
+  const categoryPool = wordPools[category] ?? wordPools.geral;
+  const words = categoryPool[difficulty] ?? wordPools.geral.medio;
   return words[randomIndex(words.length)];
 }
 
@@ -231,6 +307,7 @@ function resetToSetup(clearWord = false) {
   state.phase = "setup";
   syncPlayerInput(elements.playerCount.value);
   syncCategoryInput(elements.wordCategory.value);
+  syncDifficultyInput(elements.wordDifficulty.value);
   if (clearWord) {
     state.secretWord = "";
     elements.secretWord.value = "";
@@ -243,10 +320,11 @@ function resetToSetup(clearWord = false) {
 function startGame() {
   const players = syncPlayerInput(elements.playerCount.value);
   const selectedCategory = syncCategoryInput(elements.wordCategory.value);
+  const selectedDifficulty = syncDifficultyInput(elements.wordDifficulty.value);
   let secretWord = normalizeWord(elements.secretWord.value);
 
   if (!secretWord) {
-    secretWord = getWordFromCategory(selectedCategory);
+    secretWord = getWordFromCategory(selectedCategory, selectedDifficulty);
     elements.secretWord.value = secretWord;
     setWordVisibility(false);
   }
@@ -254,6 +332,7 @@ function startGame() {
   state.totalPlayers = players;
   state.secretWord = secretWord;
   state.selectedCategory = selectedCategory;
+  state.selectedDifficulty = selectedDifficulty;
   state.impostorIndex = randomIndex(players);
   state.currentPlayer = 0;
   state.phase = "prep";
@@ -278,9 +357,14 @@ elements.wordCategory.addEventListener("change", (event) => {
   syncCategoryInput(event.target.value);
 });
 
+elements.wordDifficulty.addEventListener("change", (event) => {
+  syncDifficultyInput(event.target.value);
+});
+
 elements.randomWord.addEventListener("click", () => {
   const selectedCategory = syncCategoryInput(elements.wordCategory.value);
-  const nextWord = getWordFromCategory(selectedCategory);
+  const selectedDifficulty = syncDifficultyInput(elements.wordDifficulty.value);
+  const nextWord = getWordFromCategory(selectedCategory, selectedDifficulty);
   elements.secretWord.value = nextWord;
   setWordVisibility(false);
   updateSetupFeedback("");
@@ -326,4 +410,5 @@ elements.playAgain.addEventListener("click", () => {
 
 syncPlayerInput(elements.playerCount.value);
 syncCategoryInput(elements.wordCategory.value);
+syncDifficultyInput(elements.wordDifficulty.value);
 setWordVisibility(false);

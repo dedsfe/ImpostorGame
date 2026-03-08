@@ -193,6 +193,12 @@ h2 {
   gap: 0.45rem;
 }
 
+.setup-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
 .setup-badge {
   display: inline-flex;
   align-items: center;
@@ -640,6 +646,10 @@ h2 {
 }
 
 @media (max-width: 560px) {
+  .setup-select-grid {
+    grid-template-columns: 1fr;
+  }
+
   .turn-topbar {
     flex-direction: column;
     align-items: stretch;

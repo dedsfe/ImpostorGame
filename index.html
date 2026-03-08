@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Impostor</title>
-    <link rel="stylesheet" href="./styles.css?v=12" />
+    <link rel="stylesheet" href="./styles.css?v=13" />
   </head>
   <body>
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -26,12 +26,13 @@
             <p class="panel-label">Configuração</p>
             <h2 id="setup-title">Monte a rodada</h2>
             <p class="setup-description">
-              Escolha a quantidade de jogadores, defina uma categoria e prepare
-              a palavra secreta para a rodada.
+              Escolha a quantidade de jogadores, defina categoria e dificuldade
+              e prepare a palavra secreta para a rodada.
             </p>
             <div class="setup-badges" aria-label="Resumo da rodada">
               <span class="setup-badge">3 a 20 jogadores</span>
               <span class="setup-badge">1 impostor</span>
+              <span class="setup-badge">Facil ao dificil</span>
               <span class="setup-badge">Passa o celular</span>
             </div>
             <div class="setup-points">
@@ -79,18 +80,26 @@
             </label>
 
             <label class="field-group" for="secret-word">
-              <span class="field-label">Palavra secreta</span>
-              <select id="word-category" class="select-input">
-                <option value="geral">Categoria: Geral</option>
-                <option value="animais">Categoria: Animais</option>
-                <option value="comidas">Categoria: Comidas</option>
-                <option value="objetos">Categoria: Objetos</option>
-                <option value="lugares">Categoria: Lugares</option>
-              </select>
+              <span class="field-label">Categoria e dificuldade</span>
+              <div class="setup-select-grid">
+                <select id="word-category" class="select-input">
+                  <option value="geral">Categoria: Geral</option>
+                  <option value="animais">Categoria: Animais</option>
+                  <option value="comidas">Categoria: Comidas</option>
+                  <option value="objetos">Categoria: Objetos</option>
+                  <option value="lugares">Categoria: Lugares</option>
+                </select>
+                <select id="word-difficulty" class="select-input">
+                  <option value="facil">Dificuldade: Facil</option>
+                  <option value="medio" selected>Dificuldade: Media</option>
+                  <option value="dificil">Dificuldade: Dificil</option>
+                </select>
+              </div>
               <p class="field-hint">
                 Se o campo da palavra ficar vazio, o app sorteia uma palavra da
-                categoria escolhida.
+                categoria e dificuldade escolhidas.
               </p>
+              <span class="field-label">Palavra secreta</span>
               <div class="word-input-row">
                 <input
                   id="secret-word"
@@ -209,6 +218,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=5"></script>
+    <script src="./script.js?v=6"></script>
   </body>
 </html>
