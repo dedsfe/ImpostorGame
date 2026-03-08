@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impostor</title>
+    <link rel="stylesheet" href="./styles.css?v=12" />
+  </head>
+  <body>
+    <div class="ambient ambient-left" aria-hidden="true"></div>
+    <div class="ambient ambient-right" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">Jogo local para passar o celular</p>
+        <h1>Impostor</h1>
+        <p class="hero-copy">
+          Configure a rodada, sorteie um impostor e revele o papel de cada
+          jogador em segurança.
+        </p>
+      </header>
+
+      <section id="setup-screen" class="screen is-active" aria-labelledby="setup-title">
+        <div class="setup-stage">
+          <div class="setup-copy">
+            <p class="panel-label">Configuração</p>
+            <h2 id="setup-title">Monte a rodada</h2>
+            <p class="setup-description">
+              Escolha a quantidade de jogadores, defina uma categoria e prepare
+              a palavra secreta para a rodada.
+            </p>
+            <div class="setup-badges" aria-label="Resumo da rodada">
+              <span class="setup-badge">3 a 20 jogadores</span>
+              <span class="setup-badge">1 impostor</span>
+              <span class="setup-badge">Passa o celular</span>
+            </div>
+            <div class="setup-points">
+              <article class="setup-point">
+                <strong>Escolha rápida</strong>
+                <p>Defina a categoria e deixe o app sortear a palavra se quiser.</p>
+              </article>
+              <article class="setup-point">
+                <strong>Distribuição segura</strong>
+                <p>Cada jogador vê apenas a própria tela antes de passar o celular.</p>
+              </article>
+            </div>
+          </div>
+
+          <form id="setup-form" class="setup-form setup-card">
+            <label class="field-group" for="player-count">
+              <span class="field-label">Número de jogadores</span>
+              <div class="stepper">
+                <button
+                  id="decrease-players"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir jogadores"
+                >
+                  -
+                </button>
+                <input
+                  id="player-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="3"
+                  max="20"
+                  value="4"
+                />
+                <button
+                  id="increase-players"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar jogadores"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <label class="field-group" for="secret-word">
+              <span class="field-label">Palavra secreta</span>
+              <select id="word-category" class="select-input">
+                <option value="geral">Categoria: Geral</option>
+                <option value="animais">Categoria: Animais</option>
+                <option value="comidas">Categoria: Comidas</option>
+                <option value="objetos">Categoria: Objetos</option>
+                <option value="lugares">Categoria: Lugares</option>
+              </select>
+              <p class="field-hint">
+                Se o campo da palavra ficar vazio, o app sorteia uma palavra da
+                categoria escolhida.
+              </p>
+              <div class="word-input-row">
+                <input
+                  id="secret-word"
+                  class="text-input"
+                  type="password"
+                  maxlength="40"
+                  placeholder="Ex.: astronauta"
+                  autocomplete="off"
+                />
+                <button
+                  id="toggle-word-visibility"
+                  class="icon-button"
+                  type="button"
+                  aria-label="Mostrar palavra secreta"
+                  aria-pressed="false"
+                >
+                  <svg
+                    class="icon-eye"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+                  </svg>
+                  <span id="toggle-word-label">Mostrar</span>
+                </button>
+                <button id="random-word" class="secondary-button" type="button">
+                  Sortear palavra
+                </button>
+              </div>
+            </label>
+
+            <p id="setup-feedback" class="feedback" aria-live="polite"></p>
+
+            <button id="start-game" class="primary-button" type="submit">
+              Iniciar rodada
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="turn-screen" class="screen" aria-labelledby="turn-progress">
+        <div id="turn-panel" class="panel turn-panel is-prep">
+          <div class="turn-topbar">
+            <div>
+              <p class="panel-label">Distribuição</p>
+              <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
+            </div>
+            <button id="restart-turn" class="ghost-button" type="button">
+              Reiniciar
+            </button>
+          </div>
+
+          <div id="prep-view" class="turn-view is-active">
+            <p class="status-pill">Tela de preparação</p>
+            <h2 id="prep-title">Prepare o Jogador 1</h2>
+            <p id="prep-description" class="support-copy">
+              Passe o celular para o próximo jogador e toque no botão apenas
+              quando ele estiver pronto.
+            </p>
+            <button id="reveal-role" class="primary-button" type="button">
+              Mostrar papel
+            </button>
+          </div>
+
+          <div id="reveal-view" class="turn-view">
+            <p id="role-badge" class="status-pill">Papel revelado</p>
+            <h2 id="role-title">Você recebeu uma palavra</h2>
+            <p id="role-description" class="support-copy"></p>
+            <div id="word-card" class="word-card"></div>
+            <button id="next-player" class="primary-button" type="button">
+              Próximo jogador
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="end-screen" class="screen" aria-labelledby="end-title">
+        <div class="panel end-panel">
+          <p class="panel-label">Rodada pronta</p>
+          <h2 id="end-title">Todos já receberam seus papéis</h2>
+          <p class="support-copy">
+            Agora afastem o celular e comecem a conversa para descobrir quem é
+            o impostor.
+          </p>
+
+          <div class="summary-grid">
+            <article class="summary-card">
+              <span class="summary-label">Jogadores</span>
+              <strong id="end-players">4</strong>
+            </article>
+            <article class="summary-card">
+              <span class="summary-label">Impostores</span>
+              <strong>1</strong>
+            </article>
+          </div>
+
+          <button id="play-again" class="primary-button" type="button">
+            Nova partida
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js?v=5"></script>
+  </body>
+</html>
