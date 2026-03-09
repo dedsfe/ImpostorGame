@@ -34,7 +34,8 @@ body {
   font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   color: var(--ink);
   background: var(--bg);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body.is-whoami-reveal {
@@ -188,6 +189,11 @@ h2 {
 #mimica-setup-screen,
 #mimica-prep-screen {
   place-items: center;
+}
+
+#hub-screen {
+  align-content: start;
+  padding-bottom: 1rem;
 }
 
 #whoami-reveal-screen {
