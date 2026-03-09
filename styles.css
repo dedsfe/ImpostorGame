@@ -385,7 +385,15 @@ h2 {
   flex: 0 0 auto;
 }
 
-#turn-panel,
+#turn-panel {
+  width: min(100%, 31rem);
+  max-width: 31rem;
+  height: auto;
+  max-height: min(100%, 34rem);
+  justify-self: center;
+  align-self: center;
+}
+
 #end-screen .panel {
   width: min(100%, 31rem);
   max-width: 31rem;
@@ -393,6 +401,10 @@ h2 {
   max-height: min(100%, 34rem);
   justify-self: center;
   align-self: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 #turn-screen .panel,
