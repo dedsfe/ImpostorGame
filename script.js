@@ -857,6 +857,42 @@ function setHero(content) {
   elements.heroCopy.textContent = content.copy;
 }
 
+function getFullscreenElement() {
+  return document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
+}
+
+async function enterWhoAmIFullscreen() {
+  const target = elements.screens.whoamiReveal;
+
+  if (getFullscreenElement() === target || getFullscreenElement()) {
+    return;
+  }
+
+  try {
+    if (target.requestFullscreen) {
+      await target.requestFullscreen();
+      return;
+    }
+
+    if (target.webkitRequestFullscreen) {
+      target.webkitRequestFullscreen();
+    }
+  } catch {}
+}
+
+async function exitFullscreenIfNeeded() {
+  try {
+    if (document.exitFullscreen && document.fullscreenElement) {
+      await document.exitFullscreen();
+      return;
+    }
+
+    if (document.webkitExitFullscreen && document.webkitFullscreenElement) {
+      document.webkitExitFullscreen();
+    }
+  } catch {}
+}
+
 function getCryptoRandomUint32() {
   if (globalThis.crypto?.getRandomValues) {
     const values = new Uint32Array(1);
@@ -903,6 +939,10 @@ function setActiveScreen(screen) {
   Object.entries(elements.screens).forEach(([key, element]) => {
     element.classList.toggle("is-active", key === screen);
   });
+
+  if (screen !== "whoamiReveal") {
+    exitFullscreenIfNeeded();
+  }
 
   if (screen === "hub") {
     setHero(heroContent.hub);
@@ -1252,6 +1292,7 @@ function renderWhoAmICharacter() {
   elements.whoami.characterName.textContent = character;
   updateWhoAmIFeedback("");
   setActiveScreen("whoamiReveal");
+  enterWhoAmIFullscreen();
 }
 
 function renderPreparation() {
