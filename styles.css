@@ -39,6 +39,12 @@ body {
 
 body.is-whoami-reveal {
   background: #ffffff;
+  overflow: hidden;
+}
+
+body.is-mimica-play {
+  background: #ffffff;
+  overflow: hidden;
 }
 
 button,
@@ -75,6 +81,10 @@ body.is-whoami-reveal .ambient {
   display: none;
 }
 
+body.is-mimica-play .ambient {
+  display: none;
+}
+
 .shell {
   width: min(100%, 72rem);
   margin: 0 auto;
@@ -94,6 +104,14 @@ body.is-whoami-reveal .shell {
   gap: 0;
 }
 
+body.is-mimica-play .shell {
+  width: 100%;
+  min-height: 100svh;
+  max-width: none;
+  padding: 0;
+  gap: 0;
+}
+
 .hero {
   display: grid;
   gap: 0.55rem;
@@ -105,6 +123,10 @@ body.is-whoami-reveal .shell {
 }
 
 body.is-whoami-reveal .hero {
+  display: none;
+}
+
+body.is-mimica-play .hero {
   display: none;
 }
 
@@ -162,11 +184,17 @@ h2 {
 #hub-screen,
 #impostor-setup-screen,
 #police-setup-screen,
-#whoami-setup-screen {
+#whoami-setup-screen,
+#mimica-setup-screen,
+#mimica-prep-screen {
   place-items: center;
 }
 
 #whoami-reveal-screen {
+  place-items: stretch;
+}
+
+#mimica-play-screen {
   place-items: stretch;
 }
 
@@ -213,6 +241,10 @@ h2 {
 
 .hub-card-whoami {
   background: rgba(255, 255, 255, 0.92);
+}
+
+.hub-card-mimica {
+  background: rgba(245, 255, 245, 0.92);
 }
 
 .hub-meta {
@@ -383,6 +415,143 @@ h2 {
 
 #end-screen .summary-grid {
   width: 100%;
+}
+
+.mimica-prep-panel {
+  width: min(100%, 31rem);
+  max-width: 31rem;
+  height: auto;
+  max-height: min(100%, 34rem);
+  justify-self: center;
+  align-self: center;
+}
+
+.mimica-play {
+  width: 100%;
+  min-height: 100svh;
+  padding: clamp(0.85rem, 2vw, 1.3rem);
+  background: #ffffff;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.mimica-play-meta {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+}
+
+.mimica-status {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: rgba(22, 50, 74, 0.52);
+}
+
+.mimica-timer-wrap {
+  width: min(100%, 28rem);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.mimica-timer {
+  font-size: clamp(1.5rem, 5vw, 2.8rem);
+  line-height: 1;
+  text-align: center;
+  color: #16324a;
+}
+
+.mimica-progress-track {
+  width: 100%;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: rgba(22, 50, 74, 0.1);
+  overflow: hidden;
+}
+
+.mimica-progress-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: #20c95d;
+  transition: width 180ms ease, background-color 180ms ease;
+}
+
+.mimica-word-wrap {
+  display: grid;
+  place-items: center;
+  padding: 0 1rem;
+}
+
+.mimica-word {
+  margin: 0;
+  max-width: 10ch;
+  text-align: center;
+  color: #09131b;
+  font-size: clamp(4.2rem, 14vw, 10rem);
+  line-height: 0.84;
+  text-wrap: balance;
+}
+
+.mimica-actions {
+  width: min(100%, 42rem);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.mimica-primary-action,
+.mimica-secondary-action {
+  min-height: 3rem;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    background-color var(--transition),
+    box-shadow var(--transition),
+    color var(--transition);
+}
+
+.mimica-primary-action {
+  border: 0;
+  background: #20c95d;
+  color: #ffffff;
+  box-shadow: 0 14px 24px rgba(32, 201, 93, 0.22);
+}
+
+.mimica-secondary-action {
+  border: 1px solid rgba(22, 50, 74, 0.14);
+  background: #ffffff;
+  color: #16324a;
+}
+
+.mimica-primary-action:hover,
+.mimica-secondary-action:hover {
+  transform: translateY(-1px);
+}
+
+.mimica-play.is-success .mimica-status {
+  color: #0b9c45;
+}
+
+.mimica-play.is-success .mimica-progress-fill {
+  background: #20c95d;
+}
+
+.mimica-play.is-timed-out .mimica-status,
+.mimica-play.is-timed-out .mimica-timer {
+  color: #c0540f;
+}
+
+.mimica-play.is-timed-out .mimica-progress-fill {
+  background: #ff8a1f;
 }
 
 .whoami-reveal {
@@ -833,7 +1002,9 @@ h2 {
   #hub-screen,
   #impostor-setup-screen,
   #police-setup-screen,
-  #whoami-setup-screen {
+  #whoami-setup-screen,
+  #mimica-setup-screen,
+  #mimica-prep-screen {
     align-content: start;
   }
 
@@ -868,6 +1039,7 @@ h2 {
   }
 
   #turn-panel,
+  .mimica-prep-panel,
   #end-screen .panel {
     width: min(100%, 32rem);
     max-height: none;
@@ -933,6 +1105,19 @@ h2 {
   #turn-screen .word-card {
     min-height: 6rem;
     font-size: 1.35rem;
+  }
+
+  .mimica-play {
+    padding: 0.75rem;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  }
+
+  .mimica-word {
+    font-size: clamp(3.6rem, 17vw, 6.4rem);
+  }
+
+  .mimica-actions {
+    grid-template-columns: 1fr;
   }
 
   .whoami-reveal {

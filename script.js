@@ -116,6 +116,237 @@ const wordPools = {
   },
 };
 
+const mimicaPools = {
+  geral: {
+    facil: [
+      "dormir",
+      "chorar",
+      "rir",
+      "correr",
+      "dançar",
+      "nadar",
+      "comer",
+      "beber água",
+      "escovar os dentes",
+      "telefonar",
+    ],
+    medio: [
+      "andar de bicicleta",
+      "jogar futebol",
+      "tocar violão",
+      "lavar louça",
+      "abrir guarda-chuva",
+      "tirar selfie",
+      "fazer yoga",
+      "cozinhar macarrão",
+      "andar de patins",
+      "varrer a casa",
+    ],
+    dificil: [
+      "trocar pneu",
+      "montar barraca",
+      "desviar de laser",
+      "surfar em onda gigante",
+      "aterrissar avião",
+      "andar na corda bamba",
+      "domar leão",
+      "apagar incêndio",
+      "mergulhar com cilindro",
+      "fazer malabarismo",
+    ],
+  },
+  animais: {
+    facil: [
+      "cachorro",
+      "gato",
+      "macaco",
+      "pato",
+      "cavalo",
+      "coelho",
+      "cobra",
+      "peixe",
+      "galinha",
+      "porco",
+    ],
+    medio: [
+      "girafa",
+      "canguru",
+      "jacaré",
+      "golfinho",
+      "pinguim",
+      "capivara",
+      "coruja",
+      "polvo",
+      "camaleão",
+      "leopardo",
+    ],
+    dificil: [
+      "ornitorrinco",
+      "tamanduá-bandeira",
+      "pangolim",
+      "suricata",
+      "narval",
+      "axolote",
+      "avestruz",
+      "bicho-preguiça",
+      "esquilo-voador",
+      "caranguejo-aranha",
+    ],
+  },
+  objetos: {
+    facil: [
+      "martelo",
+      "escova",
+      "tesoura",
+      "chave",
+      "copo",
+      "livro",
+      "telefone",
+      "mochila",
+      "bola",
+      "guarda-chuva",
+    ],
+    medio: [
+      "aspirador",
+      "controle remoto",
+      "microfone",
+      "violão",
+      "geladeira",
+      "liquidificador",
+      "skate",
+      "lanterna",
+      "binóculo",
+      "máquina de lavar",
+    ],
+    dificil: [
+      "microscópio",
+      "estetoscópio",
+      "retroprojetor",
+      "parafusadeira",
+      "extintor",
+      "catraca",
+      "saca-rolhas",
+      "cronômetro",
+      "impressora 3D",
+      "termostato",
+    ],
+  },
+  "filmes-series": {
+    facil: [
+      "Shrek",
+      "Elsa",
+      "Harry Potter",
+      "Batman",
+      "Homem-Aranha",
+      "Barbie",
+      "Woody",
+      "Buzz Lightyear",
+      "Darth Vader",
+      "Jack Sparrow",
+    ],
+    medio: [
+      "Eleven",
+      "Jon Snow",
+      "Hermione Granger",
+      "Loki",
+      "Yoda",
+      "Wednesday Addams",
+      "Indiana Jones",
+      "Sherlock Holmes",
+      "Tony Stark",
+      "Marty McFly",
+    ],
+    dificil: [
+      "Saul Goodman",
+      "Davy Jones",
+      "Raymond Reddington",
+      "Gus Fring",
+      "Cersei Lannister",
+      "Peaky Blinders",
+      "Daenerys Targaryen",
+      "Jean-Luc Picard",
+      "Beth Harmon",
+      "Meredith Grey",
+    ],
+  },
+  profissoes: {
+    facil: [
+      "médico",
+      "professor",
+      "cozinheiro",
+      "motorista",
+      "policial",
+      "dentista",
+      "cantor",
+      "bombeiro",
+      "pintor",
+      "garçom",
+    ],
+    medio: [
+      "piloto",
+      "jornalista",
+      "ator",
+      "veterinário",
+      "fotógrafo",
+      "engenheiro",
+      "cabeleireiro",
+      "dançarino",
+      "astronauta",
+      "carteiro",
+    ],
+    dificil: [
+      "neurologista",
+      "mergulhador",
+      "mímico",
+      "maestro",
+      "arqueólogo",
+      "investigador",
+      "tradutor",
+      "paramédico",
+      "fisioterapeuta",
+      "equilibrista",
+    ],
+  },
+  games: {
+    facil: [
+      "Mario",
+      "Luigi",
+      "Sonic",
+      "Pikachu",
+      "Pac-Man",
+      "Donkey Kong",
+      "Yoshi",
+      "Link",
+      "Peach",
+      "Bowser",
+    ],
+    medio: [
+      "Lara Croft",
+      "Kratos",
+      "Master Chief",
+      "Sub-Zero",
+      "Scorpion",
+      "Chun-Li",
+      "Ryu",
+      "Crash Bandicoot",
+      "Spyro",
+      "Steve do Minecraft",
+    ],
+    dificil: [
+      "Sephiroth",
+      "Commander Shepard",
+      "Vault Boy",
+      "Handsome Jack",
+      "GLaDOS",
+      "Arthur Morgan",
+      "Geralt de Rivia",
+      "Solid Snake",
+      "Agent 47",
+      "Zagreus",
+    ],
+  },
+};
+
 const whoAmIFilmesSeries = [
   "Harry Potter",
   "Hermione Granger",
@@ -713,6 +944,12 @@ const heroContent = {
     copy:
       "Escolha quantos serão policiais, ladrões e vítimas e deixe o app embaralhar os papéis.",
   },
+  mimicaSetup: {
+    eyebrow: "Mímica Rápida",
+    title: "Monte a rodada",
+    copy:
+      "Escolha categoria, dificuldade e tempo. Depois revele uma palavra em tela branca para a mímica.",
+  },
   whoamiSetup: {
     eyebrow: "Quem sou eu?",
     title: "Escolha a categoria",
@@ -730,6 +967,19 @@ const state = {
     currentCharacter: "",
     usedCharacters: [],
   },
+  mimica: {
+    category: "geral",
+    difficulty: "medio",
+    timePerRound: 45,
+    currentWord: "",
+    recentWords: [],
+    timerId: null,
+    timeRemaining: 45,
+    currentDuration: 45,
+    timedOut: false,
+    solved: false,
+    prepMode: "start",
+  },
 };
 
 const elements = {
@@ -740,6 +990,9 @@ const elements = {
     hub: document.getElementById("hub-screen"),
     impostorSetup: document.getElementById("impostor-setup-screen"),
     policeSetup: document.getElementById("police-setup-screen"),
+    mimicaSetup: document.getElementById("mimica-setup-screen"),
+    mimicaPrep: document.getElementById("mimica-prep-screen"),
+    mimicaPlay: document.getElementById("mimica-play-screen"),
     whoamiSetup: document.getElementById("whoami-setup-screen"),
     whoamiReveal: document.getElementById("whoami-reveal-screen"),
     turn: document.getElementById("turn-screen"),
@@ -747,6 +1000,7 @@ const elements = {
   },
   openImpostorGame: document.getElementById("open-impostor-game"),
   openPoliceGame: document.getElementById("open-police-game"),
+  openMimicaGame: document.getElementById("open-mimica-game"),
   openWhoAmIGame: document.getElementById("open-whoami-game"),
   impostor: {
     form: document.getElementById("impostor-setup-form"),
@@ -776,6 +1030,29 @@ const elements = {
     roleSummary: document.getElementById("police-role-summary"),
     feedback: document.getElementById("police-setup-feedback"),
     goHub: document.getElementById("go-hub-from-police"),
+  },
+  mimica: {
+    form: document.getElementById("mimica-setup-form"),
+    category: document.getElementById("mimica-category"),
+    difficulty: document.getElementById("mimica-difficulty"),
+    time: document.getElementById("mimica-time"),
+    feedback: document.getElementById("mimica-setup-feedback"),
+    goHub: document.getElementById("go-hub-from-mimica"),
+    prepTitle: document.getElementById("mimica-prep-title"),
+    prepDescription: document.getElementById("mimica-prep-description"),
+    showWord: document.getElementById("show-mimica-word"),
+    goHubPrep: document.getElementById("go-hub-from-mimica-prep"),
+    goSetupPrep: document.getElementById("go-setup-from-mimica-prep"),
+    play: document.getElementById("mimica-play"),
+    word: document.getElementById("mimica-word"),
+    status: document.getElementById("mimica-status"),
+    timerWrap: document.getElementById("mimica-timer-wrap"),
+    timer: document.getElementById("mimica-timer"),
+    progressFill: document.getElementById("mimica-progress-fill"),
+    success: document.getElementById("mimica-success"),
+    nextWord: document.getElementById("mimica-next-word"),
+    nextPlayer: document.getElementById("mimica-next-player"),
+    close: document.getElementById("close-mimica-play"),
   },
   whoami: {
     form: document.getElementById("whoami-setup-form"),
@@ -861,8 +1138,7 @@ function getFullscreenElement() {
   return document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
 }
 
-async function enterWhoAmIFullscreen() {
-  const target = elements.screens.whoamiReveal;
+async function enterFullscreenFor(target) {
 
   if (getFullscreenElement() === target || getFullscreenElement()) {
     return;
@@ -878,6 +1154,14 @@ async function enterWhoAmIFullscreen() {
       target.webkitRequestFullscreen();
     }
   } catch {}
+}
+
+async function enterWhoAmIFullscreen() {
+  await enterFullscreenFor(elements.screens.whoamiReveal);
+}
+
+async function enterMimicaFullscreen() {
+  await enterFullscreenFor(elements.screens.mimicaPlay);
 }
 
 async function exitFullscreenIfNeeded() {
@@ -936,11 +1220,12 @@ function shuffleArray(items) {
 function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
+  document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
   Object.entries(elements.screens).forEach(([key, element]) => {
     element.classList.toggle("is-active", key === screen);
   });
 
-  if (screen !== "whoamiReveal") {
+  if (screen !== "whoamiReveal" && screen !== "mimicaPlay") {
     exitFullscreenIfNeeded();
   }
 
@@ -956,6 +1241,11 @@ function setActiveScreen(screen) {
 
   if (screen === "policeSetup") {
     setHero(heroContent.policeSetup);
+    return;
+  }
+
+  if (screen === "mimicaSetup" || screen === "mimicaPrep") {
+    setHero(heroContent.mimicaSetup);
     return;
   }
 
@@ -1003,6 +1293,10 @@ function updateWhoAmIFeedback(message = "") {
   elements.whoami.feedback.textContent = message;
 }
 
+function updateMimicaFeedback(message = "") {
+  elements.mimica.feedback.textContent = message;
+}
+
 function syncImpostorPlayerInput(nextValue) {
   const safeValue = clampPlayers(nextValue);
   elements.impostor.playerCount.value = safeValue;
@@ -1030,6 +1324,149 @@ function getWordFromCategory(category, difficulty) {
   const categoryPool = wordPools[category] ?? wordPools.geral;
   const words = categoryPool[difficulty] ?? wordPools.geral.medio;
   return words[randomIndex(words.length)];
+}
+
+function getMimicaWord(category, difficulty) {
+  const categoryPool = mimicaPools[category] ?? mimicaPools.geral;
+  const words = categoryPool[difficulty] ?? mimicaPools.geral.medio;
+  let candidates = words.filter(
+    (word) =>
+      !state.mimica.recentWords.includes(word) && word !== state.mimica.currentWord,
+  );
+
+  if (candidates.length === 0) {
+    state.mimica.recentWords = state.mimica.currentWord ? [state.mimica.currentWord] : [];
+    candidates = words.filter((word) => word !== state.mimica.currentWord);
+  }
+
+  if (candidates.length === 0) {
+    candidates = [...words];
+  }
+
+  const nextWord = candidates[randomIndex(candidates.length)];
+
+  state.mimica.currentWord = nextWord;
+  state.mimica.recentWords = [...state.mimica.recentWords, nextWord].slice(-8);
+  return nextWord;
+}
+
+function syncMimicaCategoryInput(nextValue) {
+  const safeCategory = Object.prototype.hasOwnProperty.call(mimicaPools, nextValue)
+    ? nextValue
+    : "geral";
+
+  if (state.mimica.category !== safeCategory) {
+    state.mimica.recentWords = [];
+    state.mimica.currentWord = "";
+  }
+
+  state.mimica.category = safeCategory;
+  elements.mimica.category.value = safeCategory;
+  return safeCategory;
+}
+
+function syncMimicaDifficultyInput(nextValue) {
+  const safeDifficulty =
+    nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
+      ? nextValue
+      : "medio";
+
+  if (state.mimica.difficulty !== safeDifficulty) {
+    state.mimica.recentWords = [];
+    state.mimica.currentWord = "";
+  }
+
+  state.mimica.difficulty = safeDifficulty;
+  elements.mimica.difficulty.value = safeDifficulty;
+  return safeDifficulty;
+}
+
+function syncMimicaTimeInput(nextValue) {
+  const safeTime =
+    nextValue === "30" || nextValue === "45" || nextValue === "60"
+      ? Number(nextValue)
+      : null;
+
+  state.mimica.timePerRound = safeTime;
+  elements.mimica.time.value = safeTime === null ? "none" : String(safeTime);
+  return safeTime;
+}
+
+function clearMimicaTimer() {
+  if (state.mimica.timerId !== null) {
+    clearInterval(state.mimica.timerId);
+    state.mimica.timerId = null;
+  }
+}
+
+function resetMimicaRoundState() {
+  clearMimicaTimer();
+  state.mimica.timeRemaining = state.mimica.timePerRound ?? 0;
+  state.mimica.currentDuration = state.mimica.timePerRound ?? 0;
+  state.mimica.timedOut = false;
+  state.mimica.solved = false;
+}
+
+function renderMimicaTimer() {
+  const hasTimer = state.mimica.timePerRound !== null;
+  const duration = state.mimica.currentDuration || 1;
+  const ratio = hasTimer ? Math.max(0, state.mimica.timeRemaining / duration) : 1;
+
+  elements.mimica.timerWrap.hidden = !hasTimer;
+  if (hasTimer) {
+    elements.mimica.timer.textContent = `${state.mimica.timeRemaining}s`;
+    elements.mimica.progressFill.style.width = `${Math.max(0, ratio * 100)}%`;
+  } else {
+    elements.mimica.progressFill.style.width = "100%";
+  }
+}
+
+function updateMimicaVisualState() {
+  elements.mimica.play.classList.remove("is-timed-out", "is-success");
+
+  if (state.mimica.solved) {
+    elements.mimica.play.classList.add("is-success");
+    elements.mimica.status.textContent = "Acertaram!";
+    return;
+  }
+
+  if (state.mimica.timedOut) {
+    elements.mimica.play.classList.add("is-timed-out");
+    elements.mimica.status.textContent = "Tempo esgotado!";
+    return;
+  }
+
+  elements.mimica.status.textContent =
+    state.mimica.timePerRound === null ? "Valendo!" : "Tempo correndo";
+}
+
+function startMimicaTimer() {
+  clearMimicaTimer();
+
+  if (state.mimica.timePerRound === null) {
+    renderMimicaTimer();
+    updateMimicaVisualState();
+    return;
+  }
+
+  state.mimica.timeRemaining = state.mimica.timePerRound;
+  state.mimica.currentDuration = state.mimica.timePerRound;
+  renderMimicaTimer();
+  updateMimicaVisualState();
+
+  state.mimica.timerId = setInterval(() => {
+    if (state.mimica.timeRemaining <= 1) {
+      state.mimica.timeRemaining = 0;
+      clearMimicaTimer();
+      state.mimica.timedOut = true;
+      renderMimicaTimer();
+      updateMimicaVisualState();
+      return;
+    }
+
+    state.mimica.timeRemaining -= 1;
+    renderMimicaTimer();
+  }, 1000);
 }
 
 function syncWhoAmICategoryInput(nextValue) {
@@ -1249,8 +1686,10 @@ function openHub() {
   state.currentPlayer = 0;
   clearRoleTone();
   setTurnPhase("prep");
+  clearMimicaTimer();
   updateImpostorFeedback("");
   updatePoliceFeedback("");
+  updateMimicaFeedback("");
   setActiveScreen("hub");
 }
 
@@ -1272,6 +1711,58 @@ function openPoliceSetup() {
   updatePoliceFeedback("");
   syncPoliceRoleInputs();
   setActiveScreen("policeSetup");
+}
+
+function openMimicaSetup() {
+  state.currentGame = {
+    type: "mimica",
+    name: "Mímica Rápida",
+  };
+  state.currentPlayer = 0;
+  clearMimicaTimer();
+  syncMimicaCategoryInput(elements.mimica.category.value);
+  syncMimicaDifficultyInput(elements.mimica.difficulty.value);
+  syncMimicaTimeInput(elements.mimica.time.value);
+  state.mimica.prepMode = "start";
+  state.mimica.solved = false;
+  state.mimica.timedOut = false;
+  updateMimicaFeedback("");
+  setActiveScreen("mimicaSetup");
+}
+
+function renderMimicaPreparation() {
+  const isNextPlayer = state.mimica.prepMode === "next-player";
+
+  elements.mimica.prepTitle.textContent = isNextPlayer
+    ? "Passe o celular para o próximo mímico"
+    : "Passe o celular para quem vai fazer a mímica";
+  elements.mimica.prepDescription.textContent = isNextPlayer
+    ? "Toque em mostrar quando a próxima pessoa estiver pronta para ver a palavra."
+    : "Toque em mostrar apenas quando a pessoa estiver pronta para ver a palavra.";
+
+  clearMimicaTimer();
+  setActiveScreen("mimicaPrep");
+}
+
+function renderMimicaWord() {
+  const category = syncMimicaCategoryInput(elements.mimica.category.value);
+  const difficulty = syncMimicaDifficultyInput(elements.mimica.difficulty.value);
+  const nextWord = getMimicaWord(category, difficulty);
+
+  resetMimicaRoundState();
+  elements.mimica.word.textContent = nextWord;
+  renderMimicaTimer();
+  updateMimicaVisualState();
+  setActiveScreen("mimicaPlay");
+  startMimicaTimer();
+  enterMimicaFullscreen();
+}
+
+function markMimicaSuccess() {
+  state.mimica.solved = true;
+  state.mimica.timedOut = false;
+  clearMimicaTimer();
+  updateMimicaVisualState();
 }
 
 function openWhoAmISetup() {
@@ -1394,6 +1885,11 @@ function restartCurrentGame() {
     return;
   }
 
+  if (state.currentGame.type === "mimica") {
+    openMimicaSetup();
+    return;
+  }
+
   if (state.currentGame.type === "whoami") {
     openWhoAmISetup();
     return;
@@ -1434,6 +1930,15 @@ function startPoliceGame() {
   renderPreparation();
 }
 
+function startMimicaGame() {
+  syncMimicaCategoryInput(elements.mimica.category.value);
+  syncMimicaDifficultyInput(elements.mimica.difficulty.value);
+  syncMimicaTimeInput(elements.mimica.time.value);
+  state.mimica.prepMode = "start";
+  updateMimicaFeedback("");
+  renderMimicaPreparation();
+}
+
 function startWhoAmIGame() {
   syncWhoAmICategoryInput(elements.whoami.category.value);
   renderWhoAmICharacter();
@@ -1441,6 +1946,7 @@ function startWhoAmIGame() {
 
 elements.openImpostorGame.addEventListener("click", openImpostorSetup);
 elements.openPoliceGame.addEventListener("click", openPoliceSetup);
+elements.openMimicaGame.addEventListener("click", openMimicaSetup);
 elements.openWhoAmIGame.addEventListener("click", openWhoAmISetup);
 
 elements.impostor.decreasePlayers.addEventListener("click", () => {
@@ -1527,6 +2033,35 @@ elements.police.form.addEventListener("submit", (event) => {
 
 elements.police.goHub.addEventListener("click", openHub);
 
+elements.mimica.category.addEventListener("change", (event) => {
+  syncMimicaCategoryInput(event.target.value);
+});
+
+elements.mimica.difficulty.addEventListener("change", (event) => {
+  syncMimicaDifficultyInput(event.target.value);
+});
+
+elements.mimica.time.addEventListener("change", (event) => {
+  syncMimicaTimeInput(event.target.value);
+});
+
+elements.mimica.form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  startMimicaGame();
+});
+
+elements.mimica.showWord.addEventListener("click", renderMimicaWord);
+elements.mimica.success.addEventListener("click", markMimicaSuccess);
+elements.mimica.nextWord.addEventListener("click", renderMimicaWord);
+elements.mimica.nextPlayer.addEventListener("click", () => {
+  state.mimica.prepMode = "next-player";
+  renderMimicaPreparation();
+});
+elements.mimica.close.addEventListener("click", openMimicaSetup);
+elements.mimica.goHub.addEventListener("click", openHub);
+elements.mimica.goHubPrep.addEventListener("click", openHub);
+elements.mimica.goSetupPrep.addEventListener("click", openMimicaSetup);
+
 elements.whoami.category.addEventListener("change", (event) => {
   syncWhoAmICategoryInput(event.target.value);
 });
@@ -1564,5 +2099,8 @@ syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
 setImpostorWordVisibility(false);
 syncPoliceRoleInputs();
+syncMimicaCategoryInput(elements.mimica.category.value);
+syncMimicaDifficultyInput(elements.mimica.difficulty.value);
+syncMimicaTimeInput(elements.mimica.time.value);
 syncWhoAmICategoryInput(elements.whoami.category.value);
 setActiveScreen("hub");

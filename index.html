@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hub de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=16" />
+    <link rel="stylesheet" href="./styles.css?v=17" />
   </head>
   <body>
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -70,6 +70,23 @@
             </div>
             <button id="open-whoami-game" class="primary-button" type="button">
               Entrar no Quem sou eu?
+            </button>
+          </article>
+
+          <article class="hub-card hub-card-mimica">
+            <p class="panel-label">Mímica em grupo</p>
+            <h2>Mímica Rápida</h2>
+            <p class="support-copy">
+              Faça mímicas e deixe a galera adivinhar com palavra grande e
+              timer opcional.
+            </p>
+            <div class="hub-meta">
+              <span class="hub-pill">Categoria + dificuldade</span>
+              <span class="hub-pill">Tempo opcional</span>
+              <span class="hub-pill">Tela branca total</span>
+            </div>
+            <button id="open-mimica-game" class="primary-button" type="button">
+              Entrar em Mímica Rápida
             </button>
           </article>
         </div>
@@ -425,6 +442,169 @@
       </section>
 
       <section
+        id="mimica-setup-screen"
+        class="screen"
+        aria-labelledby="mimica-setup-title"
+      >
+        <div class="setup-stage">
+          <div class="setup-copy">
+            <p class="panel-label">Mímica Rápida</p>
+            <h2 id="mimica-setup-title">Monte a rodada</h2>
+            <p class="setup-description">
+              Escolha categoria, dificuldade e tempo. Depois passe o celular
+              para quem vai fazer a mímica.
+            </p>
+            <div class="setup-badges" aria-label="Resumo da rodada">
+              <span class="setup-badge">Categoria</span>
+              <span class="setup-badge">Fácil ao difícil</span>
+              <span class="setup-badge">30s a 60s ou sem tempo</span>
+              <span class="setup-badge">Passa o celular</span>
+            </div>
+            <div class="setup-points">
+              <article class="setup-point">
+                <strong>Palavra em foco total</strong>
+                <p>A tela da mímica mostra só a palavra e o tempo, sem distrações.</p>
+              </article>
+              <article class="setup-point">
+                <strong>Privacidade antes de revelar</strong>
+                <p>Outra pessoa toca em mostrar apenas quando o mímico estiver pronto.</p>
+              </article>
+            </div>
+          </div>
+
+          <form id="mimica-setup-form" class="setup-form setup-card">
+            <label class="field-group" for="mimica-category">
+              <span class="field-label">Categoria</span>
+              <select id="mimica-category" class="select-input">
+                <option value="geral">Categoria: Geral</option>
+                <option value="animais">Categoria: Animais</option>
+                <option value="objetos">Categoria: Objetos</option>
+                <option value="filmes-series">Categoria: Filmes e series</option>
+                <option value="profissoes">Categoria: Profissoes</option>
+                <option value="games">Categoria: Games</option>
+              </select>
+            </label>
+
+            <label class="field-group" for="mimica-difficulty">
+              <span class="field-label">Dificuldade</span>
+              <select id="mimica-difficulty" class="select-input">
+                <option value="facil">Dificuldade: Fácil</option>
+                <option value="medio" selected>Dificuldade: Média</option>
+                <option value="dificil">Dificuldade: Difícil</option>
+              </select>
+            </label>
+
+            <label class="field-group" for="mimica-time">
+              <span class="field-label">Tempo por mímica</span>
+              <select id="mimica-time" class="select-input">
+                <option value="30">Tempo: 30s</option>
+                <option value="45" selected>Tempo: 45s</option>
+                <option value="60">Tempo: 60s</option>
+                <option value="none">Tempo: Sem tempo</option>
+              </select>
+            </label>
+
+            <p class="field-hint">
+              Passe o celular para quem vai fazer mímica. Outra pessoa toca em
+              “Mostrar palavra”.
+            </p>
+            <p id="mimica-setup-feedback" class="feedback" aria-live="polite"></p>
+
+            <div class="action-row">
+              <button id="start-mimica-game" class="primary-button" type="submit">
+                Iniciar rodada
+              </button>
+              <button id="go-hub-from-mimica" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section
+        id="mimica-prep-screen"
+        class="screen"
+        aria-labelledby="mimica-prep-title"
+      >
+        <div class="panel mimica-prep-panel">
+          <div class="turn-topbar">
+            <div>
+              <p class="panel-label">Mímica Rápida</p>
+              <p class="turn-progress">Preparação</p>
+            </div>
+            <div class="topbar-actions">
+              <button id="go-setup-from-mimica-prep" class="ghost-button" type="button">
+                Ajustes
+              </button>
+              <button id="go-hub-from-mimica-prep" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
+          </div>
+
+          <div class="turn-view is-active">
+            <p class="status-pill">Tela de preparação</p>
+            <h2 id="mimica-prep-title">Passe o celular para quem vai fazer a mímica</h2>
+            <p id="mimica-prep-description" class="support-copy">
+              Toque em mostrar apenas quando a pessoa estiver pronta para ver a palavra.
+            </p>
+            <button id="show-mimica-word" class="primary-button" type="button">
+              Mostrar palavra
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="mimica-play-screen"
+        class="screen"
+        aria-labelledby="mimica-word"
+      >
+        <div id="mimica-play" class="mimica-play">
+          <button
+            id="close-mimica-play"
+            class="whoami-close"
+            type="button"
+            aria-label="Sair da mímica"
+          >
+            X
+          </button>
+
+          <div class="mimica-play-meta">
+            <p id="mimica-status" class="mimica-status">Valendo!</p>
+            <div
+              id="mimica-timer-wrap"
+              class="mimica-timer-wrap"
+              role="timer"
+              aria-live="polite"
+            >
+              <strong id="mimica-timer" class="mimica-timer">45s</strong>
+              <div class="mimica-progress-track" aria-hidden="true">
+                <div id="mimica-progress-fill" class="mimica-progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mimica-word-wrap">
+            <h2 id="mimica-word" class="mimica-word">Palavra</h2>
+          </div>
+
+          <div class="mimica-actions">
+            <button id="mimica-success" class="mimica-secondary-action" type="button">
+              Acertaram
+            </button>
+            <button id="mimica-next-word" class="mimica-primary-action" type="button">
+              Próxima palavra
+            </button>
+            <button id="mimica-next-player" class="mimica-secondary-action" type="button">
+              Trocar mímico
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section
         id="whoami-reveal-screen"
         class="screen"
         aria-labelledby="whoami-character-name"
@@ -513,6 +693,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=11"></script>
+    <script src="./script.js?v=12"></script>
   </body>
 </html>
