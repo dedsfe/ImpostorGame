@@ -1950,6 +1950,506 @@ const whoAmIAnimationStudios = Array.from(
   ]),
 );
 
+const animationStudioCharacterGroups = [
+  {
+    source: "Branca de Neve e os Sete Anões",
+    characters: [
+      "Branca de Neve",
+      "Rainha Má",
+      "Príncipe Florian",
+      "Mestre",
+      "Zangado",
+      "Feliz",
+      "Soneca",
+      "Dengoso",
+      "Atchim",
+      "Dunga",
+    ],
+  },
+  {
+    source: "Cinderela",
+    characters: [
+      "Cinderela",
+      "Príncipe Encantado",
+      "Fada Madrinha",
+      "Lady Tremaine",
+      "Drizela",
+      "Anastásia",
+      "Jaq",
+      "Gus Gus",
+      "Lúcifer",
+      "Bruno",
+    ],
+  },
+  {
+    source: "Alice no País das Maravilhas",
+    characters: [
+      "Alice",
+      "Chapeleiro Maluco",
+      "Coelho Branco",
+      "Rainha de Copas",
+      "Gato Risonho",
+      "Lebre de Março",
+      "Arganaz",
+      "Lagarta",
+      "Tweedle Dee",
+      "Tweedle Dum",
+    ],
+  },
+  {
+    source: "Peter Pan",
+    characters: [
+      "Peter Pan",
+      "Wendy",
+      "João Darling",
+      "Miguel Darling",
+      "Sininho",
+      "Capitão Gancho",
+      "Sr. Smee",
+      "Princesa Tigrinha",
+    ],
+  },
+  {
+    source: "A Bela Adormecida",
+    characters: ["Aurora", "Príncipe Felipe", "Malévola", "Flora", "Fauna", "Primavera"],
+  },
+  {
+    source: "A Pequena Sereia",
+    characters: [
+      "Ariel",
+      "Príncipe Eric",
+      "Ursula",
+      "Sebastião",
+      "Linguado",
+      "Sabidão",
+      "Rei Tritão",
+      "Chef Louis",
+      "Max",
+    ],
+  },
+  {
+    source: "A Bela e a Fera",
+    characters: [
+      "Bela",
+      "Fera",
+      "Gaston",
+      "Lefou",
+      "Lumière",
+      "Horloge",
+      "Senhora Potts",
+      "Zip",
+      "Maurice",
+      "Babette",
+    ],
+  },
+  {
+    source: "Aladdin",
+    characters: [
+      "Aladdin",
+      "Jasmine",
+      "Gênio",
+      "Jafar",
+      "Abu",
+      "Iago",
+      "Tapete Mágico",
+      "Sultão",
+      "Rajah",
+    ],
+  },
+  {
+    source: "Pocahontas",
+    characters: [
+      "Pocahontas",
+      "John Smith",
+      "Meeko",
+      "Percy",
+      "Vovó Salgueiro",
+      "Governador Ratcliffe",
+    ],
+  },
+  {
+    source: "Hércules",
+    characters: [
+      "Hércules",
+      "Megara",
+      "Hades",
+      "Filoctetes",
+      "Zeus",
+      "Hera",
+      "Pégaso",
+      "Pânico",
+      "Dor",
+    ],
+  },
+  {
+    source: "Mulan",
+    characters: ["Mulan", "Mushu", "Li Shang", "Shan Yu", "Gri-Li", "Yao", "Ling", "Chien-Po"],
+  },
+  {
+    source: "Tarzan",
+    characters: ["Tarzan", "Jane", "Terk", "Tantor", "Kala", "Kerchak", "Clayton"],
+  },
+  {
+    source: "Lilo & Stitch",
+    characters: ["Lilo", "Stitch", "Nani", "Jumba", "Pleakley", "Cobra Bubbles", "David", "Angel"],
+  },
+  {
+    source: "A Princesa e o Sapo",
+    characters: ["Tiana", "Naveen", "Dr. Facilier", "Charlotte", "Ray", "Louis", "Mama Odie"],
+  },
+  {
+    source: "Enrolados",
+    characters: ["Rapunzel", "Flynn Rider", "Mamãe Gothel", "Maximus", "Pascal", "Vladimir"],
+  },
+  {
+    source: "Detona Ralph",
+    characters: ["Ralph", "Vanellope", "Felix", "Sargento Calhoun", "Rei Doce"],
+  },
+  {
+    source: "Frozen",
+    characters: ["Elsa", "Anna", "Kristoff", "Olaf", "Sven", "Hans"],
+  },
+  {
+    source: "Operação Big Hero",
+    characters: ["Hiro", "Baymax", "Go Go", "Wasabi", "Honey Lemon", "Fred", "Tadashi", "Yokai"],
+  },
+  {
+    source: "Zootopia",
+    characters: ["Judy Hopps", "Nick Wilde", "Chefe Bogo", "Flash", "Clawhauser", "Bellwether", "Sr. Big", "Finnick"],
+  },
+  {
+    source: "Moana",
+    characters: ["Moana", "Maui", "Hei Hei", "Pua", "Tamatoa", "Vovó Tala", "Chefe Tui", "Sina"],
+  },
+  {
+    source: "Raya e o Último Dragão",
+    characters: ["Raya", "Sisu", "Namaari", "Tuk Tuk", "Boun", "Tong", "Noi"],
+  },
+  {
+    source: "Encanto",
+    characters: [
+      "Mirabel",
+      "Luisa",
+      "Isabela",
+      "Bruno",
+      "Dolores",
+      "Camilo",
+      "Antonio",
+      "Julieta",
+      "Pepa",
+      "Agustín",
+      "Félix",
+      "Abuela Alma",
+    ],
+  },
+  {
+    source: "Wish: O Poder dos Desejos",
+    characters: ["Asha", "Valentino", "Rei Magnífico", "Rainha Amaya", "Estrela"],
+  },
+  {
+    source: "O Rei Leão",
+    characters: [
+      "Simba",
+      "Nala",
+      "Mufasa",
+      "Scar",
+      "Timão",
+      "Pumba",
+      "Rafiki",
+      "Zazu",
+      "Sarabi",
+      "Shenzi",
+      "Banzai",
+      "Ed",
+      "Kiara",
+      "Kovu",
+    ],
+  },
+  {
+    source: "Toy Story",
+    characters: [
+      "Woody",
+      "Buzz Lightyear",
+      "Jessie",
+      "Rex",
+      "Bala no Alvo",
+      "Hamm",
+      "Betty",
+      "Cabeça de Batata",
+      "Senhora Cabeça de Batata",
+      "Lotso",
+      "Forky",
+      "Gabby Gabby",
+      "Duke Caboom",
+      "Zurg",
+    ],
+  },
+  {
+    source: "Monstros S.A.",
+    characters: ["Sulley", "Mike Wazowski", "Boo", "Randall", "Roz", "Celia", "Waternoose", "George Sanderson", "Hardscrabble"],
+  },
+  {
+    source: "Procurando Nemo",
+    characters: ["Nemo", "Dory", "Marlin", "Crush", "Esguicho", "Bruce", "Nigel", "Gill", "Bolha", "Hank", "Destiny", "Bailey"],
+  },
+  {
+    source: "Os Incríveis",
+    characters: ["Sr. Incrível", "Mulher-Elástica", "Violeta", "Flecha", "Zezé", "Gelado", "Edna Moda", "Síndrome", "Mirage", "Rick Dicker"],
+  },
+  {
+    source: "Carros",
+    characters: ["Relâmpago McQueen", "Mate", "Sally", "Doc Hudson", "Luigi", "Guido", "Chick Hicks", "Cruz Ramirez", "Jackson Storm", "Mack"],
+  },
+  {
+    source: "Ratatouille",
+    characters: ["Rémy", "Linguini", "Colette", "Anton Ego", "Skinner", "Emile"],
+  },
+  {
+    source: "Up: Altas Aventuras",
+    characters: ["Carl Fredricksen", "Russell", "Dug", "Kevin", "Charles Muntz"],
+  },
+  {
+    source: "WALL-E",
+    characters: ["WALL-E", "EVE", "AUTO", "M-O"],
+  },
+  {
+    source: "Valente",
+    characters: ["Mérida", "Rainha Elinor", "Rei Fergus", "Harris", "Hubert", "Hamish"],
+  },
+  {
+    source: "Divertida Mente",
+    characters: ["Alegria", "Tristeza", "Raiva", "Medo", "Nojinho", "Riley", "Bing Bong", "Ansiedade", "Tédio", "Vergonha", "Inveja", "Nostalgia"],
+  },
+  {
+    source: "Coco",
+    characters: ["Miguel", "Héctor", "Ernesto de la Cruz", "Mamá Imelda", "Mamá Coco", "Dante", "Pepita", "Vovó Elena"],
+  },
+  {
+    source: "Luca",
+    characters: ["Luca", "Alberto", "Giulia", "Ercole", "Massimo"],
+  },
+  {
+    source: "Red: Crescer é uma Fera",
+    characters: ["Mei", "Ming", "Miriam", "Priya", "Abby", "Tyler"],
+  },
+  {
+    source: "Soul",
+    characters: ["Joe Gardner", "22", "Terry", "Moonwind"],
+  },
+  {
+    source: "Dois Irmãos",
+    characters: ["Ian", "Barley", "Laurel", "Corey"],
+  },
+  {
+    source: "Elementos",
+    characters: ["Ember", "Wade", "Bernie", "Clod", "Gale"],
+  },
+  {
+    source: "Vida de Inseto",
+    characters: ["Flik", "Atta", "Dot", "Hopper", "Heimlich", "Francis", "Slim", "Rosie"],
+  },
+  {
+    source: "O Bom Dinossauro",
+    characters: ["Arlo", "Spot"],
+  },
+  {
+    source: "Shrek",
+    characters: [
+      "Shrek",
+      "Burro",
+      "Fiona",
+      "Gato de Botas",
+      "Lord Farquaad",
+      "Dragão",
+      "Biscoito",
+      "Pinóquio",
+      "Lobo Mau",
+      "Três Porquinhos",
+      "Príncipe Encantado",
+      "Fada Madrinha",
+      "Artie",
+      "Merlin",
+      "Rumpelstiltskin",
+    ],
+  },
+  {
+    source: "Madagascar",
+    characters: ["Alex", "Marty", "Gloria", "Melman", "Rei Julien", "Maurice", "Mort", "Skipper", "Kowalski", "Rico", "Recruta"],
+  },
+  {
+    source: "Kung Fu Panda",
+    characters: ["Po", "Tigresa", "Macaco", "Víbora", "Garça", "Louva-a-deus", "Mestre Shifu", "Tai Lung", "Oogway", "Lord Shen", "Kai"],
+  },
+  {
+    source: "Como Treinar o Seu Dragão",
+    characters: ["Soluço", "Astrid", "Banguela", "Stoico", "Valka", "Melequento", "Perna-de-Peixe", "Cabeça Dura", "Cabeçaquente", "Bocão", "Drago", "Eret"],
+  },
+  {
+    source: "Trolls",
+    characters: ["Poppy", "Tronco", "Diamante", "Biggie", "Tiny Diamond", "Cooper", "Rainha Barb", "Rei Trollex", "Cetim", "Chenille"],
+  },
+  {
+    source: "O Poderoso Chefinho",
+    characters: ["Poderoso Chefinho", "Tim", "Ted", "Tina", "Carol", "Francis"],
+  },
+  {
+    source: "Os Croods",
+    characters: ["Grug", "Eep", "Ugga", "Thunk", "Sandy", "Gran", "Guy", "Belt"],
+  },
+  {
+    source: "Megamente",
+    characters: ["Megamente", "Roxanne", "Metro Man", "Minion", "Tighten"],
+  },
+  {
+    source: "Bee Movie",
+    characters: ["Barry", "Vanessa", "Adam", "Ken"],
+  },
+  {
+    source: "A Origem dos Guardiões",
+    characters: ["Jack Frost", "Norte", "Fada do Dente", "Coelhão", "Sandman", "Breu"],
+  },
+  {
+    source: "O Príncipe do Egito",
+    characters: ["Moisés", "Ramsés", "Tzipora", "Miriam", "Arão"],
+  },
+  {
+    source: "Spirit: O Corcel Indomável",
+    characters: ["Spirit", "Chuva", "Pequeno Riacho", "Chica Linda"],
+  },
+  {
+    source: "Simbad: A Lenda dos Sete Mares",
+    characters: ["Simbad", "Marina", "Éris", "Proteu"],
+  },
+  {
+    source: "As Aventuras de Peabody e Sherman",
+    characters: ["Sr. Peabody", "Sherman", "Penny"],
+  },
+  {
+    source: "Turbo",
+    characters: ["Turbo", "Chet", "Tito", "Chicote", "Guy Gagné"],
+  },
+  {
+    source: "Meu Malvado Favorito",
+    characters: [
+      "Gru",
+      "Lucy Wilde",
+      "Margo",
+      "Edith",
+      "Agnes",
+      "Dr. Nefario",
+      "Vector",
+      "El Macho",
+      "Dru",
+      "Balthazar Bratt",
+      "Silas",
+      "Kevin",
+      "Stuart",
+      "Bob",
+      "Otto",
+      "Scarlet Overkill",
+      "Herb",
+      "Wild Knuckles",
+    ],
+  },
+  {
+    source: "Sing: Quem Canta Seus Males Espanta",
+    characters: ["Buster Moon", "Rosita", "Johnny", "Meena", "Ash", "Gunter", "Mike", "Clay Calloway", "Porsha", "Jimmy Crystal"],
+  },
+  {
+    source: "Pets: A Vida Secreta dos Bichos",
+    characters: ["Max", "Duke", "Gidget", "Bola de Neve", "Chloe", "Mel", "Buddy", "Pops", "Rooster"],
+  },
+  {
+    source: "Super Mario Bros. O Filme",
+    characters: ["Mario", "Peach", "Bowser", "Toad", "Donkey Kong", "Cranky Kong", "Kamek", "Spike", "Lumalee"],
+  },
+  {
+    source: "O Lorax: Em Busca da Trúfula Perdida",
+    characters: ["Ted", "Lorax", "Audrey", "Once-ler", "O'Hare", "Vovó Norma"],
+  },
+  {
+    source: "Patos!",
+    characters: ["Mack Mallard", "Pam Mallard", "Dax Mallard", "Gwen Mallard", "Tio Dan", "Delroy"],
+  },
+  {
+    source: "A Era do Gelo",
+    characters: ["Manny", "Sid", "Diego", "Scrat", "Ellie", "Crash", "Eddie", "Buck", "Peaches", "Shira", "Vovó", "Julian"],
+  },
+  {
+    source: "Rio",
+    characters: ["Blu", "Jade", "Rafael", "Nico", "Pedro", "Luiz", "Linda", "Túlio", "Gabi"],
+  },
+  {
+    source: "Ferdinando",
+    characters: ["Ferdinando", "Nina", "Lupe", "Valiente", "Bones", "Angus"],
+  },
+  {
+    source: "Horton e o Mundo dos Quem",
+    characters: ["Horton", "Prefeito Ned McDodd", "JoJo", "Canguru", "Vlad", "Morton"],
+  },
+  {
+    source: "Robôs",
+    characters: ["Rodney", "Fender", "Cappy", "Ratchet", "Bigweld", "Piper", "Madame Gasket", "Tia Fanny"],
+  },
+  {
+    source: "Tá Chovendo Hambúrguer",
+    characters: ["Flint", "Sam Sparks", "Brent", "Steve", "Tim", "Earl", "Manny", "Chester V"],
+  },
+  {
+    source: "Hotel Transilvânia",
+    characters: ["Drácula", "Mavis", "Jonathan", "Dennis", "Wayne", "Wanda", "Frankenstein", "Eunice", "Murray", "Griffin", "Ericka", "Abraham Van Helsing"],
+  },
+  {
+    source: "Homem-Aranha no Aranhaverso",
+    characters: [
+      "Miles Morales",
+      "Gwen Stacy",
+      "Peter B. Parker",
+      "Homem-Aranha Noir",
+      "Peni Parker",
+      "Spider-Ham",
+      "Rei do Crime",
+      "Mancha",
+      "Miguel O'Hara",
+      "Jessica Drew",
+      "Pavitr Prabhakar",
+      "Hobie Brown",
+      "Aaron Davis",
+      "Olivia Octavius",
+      "Rio Morales",
+      "Jefferson Davis",
+    ],
+  },
+  {
+    source: "Bicho Vai Pegar",
+    characters: ["Boog", "Elliot", "Beth", "Shaw", "McSquizzy", "Ian", "Giselle", "Sr. Weenie"],
+  },
+  {
+    source: "A Família Mitchell e a Revolta das Máquinas",
+    characters: ["Katie Mitchell", "Rick Mitchell", "Linda Mitchell", "Aaron Mitchell", "Monchi", "PAL", "Eric", "Deborahbot 5000", "Din Song"],
+  },
+  {
+    source: "Os Smurfs",
+    characters: ["Papai Smurf", "Smurfette", "Desastrado", "Gênio", "Gargamel", "Azrael"],
+  },
+  {
+    source: "Tá Dando Onda",
+    characters: ["Cody Maverick", "Lani", "Big Z", "Frango Joe"],
+  },
+  {
+    source: "Vivo",
+    characters: ["Vivo", "Gabi", "Marta", "Andrés"],
+  },
+];
+
+const whoAmIAnimationStudiosPtBr = animationStudioCharacterGroups.flatMap(
+  ({ source, characters }) => characters.map((name) => ({ name, source })),
+);
+
+const mimicaAnimationStudioNames = Array.from(
+  new Set(whoAmIAnimationStudiosPtBr.map(({ name }) => name)),
+);
+
 const whoAmIGeral = [
   ...whoAmIFilmesSeries.slice(0, 22),
   ...whoAmIDesenhosAnimes.slice(0, 22),
@@ -1962,16 +2462,16 @@ const whoAmIPools = {
   geral: whoAmIGeral,
   "filmes-series": whoAmIFilmesSeries,
   "desenhos-animes": whoAmIDesenhosAnimes,
-  "estudios-animacao": whoAmIAnimationStudios,
+  "estudios-animacao": whoAmIAnimationStudiosPtBr,
   "super-herois": whoAmISuperHerois,
   famosos: whoAmIFamosos,
   games: whoAmIGames,
 };
 
 mimicaPools["estudios-animacao"] = {
-  facil: whoAmIAnimationStudios.slice(0, 160),
-  medio: whoAmIAnimationStudios.slice(160, 320),
-  dificil: whoAmIAnimationStudios.slice(320),
+  facil: mimicaAnimationStudioNames.slice(0, 160),
+  medio: mimicaAnimationStudioNames.slice(160, 320),
+  dificil: mimicaAnimationStudioNames.slice(320),
 };
 
 const heroContent = {
@@ -2133,6 +2633,7 @@ const elements = {
     feedback: document.getElementById("whoami-setup-feedback"),
     goHub: document.getElementById("go-hub-from-whoami"),
     characterName: document.getElementById("whoami-character-name"),
+    characterSource: document.getElementById("whoami-character-source"),
     reroll: document.getElementById("whoami-reroll"),
     close: document.getElementById("whoami-close"),
   },
@@ -2299,9 +2800,32 @@ function shuffleArray(items) {
   return shuffled;
 }
 
-function buildShuffledDeck(items, currentItem = "") {
-  const nextItems = items.filter((item) => item !== currentItem);
+function buildShuffledDeck(items, currentItem = "", getKey = (item) => item) {
+  const currentKey = currentItem === "" || currentItem === null ? "" : getKey(currentItem);
+  const nextItems = items.filter((item) => getKey(item) !== currentKey);
   return shuffleArray(nextItems.length > 0 ? nextItems : items);
+}
+
+function getWhoAmIEntryKey(entry) {
+  if (entry && typeof entry === "object") {
+    return `${entry.source ?? ""}::${entry.name ?? ""}`;
+  }
+
+  return String(entry ?? "");
+}
+
+function normalizeWhoAmIEntry(entry) {
+  if (entry && typeof entry === "object") {
+    return {
+      name: entry.name ?? "",
+      source: entry.source ?? "",
+    };
+  }
+
+  return {
+    name: String(entry ?? ""),
+    source: "",
+  };
 }
 
 function setActiveScreen(screen) {
@@ -2586,6 +3110,7 @@ function getWhoAmICharacter(category) {
     state.whoami.remainingCharacters = buildShuffledDeck(
       pool,
       state.whoami.currentCharacter,
+      getWhoAmIEntryKey,
     );
   }
 
@@ -3015,8 +3540,11 @@ function openWhoAmISetup() {
 function renderWhoAmICharacter() {
   const category = syncWhoAmICategoryInput(elements.whoami.category.value);
   const character = getWhoAmICharacter(category);
+  const characterData = normalizeWhoAmIEntry(character);
 
-  elements.whoami.characterName.textContent = character;
+  elements.whoami.characterName.textContent = characterData.name;
+  elements.whoami.characterSource.textContent = characterData.source;
+  elements.whoami.characterSource.hidden = characterData.source === "";
   updateWhoAmIFeedback("");
   setActiveScreen("whoamiReveal");
   enterWhoAmIFullscreen();
