@@ -522,6 +522,7 @@ h2 {
 .mimica-word-wrap {
   display: grid;
   place-items: center;
+  gap: 0.7rem;
   padding: 0 1rem;
 }
 
@@ -532,6 +533,19 @@ h2 {
   color: #09131b;
   font-size: clamp(4.2rem, 14vw, 10rem);
   line-height: 0.84;
+  text-wrap: balance;
+}
+
+.mimica-word-source {
+  margin: 0;
+  max-width: min(90vw, 34rem);
+  text-align: center;
+  color: rgba(22, 50, 74, 0.54);
+  font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 

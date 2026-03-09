@@ -2446,9 +2446,7 @@ const whoAmIAnimationStudiosPtBr = animationStudioCharacterGroups.flatMap(
   ({ source, characters }) => characters.map((name) => ({ name, source })),
 );
 
-const mimicaAnimationStudioNames = Array.from(
-  new Set(whoAmIAnimationStudiosPtBr.map(({ name }) => name)),
-);
+const mimicaAnimationStudioEntries = [...whoAmIAnimationStudiosPtBr];
 
 const whoAmIGeral = [
   ...whoAmIFilmesSeries.slice(0, 22),
@@ -2469,9 +2467,9 @@ const whoAmIPools = {
 };
 
 mimicaPools["estudios-animacao"] = {
-  facil: mimicaAnimationStudioNames.slice(0, 160),
-  medio: mimicaAnimationStudioNames.slice(160, 320),
-  dificil: mimicaAnimationStudioNames.slice(320),
+  facil: mimicaAnimationStudioEntries.slice(0, 160),
+  medio: mimicaAnimationStudioEntries.slice(160, 320),
+  dificil: mimicaAnimationStudioEntries.slice(320),
 };
 
 const heroContent = {
@@ -2618,6 +2616,7 @@ const elements = {
     goSetupPrep: document.getElementById("go-setup-from-mimica-prep"),
     play: document.getElementById("mimica-play"),
     word: document.getElementById("mimica-word"),
+    wordSource: document.getElementById("mimica-word-source"),
     status: document.getElementById("mimica-status"),
     timerWrap: document.getElementById("mimica-timer-wrap"),
     timer: document.getElementById("mimica-timer"),
@@ -2828,6 +2827,28 @@ function normalizeWhoAmIEntry(entry) {
   };
 }
 
+function getMimicaEntryKey(entry) {
+  if (entry && typeof entry === "object") {
+    return `${entry.source ?? ""}::${entry.name ?? ""}`;
+  }
+
+  return String(entry ?? "");
+}
+
+function normalizeMimicaEntry(entry) {
+  if (entry && typeof entry === "object") {
+    return {
+      name: entry.name ?? "",
+      source: entry.source ?? "",
+    };
+  }
+
+  return {
+    name: String(entry ?? ""),
+    source: "",
+  };
+}
+
 function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
@@ -2958,7 +2979,11 @@ function getMimicaWord(category, difficulty) {
   }
 
   if (state.mimica.remainingWords.length === 0) {
-    state.mimica.remainingWords = buildShuffledDeck(words, state.mimica.currentWord);
+    state.mimica.remainingWords = buildShuffledDeck(
+      words,
+      state.mimica.currentWord,
+      getMimicaEntryKey,
+    );
   }
 
   const nextWord = state.mimica.remainingWords.pop() ?? words[randomIndex(words.length)];
@@ -3509,9 +3534,12 @@ function renderMimicaWord() {
   const category = syncMimicaCategoryInput(elements.mimica.category.value);
   const difficulty = syncMimicaDifficultyInput(elements.mimica.difficulty.value);
   const nextWord = getMimicaWord(category, difficulty);
+  const wordData = normalizeMimicaEntry(nextWord);
 
   resetMimicaRoundState();
-  elements.mimica.word.textContent = nextWord;
+  elements.mimica.word.textContent = wordData.name;
+  elements.mimica.wordSource.textContent = wordData.source;
+  elements.mimica.wordSource.hidden = wordData.source === "";
   renderMimicaTimer();
   updateMimicaVisualState();
   setActiveScreen("mimicaPlay");
