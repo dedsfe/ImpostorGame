@@ -1384,14 +1384,15 @@ const state = {
   whoami: {
     category: "geral",
     currentCharacter: "",
-    usedCharacters: [],
+    remainingCharacters: [],
   },
   mimica: {
     category: "geral",
     difficulty: "medio",
     timePerRound: 45,
     currentWord: "",
-    recentWords: [],
+    deckKey: "geral:medio",
+    remainingWords: [],
     timerId: null,
     timeRemaining: 45,
     currentDuration: 45,
@@ -1662,6 +1663,11 @@ function shuffleArray(items) {
   return shuffled;
 }
 
+function buildShuffledDeck(items, currentItem = "") {
+  const nextItems = items.filter((item) => item !== currentItem);
+  return shuffleArray(nextItems.length > 0 ? nextItems : items);
+}
+
 function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
@@ -1783,24 +1789,21 @@ function getWordFromCategory(category, difficulty) {
 function getMimicaWord(category, difficulty) {
   const categoryPool = mimicaPools[category] ?? mimicaPools.geral;
   const words = categoryPool[difficulty] ?? mimicaPools.geral.medio;
-  let candidates = words.filter(
-    (word) =>
-      !state.mimica.recentWords.includes(word) && word !== state.mimica.currentWord,
-  );
+  const deckKey = `${category}:${difficulty}`;
 
-  if (candidates.length === 0) {
-    state.mimica.recentWords = state.mimica.currentWord ? [state.mimica.currentWord] : [];
-    candidates = words.filter((word) => word !== state.mimica.currentWord);
+  if (state.mimica.deckKey !== deckKey) {
+    state.mimica.deckKey = deckKey;
+    state.mimica.remainingWords = [];
+    state.mimica.currentWord = "";
   }
 
-  if (candidates.length === 0) {
-    candidates = [...words];
+  if (state.mimica.remainingWords.length === 0) {
+    state.mimica.remainingWords = buildShuffledDeck(words, state.mimica.currentWord);
   }
 
-  const nextWord = candidates[randomIndex(candidates.length)];
+  const nextWord = state.mimica.remainingWords.pop() ?? words[randomIndex(words.length)];
 
   state.mimica.currentWord = nextWord;
-  state.mimica.recentWords = [...state.mimica.recentWords, nextWord].slice(-8);
   return nextWord;
 }
 
@@ -1810,8 +1813,9 @@ function syncMimicaCategoryInput(nextValue) {
     : "geral";
 
   if (state.mimica.category !== safeCategory) {
-    state.mimica.recentWords = [];
+    state.mimica.remainingWords = [];
     state.mimica.currentWord = "";
+    state.mimica.deckKey = `${safeCategory}:${state.mimica.difficulty}`;
   }
 
   state.mimica.category = safeCategory;
@@ -1826,8 +1830,9 @@ function syncMimicaDifficultyInput(nextValue) {
       : "medio";
 
   if (state.mimica.difficulty !== safeDifficulty) {
-    state.mimica.recentWords = [];
+    state.mimica.remainingWords = [];
     state.mimica.currentWord = "";
+    state.mimica.deckKey = `${state.mimica.category}:${safeDifficulty}`;
   }
 
   state.mimica.difficulty = safeDifficulty;
@@ -1929,7 +1934,7 @@ function syncWhoAmICategoryInput(nextValue) {
     : "geral";
 
   if (state.whoami.category !== safeCategory) {
-    state.whoami.usedCharacters = [];
+    state.whoami.remainingCharacters = [];
     state.whoami.currentCharacter = "";
   }
 
@@ -1940,30 +1945,18 @@ function syncWhoAmICategoryInput(nextValue) {
 
 function getWhoAmICharacter(category) {
   const pool = whoAmIPools[category] ?? whoAmIPools.geral;
-  let candidates = pool.filter(
-    (character) =>
-      !state.whoami.usedCharacters.includes(character) &&
-      character !== state.whoami.currentCharacter,
-  );
 
-  if (candidates.length === 0) {
-    state.whoami.usedCharacters = state.whoami.currentCharacter
-      ? [state.whoami.currentCharacter]
-      : [];
-    candidates = pool.filter((character) => character !== state.whoami.currentCharacter);
+  if (state.whoami.remainingCharacters.length === 0) {
+    state.whoami.remainingCharacters = buildShuffledDeck(
+      pool,
+      state.whoami.currentCharacter,
+    );
   }
 
-  if (candidates.length === 0) {
-    candidates = [...pool];
-  }
-
-  const nextCharacter = candidates[randomIndex(candidates.length)];
+  const nextCharacter =
+    state.whoami.remainingCharacters.pop() ?? pool[randomIndex(pool.length)];
 
   state.whoami.currentCharacter = nextCharacter;
-  if (!state.whoami.usedCharacters.includes(nextCharacter)) {
-    state.whoami.usedCharacters.push(nextCharacter);
-  }
-
   return nextCharacter;
 }
 
