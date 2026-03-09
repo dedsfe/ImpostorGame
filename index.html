@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hub de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=17" />
+    <link rel="stylesheet" href="./styles.css?v=18" />
   </head>
   <body>
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -53,6 +53,23 @@
             </div>
             <button id="open-police-game" class="primary-button" type="button">
               Entrar em Polícia e Ladrão
+            </button>
+          </article>
+
+          <article class="hub-card hub-card-city">
+            <p class="panel-label">Detetive social</p>
+            <h2>Cidade Dorme</h2>
+            <p class="support-copy">
+              A cidade dorme, o assassino ataca, o detetive investiga e todos
+              tentam descobrir quem está mentindo.
+            </p>
+            <div class="hub-meta">
+              <span class="hub-pill">Assassino + detetive</span>
+              <span class="hub-pill">Distribuição segura</span>
+              <span class="hub-pill">Narrador conduz</span>
+            </div>
+            <button id="open-city-game" class="primary-button" type="button">
+              Entrar em Cidade Dorme
             </button>
           </article>
 
@@ -380,6 +397,148 @@
       </section>
 
       <section
+        id="city-setup-screen"
+        class="screen"
+        aria-labelledby="city-setup-title"
+      >
+        <div class="setup-stage">
+          <div class="setup-copy">
+            <p class="panel-label">Cidade Dorme</p>
+            <h2 id="city-setup-title">Configure a rodada</h2>
+            <p class="setup-description">
+              Defina quantos jogadores participarão, quantos serão assassinos e
+              quantos serão detetives. O restante vira cidadão.
+            </p>
+            <div class="setup-badges" aria-label="Resumo da rodada">
+              <span class="setup-badge">5 a 20 jogadores</span>
+              <span class="setup-badge">Ao menos 1 assassino</span>
+              <span class="setup-badge">Detetive opcional</span>
+              <span class="setup-badge">Distribuição segura</span>
+            </div>
+            <div class="setup-points">
+              <article class="setup-point">
+                <strong>Narrador fora do app</strong>
+                <p>O app distribui os papéis e depois entrega um roteiro simples para conduzir a rodada.</p>
+              </article>
+              <article class="setup-point">
+                <strong>Mesma lógica do hub</strong>
+                <p>Preparar o jogador, mostrar o papel e passar o celular para o próximo.</p>
+              </article>
+            </div>
+          </div>
+
+          <form id="city-setup-form" class="setup-form setup-card">
+            <label class="field-group" for="city-player-count">
+              <span class="field-label">Número de jogadores</span>
+              <div class="stepper">
+                <button
+                  id="city-decrease-players"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir jogadores"
+                >
+                  -
+                </button>
+                <input
+                  id="city-player-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="5"
+                  max="20"
+                  value="8"
+                />
+                <button
+                  id="city-increase-players"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar jogadores"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <label class="field-group" for="city-assassin-count">
+              <span class="field-label">Quantidade de assassinos</span>
+              <div class="stepper">
+                <button
+                  id="city-decrease-assassins"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir assassinos"
+                >
+                  -
+                </button>
+                <input
+                  id="city-assassin-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="19"
+                  value="2"
+                />
+                <button
+                  id="city-increase-assassins"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar assassinos"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <label class="field-group" for="city-detective-count">
+              <span class="field-label">Quantidade de detetives</span>
+              <div class="stepper">
+                <button
+                  id="city-decrease-detectives"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir detetives"
+                >
+                  -
+                </button>
+                <input
+                  id="city-detective-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="0"
+                  max="19"
+                  value="1"
+                />
+                <button
+                  id="city-increase-detectives"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar detetives"
+                >
+                  +
+                </button>
+              </div>
+            </label>
+
+            <p id="city-role-summary" class="field-hint">
+              Total: 8 jogadores. Serão 2 assassinos, 1 detetive e 5 cidadãos.
+            </p>
+            <p id="city-setup-feedback" class="feedback" aria-live="polite"></p>
+
+            <div class="action-row">
+              <button id="start-city-game" class="primary-button" type="submit">
+                Iniciar distribuição
+              </button>
+              <button id="go-hub-from-city" class="ghost-button" type="button">
+                Hub de jogos
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section
         id="whoami-setup-screen"
         class="screen"
         aria-labelledby="whoami-setup-title"
@@ -678,6 +837,7 @@
           <p id="end-description" class="support-copy">
             Agora afastem o celular e comecem a rodada.
           </p>
+          <ol id="end-instructions" class="end-instructions" hidden></ol>
 
           <div id="end-summary-grid" class="summary-grid"></div>
 
@@ -693,6 +853,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=12"></script>
+    <script src="./script.js?v=13"></script>
   </body>
 </html>

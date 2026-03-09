@@ -185,6 +185,7 @@ h2 {
 #hub-screen,
 #impostor-setup-screen,
 #police-setup-screen,
+#city-setup-screen,
 #whoami-setup-screen,
 #mimica-setup-screen,
 #mimica-prep-screen {
@@ -243,6 +244,10 @@ h2 {
 
 .hub-card-police {
   background: rgba(241, 248, 255, 0.9);
+}
+
+.hub-card-city {
+  background: rgba(255, 247, 239, 0.94);
 }
 
 .hub-card-whoami {
@@ -421,6 +426,21 @@ h2 {
 
 #end-screen .summary-grid {
   width: 100%;
+}
+
+.end-instructions {
+  width: 100%;
+  margin: 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.45rem;
+  color: var(--ink-soft);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.end-instructions li {
+  padding-left: 0.1rem;
 }
 
 .mimica-prep-panel {
@@ -1008,6 +1028,7 @@ h2 {
   #hub-screen,
   #impostor-setup-screen,
   #police-setup-screen,
+  #city-setup-screen,
   #whoami-setup-screen,
   #mimica-setup-screen,
   #mimica-prep-screen {
