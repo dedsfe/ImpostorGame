@@ -2518,6 +2518,7 @@ export const hubGames = [
     title: "Mímica Rápida",
     description: "Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.",
     cardImage: "./assets/mimica.png",
+    hoverVideo: "./assets/Mimic_Touches_Invisible_Wall.mp4",
     modalImage: "./assets/HorizontalImgs/Mimica Rápida.png",
     openScreen: "mimicaSetup",
   },
