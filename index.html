@@ -37,6 +37,22 @@
         font-family: "Rockwell", "Georgia", serif !important;
         font-size: 1.1rem !important;
         letter-spacing: 0.01em !important;
+        cursor: pointer !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        transition:
+          background-color 180ms ease,
+          border-color 180ms ease,
+          transform 180ms ease !important;
+      }
+
+      .app-nav-title:hover {
+        background: rgba(14, 14, 14, 0.58) !important;
+      }
+
+      .app-nav-title:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.48) !important;
+        outline-offset: 3px !important;
       }
 
       .hero {
@@ -317,7 +333,9 @@
 
     <main class="shell">
       <header class="app-nav" aria-label="Aplicativo">
-        <div class="app-nav-title">Noite de Jogos</div>
+        <button id="go-home-nav" class="app-nav-title" type="button" aria-label="Voltar para a home">
+          Noite de Jogos
+        </button>
       </header>
 
       <header class="hero">

@@ -1,5 +1,6 @@
 export function getElements() {
   return {
+    navHome: document.getElementById("go-home-nav"),
     heroEyebrow: document.getElementById("hero-eyebrow"),
     heroTitle: document.getElementById("hero-title"),
     heroCopy: document.getElementById("hero-copy"),

@@ -1200,6 +1200,7 @@ elements.impostor.form.addEventListener("submit", (event) => {
 });
 
 elements.impostor.goHub.addEventListener("click", openHub);
+elements.navHome.addEventListener("click", openHub);
 
 elements.police.decreaseCount.addEventListener("click", () => {
   syncPoliceRoleInputs("police", Number(elements.police.policeCount.value) - 1);

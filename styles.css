@@ -104,6 +104,22 @@ body.is-mimica-play .ambient {
   font-family: "Rockwell", "Georgia", serif;
   font-size: 1.1rem;
   letter-spacing: 0.01em;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.app-nav-title:hover {
+  background: rgba(14, 14, 14, 0.58);
+}
+
+.app-nav-title:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.48);
+  outline-offset: 3px;
 }
 
 body.is-whoami-reveal .shell {
