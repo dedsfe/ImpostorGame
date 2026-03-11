@@ -447,19 +447,25 @@ h2 {
 
 .hub-modal-start {
   min-height: 3.35rem;
+  width: auto;
+  min-width: 14rem;
+  padding: 0 1.5rem;
+  justify-self: start;
   border: 0;
   border-radius: 999px;
-  background: rgba(12, 12, 12, 0.84);
-  color: #ffffff;
+  background: #f3f3f3;
+  color: #09131b;
   font-weight: 800;
   cursor: pointer;
   transition:
     transform var(--transition),
-    opacity var(--transition);
+    opacity var(--transition),
+    background-color var(--transition);
 }
 
 .hub-modal-start:hover {
   transform: translateY(-1px);
+  background: #ffffff;
 }
 
 .setup-stage {
