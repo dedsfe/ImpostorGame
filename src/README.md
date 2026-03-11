@@ -28,10 +28,18 @@ src/
 
 ## Observação
 
-O app atual ainda executa via:
+Entrada atual:
 
 - `index.html`
-- `styles.css`
 - `script.js`
 
-Essa pasta existe para orientar a migração sem quebrar o comportamento já validado.
+Módulos já extraídos:
+
+- `src/app.js`
+- `src/data/catalogs.js`
+- `src/shared/utils.js`
+- `src/viewmodels/app-state.js`
+- `src/viewmodels/game-factories.js`
+- `src/views/elements.js`
+
+O CSS ainda permanece em `styles.css` na raiz, e parte da lógica de UI continua em `src/app.js`.
