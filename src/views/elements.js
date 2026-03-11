@@ -19,8 +19,10 @@ export function getElements() {
     hub: {
       grid: document.getElementById("hub-grid"),
       modal: document.getElementById("hub-modal"),
+      modalDialog: document.getElementById("hub-modal-dialog"),
       modalClose: document.getElementById("hub-modal-close"),
       modalImage: document.getElementById("hub-modal-image"),
+      modalLabel: document.getElementById("hub-modal-label"),
       modalTitle: document.getElementById("hub-modal-title"),
       modalDescription: document.getElementById("hub-modal-description"),
       modalStart: document.getElementById("hub-modal-start"),

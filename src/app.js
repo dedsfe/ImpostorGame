@@ -129,6 +129,8 @@ function renderHubModal() {
   if (!isOpen || !game) {
     elements.hub.modalImage.removeAttribute("src");
     elements.hub.modalImage.alt = "";
+    elements.hub.modal.removeAttribute("data-media-fit");
+    elements.hub.modalLabel.textContent = "";
     elements.hub.modalTitle.textContent = "";
     elements.hub.modalDescription.textContent = "";
     elements.hub.modalStart.dataset.gameId = "";
@@ -136,9 +138,12 @@ function renderHubModal() {
   }
 
   const imageSrc = game.modalImage ?? game.cardImage;
+  const mediaFit = game.modalImage ? "cover" : "contain";
 
+  elements.hub.modal.dataset.mediaFit = mediaFit;
   elements.hub.modalImage.src = imageSrc;
   elements.hub.modalImage.alt = game.title;
+  elements.hub.modalLabel.textContent = game.label;
   elements.hub.modalTitle.textContent = game.title;
   elements.hub.modalDescription.textContent = game.description;
   elements.hub.modalStart.dataset.gameId = game.id;

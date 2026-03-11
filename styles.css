@@ -355,11 +355,10 @@ h2 {
 
 .hub-modal-dialog {
   position: relative;
-  width: min(100%, 44rem);
+  width: min(100%, 58rem);
   border-radius: 2rem;
   overflow: hidden;
-  background: rgba(18, 18, 18, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
   animation: pop-in 220ms ease;
 }
@@ -394,21 +393,54 @@ h2 {
   object-fit: contain;
 }
 
+.hub-modal[data-media-fit="cover"] .hub-modal-image {
+  object-fit: cover;
+}
+
+.hub-modal-scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 55%;
+  background: linear-gradient(to top, rgba(4, 4, 4, 0.95), rgba(4, 4, 4, 0.08));
+}
+
+.hub-modal-heading {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 0.45rem;
+  padding: 1.35rem;
+}
+
+.hub-modal-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 6px 22px rgba(0, 0, 0, 0.42);
+}
+
 .hub-modal-body {
   display: grid;
   gap: 1rem;
-  padding: 1.2rem 1.2rem 1.3rem;
+  padding: 1.3rem;
+  background: #d7d7d7;
 }
 
-.hub-modal-body h2 {
+.hub-modal-heading h2 {
   color: #ffffff;
   font-size: clamp(2rem, 4vw, 2.8rem);
   line-height: 0.95;
+  text-shadow:
+    0 0 16px rgba(0, 0, 0, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.52);
 }
 
 .hub-modal-description {
   margin: 0;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(9, 19, 27, 0.72);
   line-height: 1.42;
 }
 
@@ -416,8 +448,8 @@ h2 {
   min-height: 3.35rem;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  color: #09131b;
+  background: rgba(12, 12, 12, 0.84);
+  color: #ffffff;
   font-weight: 800;
   cursor: pointer;
   transition:
@@ -1365,6 +1397,10 @@ h2 {
 
   .hub-modal-body {
     gap: 0.85rem;
+    padding: 1rem;
+  }
+
+  .hub-modal-heading {
     padding: 1rem;
   }
 

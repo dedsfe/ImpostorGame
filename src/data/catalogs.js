@@ -2488,7 +2488,7 @@ export const hubGames = [
     title: "Polícia e Ladrão",
     description: "O app distribui aleatoriamente quem é polícia, ladrão e vítima na rodada.",
     cardImage: "./assets/policiaeladrao.png",
-    modalImage: null,
+    modalImage: "./assets/HorizontalImgs/policiaeladrao.png",
     openScreen: "policeSetup",
   },
   {

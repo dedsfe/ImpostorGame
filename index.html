@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=26" />
+    <link rel="stylesheet" href="./styles.css?v=27" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -126,10 +126,10 @@
       }
 
       .hub-modal-dialog {
-        width: min(100%, 44rem) !important;
+        width: min(100%, 58rem) !important;
         border-radius: 2rem !important;
         overflow: hidden !important;
-        background: rgba(18, 18, 18, 0.94) !important;
+        background: transparent !important;
       }
 
       .hub-modal-close {
@@ -146,6 +146,7 @@
       }
 
       .hub-modal-media {
+        position: relative !important;
         aspect-ratio: 16 / 9 !important;
         background: #090909 !important;
       }
@@ -156,28 +157,54 @@
         object-fit: contain !important;
       }
 
-      .hub-modal-body {
+      .hub-modal-scrim {
+        position: absolute !important;
+        inset: auto 0 0 !important;
+        height: 55% !important;
+        background: linear-gradient(to top, rgba(4, 4, 4, 0.95), rgba(4, 4, 4, 0.08)) !important;
+      }
+
+      .hub-modal-heading {
+        position: absolute !important;
+        inset: auto 0 0 !important;
         display: grid !important;
-        gap: 1rem !important;
-        padding: 1.2rem !important;
+        gap: 0.45rem !important;
+        padding: 1.35rem !important;
+      }
+
+      .hub-modal-label {
+        margin: 0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.16em !important;
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        color: rgba(255, 255, 255, 0.72) !important;
       }
 
       #hub-modal-title {
         margin: 0 !important;
         color: #ffffff !important;
+        text-shadow: 0 8px 28px rgba(0, 0, 0, 0.52) !important;
+      }
+
+      .hub-modal-body {
+        display: grid !important;
+        gap: 1rem !important;
+        padding: 1.3rem !important;
+        background: #d7d7d7 !important;
       }
 
       .hub-modal-description {
         margin: 0 !important;
-        color: rgba(255, 255, 255, 0.72) !important;
+        color: rgba(9, 19, 27, 0.72) !important;
       }
 
       .hub-modal-start {
         min-height: 3.35rem !important;
         border-radius: 999px !important;
         border: 0 !important;
-        background: #ffffff !important;
-        color: #09131b !important;
+        background: rgba(12, 12, 12, 0.84) !important;
+        color: #ffffff !important;
         font-weight: 800 !important;
       }
     </style>
@@ -199,19 +226,24 @@
 
       <div id="hub-modal" class="hub-modal" hidden>
         <div
+          id="hub-modal-dialog"
           class="hub-modal-dialog"
           role="dialog"
           aria-modal="true"
           aria-labelledby="hub-modal-title"
         >
-          <button id="hub-modal-close" class="hub-modal-close" type="button" aria-label="Fechar">
-            ×
-          </button>
           <div class="hub-modal-media">
             <img id="hub-modal-image" class="hub-modal-image" src="" alt="" />
+            <div class="hub-modal-scrim"></div>
+            <div class="hub-modal-heading">
+              <p id="hub-modal-label" class="hub-modal-label"></p>
+              <h2 id="hub-modal-title"></h2>
+            </div>
+            <button id="hub-modal-close" class="hub-modal-close" type="button" aria-label="Fechar">
+              ×
+            </button>
           </div>
           <div class="hub-modal-body">
-            <h2 id="hub-modal-title"></h2>
             <p id="hub-modal-description" class="hub-modal-description"></p>
             <button id="hub-modal-start" class="hub-modal-start" type="button">
               Iniciar jogo
