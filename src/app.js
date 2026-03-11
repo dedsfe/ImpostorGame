@@ -16,6 +16,7 @@ const state = createInitialState();
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
+let lastHubModalTrigger = null;
 
 function clampInteger(value, min, max, fallback = min) {
   const parsed = Number.parseInt(value, 10);
@@ -95,6 +96,8 @@ function createHubCard(game) {
   image.src = game.cardImage;
   image.alt = "";
   image.setAttribute("aria-hidden", "true");
+  image.loading = "lazy";
+  image.decoding = "async";
   scrim.className = "hub-card-scrim";
 
   content.className = "hub-card-content";
@@ -154,11 +157,37 @@ function renderHubModal() {
   });
 }
 
-function openHubModal(gameId) {
+function getHubModalFocusableElements() {
+  return [
+    elements.hub.modalClose,
+    elements.hub.modalStart,
+  ].filter((element) => element && !element.hidden && !element.disabled);
+}
+
+function preloadHubImages() {
+  const imageSources = new Set();
+
+  hubGames.forEach((game) => {
+    imageSources.add(game.cardImage);
+    imageSources.add(game.modalImage ?? game.cardImage);
+  });
+
+  imageSources.forEach((src) => {
+    if (!src) {
+      return;
+    }
+
+    const image = new Image();
+    image.src = src;
+  });
+}
+
+function openHubModal(gameId, trigger = null) {
   if (!getHubGame(gameId)) {
     return;
   }
 
+  lastHubModalTrigger = trigger instanceof HTMLElement ? trigger : document.activeElement;
   state.hubModalGameId = gameId;
   state.hubModalOpen = true;
   renderHubModal();
@@ -172,6 +201,13 @@ function closeHubModal() {
   state.hubModalOpen = false;
   state.hubModalGameId = null;
   renderHubModal();
+
+  queueMicrotask(() => {
+    if (lastHubModalTrigger instanceof HTMLElement && lastHubModalTrigger.isConnected) {
+      lastHubModalTrigger.focus();
+    }
+    lastHubModalTrigger = null;
+  });
 }
 
 function openGameFromHubScreen(screen) {
@@ -1100,7 +1136,8 @@ elements.hub.grid.addEventListener("click", (event) => {
     return;
   }
 
-  openHubModal(card.dataset.gameId);
+  const trigger = event.target.closest(".hub-card-action") ?? card;
+  openHubModal(card.dataset.gameId, trigger);
 });
 
 elements.hub.grid.addEventListener("keydown", (event) => {
@@ -1111,7 +1148,7 @@ elements.hub.grid.addEventListener("keydown", (event) => {
   }
 
   event.preventDefault();
-  openHubModal(card.dataset.gameId);
+  openHubModal(card.dataset.gameId, card);
 });
 
 elements.hub.modal.addEventListener("click", (event) => {
@@ -1312,11 +1349,41 @@ elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && state.hubModalOpen) {
+  if (!state.hubModalOpen) {
+    return;
+  }
+
+  if (event.key === "Escape") {
     closeHubModal();
+    return;
+  }
+
+  if (event.key !== "Tab") {
+    return;
+  }
+
+  const focusable = getHubModalFocusableElements();
+
+  if (focusable.length === 0) {
+    return;
+  }
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+    return;
+  }
+
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
   }
 });
 
+preloadHubImages();
 renderHubCards();
 renderHubModal();
 syncImpostorPlayerInput(elements.impostor.playerCount.value);

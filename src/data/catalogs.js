@@ -2479,7 +2479,7 @@ export const hubGames = [
     title: "Impostor",
     description: "Um jogador não recebe a palavra e precisa blefar durante a conversa.",
     cardImage: "./assets/impostor.png",
-    modalImage: null,
+    modalImage: "./assets/HorizontalImgs/Impostor.png",
     openScreen: "impostorSetup",
   },
   {
@@ -2498,7 +2498,7 @@ export const hubGames = [
     description:
       "A cidade dorme, o assassino ataca, o detetive investiga e todos tentam descobrir quem está mentindo.",
     cardImage: "./assets/cidadedorme.png",
-    modalImage: null,
+    modalImage: "./assets/HorizontalImgs/CidadeDorme.png",
     openScreen: "citySetup",
   },
   {
@@ -2508,7 +2508,7 @@ export const hubGames = [
     description:
       "Escolha a categoria, coloque o celular na testa e revele um personagem em tela branca.",
     cardImage: "./assets/quemsoueu.png",
-    modalImage: null,
+    modalImage: "./assets/HorizontalImgs/Quem sou Eu.png",
     openScreen: "whoamiSetup",
   },
   {
@@ -2517,7 +2517,7 @@ export const hubGames = [
     title: "Mímica Rápida",
     description: "Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.",
     cardImage: "./assets/mimica.png",
-    modalImage: null,
+    modalImage: "./assets/HorizontalImgs/Mimica Rápida.png",
     openScreen: "mimicaSetup",
   },
 ];
