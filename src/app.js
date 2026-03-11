@@ -1,4 +1,10 @@
-import { heroContent, mimicaPools, whoAmIPools, wordPools } from "./data/catalogs.js";
+import {
+  heroContent,
+  hubGames,
+  mimicaPools,
+  whoAmIPools,
+  wordPools,
+} from "./data/catalogs.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
 import {
@@ -9,6 +15,7 @@ import {
 const state = createInitialState();
 
 const elements = getElements();
+const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
 
 function clampInteger(value, min, max, fallback = min) {
   const parsed = Number.parseInt(value, 10);
@@ -60,6 +67,144 @@ function setHero(content) {
   elements.heroEyebrow.textContent = content.eyebrow;
   elements.heroTitle.textContent = content.title;
   elements.heroCopy.textContent = content.copy;
+}
+
+function getHubGame(gameId) {
+  return hubGamesById.get(gameId) ?? null;
+}
+
+function createHubCard(game) {
+  const article = document.createElement("article");
+  const media = document.createElement("div");
+  const image = document.createElement("img");
+  const scrim = document.createElement("div");
+  const content = document.createElement("div");
+  const label = document.createElement("p");
+  const title = document.createElement("h2");
+  const action = document.createElement("button");
+
+  article.className = "hub-card";
+  article.dataset.gameId = game.id;
+  article.tabIndex = 0;
+  article.setAttribute("role", "button");
+  article.setAttribute("aria-haspopup", "dialog");
+  article.setAttribute("aria-label", `Ver jogo ${game.title}`);
+
+  media.className = "hub-card-media has-image";
+  image.className = "hub-card-media-image";
+  image.src = game.cardImage;
+  image.alt = "";
+  image.setAttribute("aria-hidden", "true");
+  scrim.className = "hub-card-scrim";
+
+  content.className = "hub-card-content";
+  label.className = "hub-card-label";
+  label.textContent = game.label;
+  title.className = "hub-card-title";
+  title.textContent = game.title;
+
+  action.className = "hub-card-action";
+  action.type = "button";
+  action.textContent = "Ver jogo";
+  action.setAttribute("aria-label", `Ver jogo ${game.title}`);
+
+  content.append(label, title, action);
+  media.append(image, scrim, content);
+  article.append(media);
+
+  return article;
+}
+
+function renderHubCards() {
+  elements.hub.grid.replaceChildren(...hubGames.map((game) => createHubCard(game)));
+}
+
+function renderHubModal() {
+  const game = getHubGame(state.hubModalGameId);
+  const isOpen = state.hubModalOpen && Boolean(game);
+
+  elements.hub.modal.hidden = !isOpen;
+  document.body.classList.toggle("is-hub-modal-open", isOpen);
+
+  if (!isOpen || !game) {
+    elements.hub.modalImage.removeAttribute("src");
+    elements.hub.modalImage.alt = "";
+    elements.hub.modalTitle.textContent = "";
+    elements.hub.modalDescription.textContent = "";
+    elements.hub.modalStart.dataset.gameId = "";
+    return;
+  }
+
+  const imageSrc = game.modalImage ?? game.cardImage;
+
+  elements.hub.modalImage.src = imageSrc;
+  elements.hub.modalImage.alt = game.title;
+  elements.hub.modalTitle.textContent = game.title;
+  elements.hub.modalDescription.textContent = game.description;
+  elements.hub.modalStart.dataset.gameId = game.id;
+  queueMicrotask(() => {
+    if (state.hubModalOpen && state.hubModalGameId === game.id) {
+      elements.hub.modalStart.focus();
+    }
+  });
+}
+
+function openHubModal(gameId) {
+  if (!getHubGame(gameId)) {
+    return;
+  }
+
+  state.hubModalGameId = gameId;
+  state.hubModalOpen = true;
+  renderHubModal();
+}
+
+function closeHubModal() {
+  if (!state.hubModalOpen && state.hubModalGameId === null) {
+    return;
+  }
+
+  state.hubModalOpen = false;
+  state.hubModalGameId = null;
+  renderHubModal();
+}
+
+function openGameFromHubScreen(screen) {
+  if (screen === "impostorSetup") {
+    openImpostorSetup();
+    return;
+  }
+
+  if (screen === "policeSetup") {
+    openPoliceSetup();
+    return;
+  }
+
+  if (screen === "citySetup") {
+    openCitySetup();
+    return;
+  }
+
+  if (screen === "mimicaSetup") {
+    openMimicaSetup();
+    return;
+  }
+
+  if (screen === "whoamiSetup") {
+    openWhoAmISetup();
+  }
+}
+
+function startHubModalGame() {
+  const game = getHubGame(state.hubModalGameId);
+
+  if (!game) {
+    closeHubModal();
+    return;
+  }
+
+  closeHubModal();
+  openGameFromHubScreen(game.openScreen);
 }
 
 function getFullscreenElement() {
@@ -199,6 +344,11 @@ function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
+
+  if (screen !== "hub") {
+    closeHubModal();
+  }
+
   Object.entries(elements.screens).forEach(([key, element]) => {
     element.classList.toggle("is-active", key === screen);
   });
@@ -628,6 +778,7 @@ function syncCityRoleInputs(preferredField = "players", nextValue = null) {
 function openHub() {
   state.currentGame = null;
   state.currentPlayer = 0;
+  closeHubModal();
   clearRoleTone();
   setTurnPhase("prep");
   clearMimicaTimer();
@@ -937,11 +1088,35 @@ function startWhoAmIGame() {
   renderWhoAmICharacter();
 }
 
-elements.openImpostorGame.addEventListener("click", openImpostorSetup);
-elements.openPoliceGame.addEventListener("click", openPoliceSetup);
-elements.openCityGame.addEventListener("click", openCitySetup);
-elements.openMimicaGame.addEventListener("click", openMimicaSetup);
-elements.openWhoAmIGame.addEventListener("click", openWhoAmISetup);
+elements.hub.grid.addEventListener("click", (event) => {
+  const card = event.target.closest(".hub-card[data-game-id]");
+
+  if (!card) {
+    return;
+  }
+
+  openHubModal(card.dataset.gameId);
+});
+
+elements.hub.grid.addEventListener("keydown", (event) => {
+  const card = event.target.closest(".hub-card[data-game-id]");
+
+  if (!card || event.target !== card || (event.key !== "Enter" && event.key !== " ")) {
+    return;
+  }
+
+  event.preventDefault();
+  openHubModal(card.dataset.gameId);
+});
+
+elements.hub.modal.addEventListener("click", (event) => {
+  if (event.target === elements.hub.modal) {
+    closeHubModal();
+  }
+});
+
+elements.hub.modalClose.addEventListener("click", closeHubModal);
+elements.hub.modalStart.addEventListener("click", startHubModalGame);
 
 elements.impostor.decreasePlayers.addEventListener("click", () => {
   syncImpostorPlayerInput(Number(elements.impostor.playerCount.value) - 1);
@@ -1131,6 +1306,14 @@ elements.turn.goHub.addEventListener("click", openHub);
 elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && state.hubModalOpen) {
+    closeHubModal();
+  }
+});
+
+renderHubCards();
+renderHubModal();
 syncImpostorPlayerInput(elements.impostor.playerCount.value);
 syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);

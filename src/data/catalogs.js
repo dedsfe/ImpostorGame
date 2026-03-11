@@ -2472,6 +2472,56 @@ mimicaPools["estudios-animacao"] = {
   dificil: mimicaAnimationStudioEntries.slice(320),
 };
 
+export const hubGames = [
+  {
+    id: "impostor",
+    label: "Palavra secreta",
+    title: "Impostor",
+    description: "Um jogador não recebe a palavra e precisa blefar durante a conversa.",
+    cardImage: "./assets/impostor.png",
+    modalImage: null,
+    openScreen: "impostorSetup",
+  },
+  {
+    id: "police",
+    label: "Papéis secretos",
+    title: "Polícia e Ladrão",
+    description: "O app distribui aleatoriamente quem é polícia, ladrão e vítima na rodada.",
+    cardImage: "./assets/policiaeladrao.png",
+    modalImage: null,
+    openScreen: "policeSetup",
+  },
+  {
+    id: "city",
+    label: "Detetive social",
+    title: "Cidade Dorme",
+    description:
+      "A cidade dorme, o assassino ataca, o detetive investiga e todos tentam descobrir quem está mentindo.",
+    cardImage: "./assets/cidadedorme.png",
+    modalImage: null,
+    openScreen: "citySetup",
+  },
+  {
+    id: "whoami",
+    label: "Teste da testa",
+    title: "Quem sou eu?",
+    description:
+      "Escolha a categoria, coloque o celular na testa e revele um personagem em tela branca.",
+    cardImage: "./assets/quemsoueu.png",
+    modalImage: null,
+    openScreen: "whoamiSetup",
+  },
+  {
+    id: "mimica",
+    label: "Mímica em grupo",
+    title: "Mímica Rápida",
+    description: "Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.",
+    cardImage: "./assets/mimica.png",
+    modalImage: null,
+    openScreen: "mimicaSetup",
+  },
+];
+
 export const heroContent = {
   hub: {
     eyebrow: "Jogos locais",

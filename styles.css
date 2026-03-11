@@ -48,6 +48,10 @@ body.is-mimica-play {
   overflow: hidden;
 }
 
+body.is-hub-modal-open:not(.is-whoami-reveal):not(.is-mimica-play) {
+  overflow: hidden;
+}
+
 button,
 input {
   font: inherit;
@@ -217,39 +221,46 @@ h2 {
 }
 
 .hub-grid {
-  width: min(100%, 74rem);
+  width: min(100%, 78rem);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.35rem;
 }
 
 .hub-card {
-  display: grid;
-  grid-template-rows: auto auto minmax(3.8rem, 1fr) auto;
-  align-content: stretch;
-  gap: 0.6rem;
-  padding: 1rem;
+  position: relative;
+  display: block;
+  padding: 0;
   border: 0;
-  border-radius: 1.9rem;
-  background: #f2f2f2;
+  border-radius: 2rem;
+  background: #0c0c0c;
   box-shadow: none;
-  min-height: 24.5rem;
-  height: 100%;
+  min-height: 28rem;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    opacity var(--transition);
+}
+
+.hub-card:hover {
+  transform: scale(1.01);
+}
+
+.hub-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 3px;
 }
 
 .hub-card-media {
   position: relative;
-  aspect-ratio: 2 / 3;
-  border-radius: 1.55rem;
-  background: transparent;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: #090909;
   overflow: hidden;
   border: 0;
-  display: grid;
-  place-items: center;
-}
-
-.hub-card-media.has-image .hub-card-media-mark {
-  display: none;
 }
 
 .hub-card-media-image {
@@ -260,31 +271,162 @@ h2 {
   object-fit: contain;
 }
 
-.hub-card-media-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 3.25rem;
-  min-height: 3.25rem;
-  padding: 0.7rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+.hub-card-scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 48%;
+  background: linear-gradient(to top, rgba(4, 4, 4, 0.94), rgba(4, 4, 4, 0.08));
+  pointer-events: none;
+}
+
+.hub-card-content {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 0.58rem;
+  padding: 1.2rem;
+  z-index: 1;
+}
+
+.hub-card-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 6px 22px rgba(0, 0, 0, 0.42);
+}
+
+.hub-card-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 4vw, 3rem);
   color: #ffffff;
-  font-size: 0.95rem;
+  line-height: 0.92;
+  text-shadow:
+    0 0 16px rgba(0, 0, 0, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.52);
+  text-wrap: balance;
+}
+
+.hub-card-action {
+  width: 100%;
+  min-height: 3.2rem;
+  height: 3.2rem;
+  padding: 0 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.42);
+  color: #ffffff;
   font-weight: 800;
-  letter-spacing: 0.18em;
-  text-indent: 0.18em;
+  cursor: pointer;
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
 }
 
-.hub-card .panel-label {
-  color: rgba(9, 19, 27, 0.5);
-  margin-top: 0.1rem;
+.hub-card-action:hover {
+  background: rgba(12, 12, 12, 0.52);
 }
 
-.hub-card h2 {
-  font-size: clamp(2rem, 4vw, 2.7rem);
+.hub-card-action:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.52);
+  outline-offset: 2px;
+}
+
+.hub-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(4, 4, 4, 0.74);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  z-index: 40;
+}
+
+.hub-modal[hidden] {
+  display: none;
+}
+
+.hub-modal-dialog {
+  position: relative;
+  width: min(100%, 44rem);
+  border-radius: 2rem;
+  overflow: hidden;
+  background: rgba(18, 18, 18, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  animation: pop-in 220ms ease;
+}
+
+.hub-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 1;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.44);
+  color: #ffffff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.hub-modal-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #090909;
+}
+
+.hub-modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hub-modal-body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem 1.2rem 1.3rem;
+}
+
+.hub-modal-body h2 {
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 0.95;
+}
+
+.hub-modal-description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.42;
+}
+
+.hub-modal-start {
+  min-height: 3.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
   color: #09131b;
-  align-self: end;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    opacity var(--transition);
+}
+
+.hub-modal-start:hover {
+  transform: translateY(-1px);
 }
 
 .setup-stage {
@@ -856,22 +998,6 @@ h2 {
   box-shadow: 0 16px 26px rgba(32, 201, 93, 0.3);
 }
 
-.hub-card .primary-button {
-  width: 100%;
-  margin-top: auto;
-  height: 3.4rem;
-  min-height: 3.4rem;
-  padding: 0 1rem;
-  background: #0b0b0b;
-  color: #ffffff;
-  box-shadow: none;
-}
-
-.hub-card .primary-button:hover {
-  box-shadow: none;
-  background: #161616;
-}
-
 .secondary-button {
   background: var(--accent-soft);
   color: #805b00;
@@ -1117,6 +1243,22 @@ h2 {
     grid-template-columns: 1fr;
   }
 
+  .hub-card {
+    min-height: 0;
+  }
+
+  .hub-card-content {
+    padding: 1rem;
+  }
+
+  .hub-modal {
+    padding: 0.9rem;
+  }
+
+  .hub-modal-dialog {
+    width: min(100%, 36rem);
+  }
+
   .setup-stage {
     width: min(100%, 34rem);
     grid-template-columns: 1fr;
@@ -1187,6 +1329,43 @@ h2 {
   #turn-panel,
   #end-screen .panel {
     width: 100%;
+  }
+
+  .hub-card {
+    border-radius: 1.4rem;
+  }
+
+  .hub-card-content {
+    padding: 0.9rem;
+  }
+
+  .hub-card-title {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+  }
+
+  .hub-card-action,
+  .hub-modal-start {
+    min-height: 3rem;
+    height: 3rem;
+  }
+
+  .hub-modal {
+    padding: 0.7rem;
+  }
+
+  .hub-modal-dialog {
+    width: 100%;
+    border-radius: 1.4rem;
+  }
+
+  .hub-modal-close {
+    top: 0.7rem;
+    right: 0.7rem;
+  }
+
+  .hub-modal-body {
+    gap: 0.85rem;
+    padding: 1rem;
   }
 
   #turn-screen .panel,

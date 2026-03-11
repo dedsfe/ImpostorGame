@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=25" />
+    <link rel="stylesheet" href="./styles.css?v=26" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -33,25 +33,31 @@
         background: transparent !important;
       }
 
-      .hub-card {
-        background: #f2f2f2 !important;
-        border-radius: 1.9rem !important;
-        border: 0 !important;
-        box-shadow: none !important;
+      .hub-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)) !important;
+        gap: 1.25rem !important;
       }
 
-      .hub-card-media {
-        display: grid !important;
-        place-items: center !important;
-        aspect-ratio: 2 / 3 !important;
-        border-radius: 1.55rem !important;
-        background: transparent !important;
+      .hub-card {
+        position: relative !important;
+        display: block !important;
+        min-height: 28rem !important;
+        border-radius: 2rem !important;
         border: 0 !important;
+        background: #0c0c0c !important;
+        box-shadow: none !important;
         overflow: hidden !important;
       }
 
-      .hub-card-media.has-image .hub-card-media-mark {
-        display: none !important;
+      .hub-card-media {
+        position: absolute !important;
+        inset: 0 !important;
+        aspect-ratio: 2 / 3 !important;
+        border-radius: inherit !important;
+        background: #080808 !important;
+        border: 0 !important;
+        overflow: hidden !important;
       }
 
       .hub-card-media-image {
@@ -62,25 +68,117 @@
         object-fit: contain !important;
       }
 
-      .hub-card-media-mark {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        min-width: 3.25rem !important;
-        min-height: 3.25rem !important;
-        padding: 0.7rem !important;
-        border-radius: 999px !important;
-        background: rgba(255, 255, 255, 0.08) !important;
-        color: #ffffff !important;
-        font-size: 0.95rem !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.18em !important;
-        text-indent: 0.18em !important;
+      .hub-card-scrim {
+        position: absolute !important;
+        inset: auto 0 0 !important;
+        height: 48% !important;
+        background: linear-gradient(to top, rgba(4, 4, 4, 0.92), rgba(4, 4, 4, 0.02)) !important;
       }
 
-      .hub-card .primary-button {
-        background: #0b0b0b !important;
-        box-shadow: none !important;
+      .hub-card-content {
+        position: absolute !important;
+        inset: auto 0 0 !important;
+        display: grid !important;
+        gap: 0.55rem !important;
+        padding: 1.1rem !important;
+      }
+
+      .hub-card-label {
+        margin: 0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.16em !important;
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        color: rgba(255, 255, 255, 0.72) !important;
+      }
+
+      .hub-card-title {
+        margin: 0 !important;
+        line-height: 0.92 !important;
+        color: #ffffff !important;
+        text-shadow: 0 8px 28px rgba(0, 0, 0, 0.52) !important;
+      }
+
+      .hub-card-action {
+        width: 100% !important;
+        min-height: 3.15rem !important;
+        height: 3.15rem !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        background: rgba(12, 12, 12, 0.42) !important;
+        backdrop-filter: blur(18px) saturate(130%) !important;
+        color: #ffffff !important;
+      }
+
+      .hub-modal {
+        position: fixed !important;
+        inset: 0 !important;
+        display: grid !important;
+        place-items: center !important;
+        padding: 1rem !important;
+        background: rgba(4, 4, 4, 0.72) !important;
+        backdrop-filter: blur(14px) !important;
+        z-index: 40 !important;
+      }
+
+      .hub-modal[hidden] {
+        display: none !important;
+      }
+
+      .hub-modal-dialog {
+        width: min(100%, 44rem) !important;
+        border-radius: 2rem !important;
+        overflow: hidden !important;
+        background: rgba(18, 18, 18, 0.94) !important;
+      }
+
+      .hub-modal-close {
+        position: absolute !important;
+        top: 0.9rem !important;
+        right: 0.9rem !important;
+        z-index: 1 !important;
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background: rgba(10, 10, 10, 0.44) !important;
+        color: #ffffff !important;
+      }
+
+      .hub-modal-media {
+        aspect-ratio: 16 / 9 !important;
+        background: #090909 !important;
+      }
+
+      .hub-modal-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+      }
+
+      .hub-modal-body {
+        display: grid !important;
+        gap: 1rem !important;
+        padding: 1.2rem !important;
+      }
+
+      #hub-modal-title {
+        margin: 0 !important;
+        color: #ffffff !important;
+      }
+
+      .hub-modal-description {
+        margin: 0 !important;
+        color: rgba(255, 255, 255, 0.72) !important;
+      }
+
+      .hub-modal-start {
+        min-height: 3.35rem !important;
+        border-radius: 999px !important;
+        border: 0 !important;
+        background: #ffffff !important;
+        color: #09131b !important;
+        font-weight: 800 !important;
       }
     </style>
   </head>
@@ -96,58 +194,31 @@
       </header>
 
       <section id="hub-screen" class="screen is-active" aria-labelledby="hero-title">
-        <div class="hub-grid">
-          <article class="hub-card hub-card-impostor">
-            <div class="hub-card-media has-image" aria-hidden="true">
-              <img class="hub-card-media-image" src="./assets/impostor.png" alt="" />
-              <span class="hub-card-media-mark">IM</span>
-            </div>
-            <p class="panel-label">Palavra secreta</p>
-            <h2>Impostor</h2>
-            <button id="open-impostor-game" class="primary-button" type="button">Abrir jogo</button>
-          </article>
-
-          <article class="hub-card hub-card-police">
-            <div class="hub-card-media has-image" aria-hidden="true">
-              <img class="hub-card-media-image" src="./assets/policiaeladrao.png" alt="" />
-              <span class="hub-card-media-mark">PL</span>
-            </div>
-            <p class="panel-label">Papéis secretos</p>
-            <h2>Polícia e Ladrão</h2>
-            <button id="open-police-game" class="primary-button" type="button">Abrir jogo</button>
-          </article>
-
-          <article class="hub-card hub-card-city">
-            <div class="hub-card-media has-image" aria-hidden="true">
-              <img class="hub-card-media-image" src="./assets/cidadedorme.png" alt="" />
-              <span class="hub-card-media-mark">CD</span>
-            </div>
-            <p class="panel-label">Detetive social</p>
-            <h2>Cidade Dorme</h2>
-            <button id="open-city-game" class="primary-button" type="button">Abrir jogo</button>
-          </article>
-
-          <article class="hub-card hub-card-whoami">
-            <div class="hub-card-media has-image" aria-hidden="true">
-              <img class="hub-card-media-image" src="./assets/quemsoueu.png" alt="" />
-              <span class="hub-card-media-mark">QS</span>
-            </div>
-            <p class="panel-label">Teste da testa</p>
-            <h2>Quem sou eu?</h2>
-            <button id="open-whoami-game" class="primary-button" type="button">Abrir jogo</button>
-          </article>
-
-          <article class="hub-card hub-card-mimica">
-            <div class="hub-card-media has-image" aria-hidden="true">
-              <img class="hub-card-media-image" src="./assets/mimica.png" alt="" />
-              <span class="hub-card-media-mark">MR</span>
-            </div>
-            <p class="panel-label">Mímica em grupo</p>
-            <h2>Mímica Rápida</h2>
-            <button id="open-mimica-game" class="primary-button" type="button">Abrir jogo</button>
-          </article>
-        </div>
+        <div id="hub-grid" class="hub-grid" aria-label="Jogos disponíveis"></div>
       </section>
+
+      <div id="hub-modal" class="hub-modal" hidden>
+        <div
+          class="hub-modal-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="hub-modal-title"
+        >
+          <button id="hub-modal-close" class="hub-modal-close" type="button" aria-label="Fechar">
+            ×
+          </button>
+          <div class="hub-modal-media">
+            <img id="hub-modal-image" class="hub-modal-image" src="" alt="" />
+          </div>
+          <div class="hub-modal-body">
+            <h2 id="hub-modal-title"></h2>
+            <p id="hub-modal-description" class="hub-modal-description"></p>
+            <button id="hub-modal-start" class="hub-modal-start" type="button">
+              Iniciar jogo
+            </button>
+          </div>
+        </div>
+      </div>
 
       <section
         id="impostor-setup-screen"
