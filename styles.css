@@ -1,6 +1,6 @@
 :root {
-  --bg: #fff15a;
-  --surface: rgba(255, 255, 255, 0.88);
+  --bg: #040404;
+  --surface: rgba(255, 255, 255, 0.92);
   --ink: #16324a;
   --ink-soft: #3d5d73;
   --panel-border: rgba(22, 50, 74, 0.14);
@@ -54,28 +54,7 @@ input {
 }
 
 .ambient {
-  position: fixed;
-  inset: auto;
-  width: 32rem;
-  height: 32rem;
-  border-radius: 50%;
-  filter: blur(24px);
-  opacity: 0.55;
-  pointer-events: none;
-  animation: drift 10s ease-in-out infinite alternate;
-}
-
-.ambient-left {
-  top: -10rem;
-  left: -6rem;
-  background: rgba(255, 95, 143, 0.28);
-}
-
-.ambient-right {
-  right: -8rem;
-  bottom: -10rem;
-  background: rgba(32, 201, 93, 0.26);
-  animation-duration: 12s;
+  display: none;
 }
 
 body.is-whoami-reveal .ambient {
@@ -87,7 +66,7 @@ body.is-mimica-play .ambient {
 }
 
 .shell {
-  width: min(100%, 72rem);
+  width: min(100%, 78rem);
   margin: 0 auto;
   min-height: 100svh;
   display: grid;
@@ -119,8 +98,9 @@ body.is-mimica-play .shell {
   align-content: start;
   justify-items: center;
   text-align: center;
-  padding: 0;
+  padding: 0.5rem 0 0.2rem;
   animation: rise-in 500ms ease;
+  color: #f6f6f6;
 }
 
 body.is-whoami-reveal .hero {
@@ -147,6 +127,14 @@ body.is-mimica-play .hero {
   color: var(--accent-strong);
 }
 
+.hero .eyebrow {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.hero h1 {
+  color: #ffffff;
+}
+
 h1,
 h2 {
   margin: 0;
@@ -169,6 +157,10 @@ h2 {
   line-height: 1.35;
   max-width: 46rem;
   margin: 0;
+}
+
+.hero-copy {
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .screen {
@@ -194,7 +186,7 @@ h2 {
 
 #hub-screen {
   align-content: start;
-  padding-bottom: 1rem;
+  padding: 0.2rem 0 1.4rem;
 }
 
 #whoami-reveal-screen {
@@ -225,55 +217,93 @@ h2 {
 }
 
 .hub-grid {
-  width: min(100%, 60rem);
+  width: min(100%, 74rem);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 1.25rem;
 }
 
 .hub-card {
   display: grid;
   align-content: start;
-  gap: 0.85rem;
-  padding: 1.15rem;
-  border: 1px solid rgba(22, 50, 74, 0.1);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.74);
-  box-shadow: 0 18px 34px rgba(22, 50, 74, 0.08);
+  gap: 0.8rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.9rem;
+  background: #f2f2f2;
+  box-shadow: none;
 }
 
-.hub-card-police {
-  background: rgba(241, 248, 255, 0.9);
+.hub-card-media {
+  position: relative;
+  aspect-ratio: 1 / 0.86;
+  border-radius: 1.55rem;
+  background: #090909;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  display: grid;
+  place-items: center;
 }
 
-.hub-card-city {
-  background: rgba(255, 247, 239, 0.94);
+.hub-card-media.has-image .hub-card-media-mark {
+  display: none;
 }
 
-.hub-card-whoami {
-  background: rgba(255, 255, 255, 0.92);
+.hub-card-media-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.hub-card-mimica {
-  background: rgba(245, 255, 245, 0.92);
+.hub-card-media-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  padding: 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+}
+
+.hub-card .panel-label {
+  color: rgba(9, 19, 27, 0.5);
+}
+
+.hub-card h2 {
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  color: #09131b;
+}
+
+.hub-card .support-copy {
+  font-size: 0.98rem;
+  color: rgba(9, 19, 27, 0.72);
+  max-width: none;
 }
 
 .hub-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.55rem;
 }
 
 .hub-pill {
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.78rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(22, 50, 74, 0.08);
-  color: var(--ink);
-  font-size: 0.82rem;
+  background: #e6e6e6;
+  border: 0;
+  color: #111111;
+  font-size: 0.8rem;
   font-weight: 700;
 }
 
@@ -290,16 +320,23 @@ h2 {
   gap: 0.8rem;
   align-content: center;
   max-width: 25rem;
+  color: #f5f5f5;
 }
 
 .setup-copy h2 {
   font-size: clamp(2.2rem, 3.5vw, 3.2rem);
   line-height: 0.92;
+  color: #ffffff;
 }
 
 .setup-description {
   font-size: 0.98rem;
   line-height: 1.35;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.setup-copy .panel-label {
+  color: rgba(255, 255, 255, 0.48);
 }
 
 .setup-badges {
@@ -837,6 +874,19 @@ h2 {
 .primary-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 26px rgba(32, 201, 93, 0.3);
+}
+
+.hub-card .primary-button {
+  width: 100%;
+  margin-top: 0.2rem;
+  background: #0b0b0b;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.hub-card .primary-button:hover {
+  box-shadow: none;
+  background: #161616;
 }
 
 .secondary-button {
