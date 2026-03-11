@@ -17,6 +17,7 @@ const state = createInitialState();
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
 let lastHubModalTrigger = null;
+let lastImpostorRulesTrigger = null;
 
 function clampInteger(value, min, max, fallback = min) {
   const parsed = Number.parseInt(value, 10);
@@ -164,6 +165,29 @@ function getHubModalFocusableElements() {
   ].filter((element) => element && !element.hidden && !element.disabled);
 }
 
+function renderImpostorRulesModal() {
+  const isOpen = state.impostorRulesOpen;
+  elements.impostor.rulesModal.hidden = !isOpen;
+  document.body.classList.toggle("is-impostor-rules-open", isOpen);
+
+  if (!isOpen) {
+    return;
+  }
+
+  queueMicrotask(() => {
+    if (state.impostorRulesOpen) {
+      elements.impostor.rulesConfirm.focus();
+    }
+  });
+}
+
+function getImpostorRulesFocusableElements() {
+  return [
+    elements.impostor.rulesClose,
+    elements.impostor.rulesConfirm,
+  ].filter((element) => element && !element.hidden && !element.disabled);
+}
+
 function preloadHubImages() {
   const imageSources = new Set();
 
@@ -207,6 +231,39 @@ function closeHubModal() {
       lastHubModalTrigger.focus();
     }
     lastHubModalTrigger = null;
+  });
+}
+
+function openImpostorRules(trigger = null) {
+  lastImpostorRulesTrigger =
+    trigger instanceof HTMLElement ? trigger : document.activeElement;
+  state.impostorRulesOpen = true;
+  renderImpostorRulesModal();
+}
+
+function closeImpostorRules({ restoreFocus = true } = {}) {
+  if (!state.impostorRulesOpen) {
+    lastImpostorRulesTrigger = restoreFocus ? lastImpostorRulesTrigger : null;
+    return;
+  }
+
+  state.impostorRulesOpen = false;
+  renderImpostorRulesModal();
+
+  if (!restoreFocus) {
+    lastImpostorRulesTrigger = null;
+    return;
+  }
+
+  queueMicrotask(() => {
+    if (
+      lastImpostorRulesTrigger instanceof HTMLElement &&
+      lastImpostorRulesTrigger.isConnected
+    ) {
+      lastImpostorRulesTrigger.focus();
+    }
+
+    lastImpostorRulesTrigger = null;
   });
 }
 
@@ -385,6 +442,10 @@ function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
+
+  if (screen !== "impostorSetup" && state.impostorRulesOpen) {
+    closeImpostorRules({ restoreFocus: false });
+  }
 
   if (screen !== "hub") {
     closeHubModal();
@@ -1200,6 +1261,20 @@ elements.impostor.form.addEventListener("submit", (event) => {
 });
 
 elements.impostor.goHub.addEventListener("click", openHub);
+elements.impostor.openRules.addEventListener("click", (event) => {
+  openImpostorRules(event.currentTarget);
+});
+elements.impostor.rulesModal.addEventListener("click", (event) => {
+  if (event.target === elements.impostor.rulesModal) {
+    closeImpostorRules();
+  }
+});
+elements.impostor.rulesClose.addEventListener("click", () => {
+  closeImpostorRules();
+});
+elements.impostor.rulesConfirm.addEventListener("click", () => {
+  closeImpostorRules();
+});
 elements.navHome.addEventListener("click", openHub);
 
 elements.police.decreaseCount.addEventListener("click", () => {
@@ -1350,6 +1425,39 @@ elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 
 document.addEventListener("keydown", (event) => {
+  if (state.impostorRulesOpen) {
+    if (event.key === "Escape") {
+      closeImpostorRules();
+      return;
+    }
+
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const focusable = getImpostorRulesFocusableElements();
+
+    if (focusable.length === 0) {
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+
+    return;
+  }
+
   if (!state.hubModalOpen) {
     return;
   }
@@ -1387,6 +1495,7 @@ document.addEventListener("keydown", (event) => {
 preloadHubImages();
 renderHubCards();
 renderHubModal();
+renderImpostorRulesModal();
 syncImpostorPlayerInput(elements.impostor.playerCount.value);
 syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);

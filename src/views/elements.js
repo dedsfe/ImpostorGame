@@ -41,6 +41,11 @@ export function getElements() {
       randomWord: document.getElementById("impostor-random-word"),
       feedback: document.getElementById("impostor-setup-feedback"),
       goHub: document.getElementById("go-hub-from-impostor"),
+      openRules: document.getElementById("open-impostor-rules"),
+      rulesModal: document.getElementById("impostor-rules-modal"),
+      rulesDialog: document.getElementById("impostor-rules-dialog"),
+      rulesClose: document.getElementById("close-impostor-rules"),
+      rulesConfirm: document.getElementById("confirm-impostor-rules"),
     },
     police: {
       form: document.getElementById("police-setup-form"),

@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=33" />
+    <link rel="stylesheet" href="./styles.css?v=34" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -381,33 +381,22 @@
         class="screen"
         aria-labelledby="impostor-setup-title"
       >
-        <div class="setup-stage">
-          <div class="setup-copy">
+        <div class="setup-stage impostor-stage">
+          <div class="setup-copy setup-copy--impostor">
             <p class="panel-label">Impostor</p>
             <h2 id="impostor-setup-title">Monte a rodada</h2>
-            <p class="setup-description">
-              Escolha a quantidade de jogadores, defina categoria e dificuldade
-              e prepare a palavra secreta para a rodada.
+            <p class="setup-description setup-description--impostor">
+              Um jogador não verá a palavra. Os outros recebem a mesma pista e precisam
+              descobrir quem está blefando.
             </p>
-            <div class="setup-badges" aria-label="Resumo da rodada">
-              <span class="setup-badge">3 a 20 jogadores</span>
-              <span class="setup-badge">1 impostor</span>
-              <span class="setup-badge">Fácil ao difícil</span>
-              <span class="setup-badge">Passa o celular</span>
-            </div>
-            <div class="setup-points">
-              <article class="setup-point">
-                <strong>Escolha rápida</strong>
-                <p>Defina a categoria e deixe o app sortear a palavra se quiser.</p>
-              </article>
-              <article class="setup-point">
-                <strong>Distribuição segura</strong>
-                <p>Cada jogador vê apenas a própria tela antes de passar o celular.</p>
-              </article>
+            <div class="impostor-copy-actions">
+              <button id="open-impostor-rules" class="glass-button" type="button">
+                Como jogar
+              </button>
             </div>
           </div>
 
-          <form id="impostor-setup-form" class="setup-form setup-card">
+          <form id="impostor-setup-form" class="setup-form setup-card setup-card--impostor">
             <label class="field-group" for="impostor-player-count">
               <span class="field-label">Número de jogadores</span>
               <div class="stepper">
@@ -455,12 +444,14 @@
                   <option value="dificil">Dificuldade: Difícil</option>
                 </select>
               </div>
-              <p class="field-hint">
-                Se o campo da palavra ficar vazio, o app sorteia uma palavra da
-                categoria e dificuldade escolhidas.
-              </p>
-              <span class="field-label">Palavra secreta</span>
-              <div class="word-input-row">
+            </label>
+
+            <label class="field-group" for="impostor-secret-word">
+              <div class="field-row">
+                <span class="field-label">Palavra secreta</span>
+                <span class="field-meta">Opcional</span>
+              </div>
+              <div class="word-input-row word-input-row--impostor">
                 <input
                   id="impostor-secret-word"
                   class="text-input"
@@ -500,23 +491,77 @@
                   </svg>
                   <span id="impostor-toggle-word-label">Mostrar</span>
                 </button>
-                <button id="impostor-random-word" class="secondary-button" type="button">
-                  Sortear palavra
-                </button>
               </div>
+              <p class="field-hint impostor-field-hint">
+                Deixe em branco para o app sortear uma palavra por você.
+              </p>
+              <button
+                id="impostor-random-word"
+                class="secondary-button secondary-button--quiet secondary-button--full"
+                type="button"
+              >
+                Sortear palavra
+              </button>
             </label>
 
             <p id="impostor-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <div class="action-row">
+            <div class="action-row action-row--single">
               <button id="start-impostor-game" class="primary-button" type="submit">
                 Iniciar rodada
               </button>
-              <button id="go-hub-from-impostor" class="ghost-button" type="button">
+              <button id="go-hub-from-impostor" class="ghost-button" type="button" hidden>
                 Noite de jogos
               </button>
             </div>
           </form>
+        </div>
+
+        <div id="impostor-rules-modal" class="rules-modal" hidden>
+          <div
+            id="impostor-rules-dialog"
+            class="rules-modal-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="impostor-rules-title"
+            aria-describedby="impostor-rules-copy"
+          >
+            <button
+              id="close-impostor-rules"
+              class="rules-modal-close"
+              type="button"
+              aria-label="Fechar regras"
+            >
+              ×
+            </button>
+            <div class="rules-modal-content">
+              <p class="rules-modal-label">Como jogar</p>
+              <h3 id="impostor-rules-title" class="rules-modal-title">Impostor em 3 passos</h3>
+              <p id="impostor-rules-copy" class="rules-modal-copy">
+                O fluxo é rápido: monte a rodada, revele os papéis com privacidade e depois
+                deixem a conversa decidir quem está mentindo.
+              </p>
+              <ol class="rules-steps">
+                <li class="rules-step">
+                  <strong>Configure a rodada</strong>
+                  <span>Escolha os jogadores, a categoria e a dificuldade da palavra.</span>
+                </li>
+                <li class="rules-step">
+                  <strong>Passem o celular</strong>
+                  <span>Cada pessoa vê só a própria tela antes de entregar para a próxima.</span>
+                </li>
+                <li class="rules-step">
+                  <strong>Discutam em grupo</strong>
+                  <span>
+                    Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.
+                  </span>
+                </li>
+              </ol>
+              <button id="confirm-impostor-rules" class="rules-modal-action" type="button">
+                Entendi
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
