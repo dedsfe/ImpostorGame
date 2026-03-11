@@ -1,6 +1,6 @@
 # Backend
 
-Esta pasta prepara a organização do backend do Hub de Jogos.
+Esta pasta prepara a organização do backend da Noite de Jogos.
 
 ## Objetivo
 

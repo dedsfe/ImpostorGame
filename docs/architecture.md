@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Organizar o Hub de Jogos em uma arquitetura incremental, mantendo o app atual estável e abrindo caminho para:
+Organizar o projeto Noite de Jogos em uma arquitetura incremental, mantendo o app atual estável e abrindo caminho para:
 
 - MVVM no frontend
 - backend separado por módulos

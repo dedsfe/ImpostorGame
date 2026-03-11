@@ -1,4 +1,4 @@
--- Schema inicial para o Hub de Jogos
+-- Schema inicial da Noite de Jogos
 -- Foco: catálogo de conteúdo + sessões opcionais
 
 create table games (

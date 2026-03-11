@@ -1,6 +1,6 @@
 # Database
 
-Esta pasta concentra o desenho do banco de dados do Hub de Jogos.
+Esta pasta concentra o desenho do banco de dados da Noite de Jogos.
 
 ## Objetivo
 

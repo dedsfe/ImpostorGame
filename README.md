@@ -1,4 +1,4 @@
-# Hub de Jogos
+# Noite de Jogos
 
 App web local para jogos presenciais de festa:
 
