@@ -225,13 +225,16 @@ h2 {
 
 .hub-card {
   display: grid;
-  align-content: start;
-  gap: 0.8rem;
+  grid-template-rows: auto auto minmax(3.8rem, 1fr) auto;
+  align-content: stretch;
+  gap: 0.6rem;
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1.9rem;
   background: #f2f2f2;
   box-shadow: none;
+  min-height: 24.5rem;
+  height: 100%;
 }
 
 .hub-card-media {
@@ -275,36 +278,13 @@ h2 {
 
 .hub-card .panel-label {
   color: rgba(9, 19, 27, 0.5);
+  margin-top: 0.1rem;
 }
 
 .hub-card h2 {
   font-size: clamp(2rem, 4vw, 2.7rem);
   color: #09131b;
-}
-
-.hub-card .support-copy {
-  font-size: 0.98rem;
-  color: rgba(9, 19, 27, 0.72);
-  max-width: none;
-}
-
-.hub-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-}
-
-.hub-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.4rem 0.78rem;
-  border-radius: 999px;
-  background: #e6e6e6;
-  border: 0;
-  color: #111111;
-  font-size: 0.8rem;
-  font-weight: 700;
+  align-self: end;
 }
 
 .setup-stage {
@@ -878,7 +858,10 @@ h2 {
 
 .hub-card .primary-button {
   width: 100%;
-  margin-top: 0.2rem;
+  margin-top: auto;
+  height: 3.4rem;
+  min-height: 3.4rem;
+  padding: 0 1rem;
   background: #0b0b0b;
   color: #ffffff;
   box-shadow: none;

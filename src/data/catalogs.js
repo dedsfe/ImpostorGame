@@ -2476,8 +2476,7 @@ export const heroContent = {
   hub: {
     eyebrow: "Jogos locais",
     title: "Noite de Jogos",
-    copy:
-      "Escolha um jogo, monte a rodada e distribua os papéis passando o celular de jogador para jogador.",
+    copy: "Escolha um jogo para começar.",
   },
   impostorSetup: {
     eyebrow: "Impostor",
