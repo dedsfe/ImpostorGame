@@ -1248,6 +1248,10 @@ h2 {
   outline: none;
 }
 
+.select-input {
+  font-weight: 700;
+}
+
 .stepper-input {
   text-align: center;
   font-size: 1.3rem;
@@ -1908,6 +1912,13 @@ h2 {
   .setup-card--spotlight .ghost-button {
     min-height: 3.3rem;
     border-radius: 1.25rem;
+  }
+
+  .setup-card--spotlight .select-input {
+    min-height: 3.5rem;
+    font-size: 1.02rem;
+    font-weight: 800;
+    padding-right: 2.6rem;
   }
 
   .setup-card--spotlight .primary-button {
