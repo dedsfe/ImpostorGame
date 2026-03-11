@@ -376,6 +376,35 @@
         </div>
       </div>
 
+      <div id="game-rules-modal" class="rules-modal" hidden>
+        <div
+          id="game-rules-dialog"
+          class="rules-modal-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="game-rules-title"
+          aria-describedby="game-rules-copy"
+        >
+          <button
+            id="close-game-rules"
+            class="rules-modal-close"
+            type="button"
+            aria-label="Fechar regras"
+          >
+            ×
+          </button>
+          <div class="rules-modal-content">
+            <p id="game-rules-label" class="rules-modal-label">Como jogar</p>
+            <h3 id="game-rules-title" class="rules-modal-title"></h3>
+            <p id="game-rules-copy" class="rules-modal-copy"></p>
+            <ol id="game-rules-steps" class="rules-steps"></ol>
+            <button id="confirm-game-rules" class="rules-modal-action" type="button">
+              Entendi
+            </button>
+          </div>
+        </div>
+      </div>
+
       <section
         id="impostor-setup-screen"
         class="screen"
@@ -523,35 +552,6 @@
               </button>
             </div>
           </form>
-        </div>
-
-        <div id="game-rules-modal" class="rules-modal" hidden>
-          <div
-            id="game-rules-dialog"
-            class="rules-modal-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="game-rules-title"
-            aria-describedby="game-rules-copy"
-          >
-            <button
-              id="close-game-rules"
-              class="rules-modal-close"
-              type="button"
-              aria-label="Fechar regras"
-            >
-              ×
-            </button>
-            <div class="rules-modal-content">
-              <p id="game-rules-label" class="rules-modal-label">Como jogar</p>
-              <h3 id="game-rules-title" class="rules-modal-title"></h3>
-              <p id="game-rules-copy" class="rules-modal-copy"></p>
-              <ol id="game-rules-steps" class="rules-steps"></ol>
-              <button id="confirm-game-rules" class="rules-modal-action" type="button">
-                Entendi
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 
