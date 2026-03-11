@@ -311,12 +311,32 @@ h2 {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: opacity 260ms ease;
+}
+
+.hub-card-media-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 260ms ease;
+  pointer-events: none;
 }
 
 .hub-card-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.hub-card.is-video-active .hub-card-media-video {
+  opacity: 1;
+}
+
+.hub-card.is-video-active .hub-card-media-image {
+  opacity: 0.12;
 }
 
 .hub-card-scrim::before,

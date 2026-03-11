@@ -17,6 +17,7 @@ const state = createInitialState();
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
+const hubHoverMediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 let lastHubModalTrigger = null;
 let lastRulesModalTrigger = null;
 
@@ -80,6 +81,7 @@ function createHubCard(game) {
   const article = document.createElement("article");
   const media = document.createElement("div");
   const image = document.createElement("img");
+  const video = game.hoverVideo ? document.createElement("video") : null;
   const scrim = document.createElement("div");
   const content = document.createElement("div");
   const label = document.createElement("p");
@@ -100,6 +102,21 @@ function createHubCard(game) {
   image.setAttribute("aria-hidden", "true");
   image.loading = "lazy";
   image.decoding = "async";
+
+  if (video) {
+    article.dataset.hoverVideo = "true";
+    media.classList.add("has-hover-video");
+    video.className = "hub-card-media-video";
+    video.src = game.hoverVideo;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.poster = game.cardImage;
+    video.setAttribute("aria-hidden", "true");
+    video.tabIndex = -1;
+  }
+
   scrim.className = "hub-card-scrim";
 
   content.className = "hub-card-content";
@@ -114,8 +131,21 @@ function createHubCard(game) {
   action.setAttribute("aria-label", `Ver jogo ${game.title}`);
 
   content.append(label, title, action);
-  media.append(image, scrim, content);
+  if (video) {
+    media.append(image, video, scrim, content);
+  } else {
+    media.append(image, scrim, content);
+  }
   article.append(media);
+
+  if (video) {
+    article.addEventListener("mouseenter", () => {
+      playHubCardVideo(article);
+    });
+    article.addEventListener("mouseleave", () => {
+      stopHubCardVideo(article);
+    });
+  }
 
   return article;
 }
@@ -229,11 +259,67 @@ function preloadHubImages() {
   });
 }
 
+function stopHubCardVideo(card, { reset = true } = {}) {
+  if (!(card instanceof HTMLElement)) {
+    return;
+  }
+
+  const video = card.querySelector(".hub-card-media-video");
+
+  if (!(video instanceof HTMLVideoElement)) {
+    return;
+  }
+
+  card.classList.remove("is-video-active");
+  video.pause();
+
+  if (reset) {
+    try {
+      video.currentTime = 0;
+    } catch {}
+  }
+}
+
+function stopHubCardVideos({ reset = true } = {}) {
+  document.querySelectorAll(".hub-card[data-hover-video='true']").forEach((card) => {
+    stopHubCardVideo(card, { reset });
+  });
+}
+
+function playHubCardVideo(card) {
+  if (
+    !hubHoverMediaQuery.matches ||
+    !(card instanceof HTMLElement) ||
+    state.currentScreen !== "hub" ||
+    state.hubModalOpen
+  ) {
+    return;
+  }
+
+  const video = card.querySelector(".hub-card-media-video");
+
+  if (!(video instanceof HTMLVideoElement)) {
+    return;
+  }
+
+  stopHubCardVideos({ reset: true });
+  card.classList.add("is-video-active");
+
+  const playAttempt = video.play();
+
+  if (playAttempt && typeof playAttempt.catch === "function") {
+    playAttempt.catch(() => {
+      stopHubCardVideo(card);
+    });
+  }
+}
+
 function openHubModal(gameId, trigger = null) {
   if (!getHubGame(gameId)) {
     return;
   }
 
+  stopHubCardVideos();
   lastHubModalTrigger = trigger instanceof HTMLElement ? trigger : document.activeElement;
   state.hubModalGameId = gameId;
   state.hubModalOpen = true;
@@ -471,6 +557,10 @@ function setActiveScreen(screen) {
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
+
+  if (screen !== "hub") {
+    stopHubCardVideos();
+  }
 
   if (
     !["impostorSetup", "policeSetup", "citySetup", "whoamiSetup", "mimicaSetup"].includes(
@@ -1244,6 +1334,12 @@ elements.hub.grid.addEventListener("keydown", (event) => {
 
   event.preventDefault();
   openHubModal(card.dataset.gameId, card);
+});
+
+hubHoverMediaQuery.addEventListener("change", (event) => {
+  if (!event.matches) {
+    stopHubCardVideos();
+  }
 });
 
 elements.hub.modal.addEventListener("click", (event) => {

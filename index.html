@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=36" />
+    <link rel="stylesheet" href="./styles.css?v=37" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -101,12 +101,32 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important;
+        transition: opacity 260ms ease !important;
+      }
+
+      .hub-card-media-video {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        opacity: 0 !important;
+        transition: opacity 260ms ease !important;
+        pointer-events: none !important;
       }
 
       .hub-card-scrim {
         position: absolute !important;
         inset: 0 !important;
         pointer-events: none !important;
+      }
+
+      .hub-card.is-video-active .hub-card-media-video {
+        opacity: 1 !important;
+      }
+
+      .hub-card.is-video-active .hub-card-media-image {
+        opacity: 0.12 !important;
       }
 
       .hub-card-scrim::before,
@@ -1146,6 +1166,6 @@
       </section>
     </main>
 
-    <script type="module" src="./script.js?v=19"></script>
+    <script type="module" src="./script.js?v=20"></script>
   </body>
 </html>
