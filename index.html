@@ -48,6 +48,18 @@
         overflow: hidden !important;
       }
 
+      .hub-card-media.has-image .hub-card-media-mark {
+        display: none !important;
+      }
+
+      .hub-card-media-image {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+      }
+
       .hub-card-media-mark {
         display: inline-flex !important;
         align-items: center !important;
@@ -84,7 +96,8 @@
       <section id="hub-screen" class="screen is-active" aria-labelledby="hero-title">
         <div class="hub-grid">
           <article class="hub-card hub-card-impostor">
-            <div class="hub-card-media" aria-hidden="true">
+            <div class="hub-card-media has-image" aria-hidden="true">
+              <img class="hub-card-media-image" src="./assets/impostor.png" alt="" />
               <span class="hub-card-media-mark">IM</span>
             </div>
             <p class="panel-label">Palavra secreta</p>
@@ -93,7 +106,8 @@
           </article>
 
           <article class="hub-card hub-card-police">
-            <div class="hub-card-media" aria-hidden="true">
+            <div class="hub-card-media has-image" aria-hidden="true">
+              <img class="hub-card-media-image" src="./assets/policiaeladrao.png" alt="" />
               <span class="hub-card-media-mark">PL</span>
             </div>
             <p class="panel-label">Papéis secretos</p>
@@ -102,7 +116,8 @@
           </article>
 
           <article class="hub-card hub-card-city">
-            <div class="hub-card-media" aria-hidden="true">
+            <div class="hub-card-media has-image" aria-hidden="true">
+              <img class="hub-card-media-image" src="./assets/cidadedorme.png" alt="" />
               <span class="hub-card-media-mark">CD</span>
             </div>
             <p class="panel-label">Detetive social</p>
@@ -111,7 +126,8 @@
           </article>
 
           <article class="hub-card hub-card-whoami">
-            <div class="hub-card-media" aria-hidden="true">
+            <div class="hub-card-media has-image" aria-hidden="true">
+              <img class="hub-card-media-image" src="./assets/quemsoueu.png" alt="" />
               <span class="hub-card-media-mark">QS</span>
             </div>
             <p class="panel-label">Teste da testa</p>
@@ -120,7 +136,8 @@
           </article>
 
           <article class="hub-card hub-card-mimica">
-            <div class="hub-card-media" aria-hidden="true">
+            <div class="hub-card-media has-image" aria-hidden="true">
+              <img class="hub-card-media-image" src="./assets/mimica.png" alt="" />
               <span class="hub-card-media-mark">MR</span>
             </div>
             <p class="panel-label">Mímica em grupo</p>
