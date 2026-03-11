@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=27" />
+    <link rel="stylesheet" href="./styles.css?v=28" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -155,6 +155,11 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important;
+        object-position: center !important;
+      }
+
+      .hub-modal[data-media-fit="cover"] .hub-modal-image {
+        object-fit: cover !important;
       }
 
       .hub-modal-scrim {
