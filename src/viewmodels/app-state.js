@@ -5,7 +5,8 @@ export function createInitialState() {
     currentGame: null,
     hubModalOpen: false,
     hubModalGameId: null,
-    impostorRulesOpen: false,
+    rulesModalOpen: false,
+    rulesModalGameId: null,
     whoami: {
       category: "geral",
       currentCharacter: "",

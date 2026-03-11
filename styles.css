@@ -52,7 +52,7 @@ body.is-hub-modal-open:not(.is-whoami-reveal):not(.is-mimica-play) {
   overflow: hidden;
 }
 
-body.is-impostor-rules-open:not(.is-whoami-reveal):not(.is-mimica-play) {
+body.is-rules-modal-open:not(.is-whoami-reveal):not(.is-mimica-play) {
   overflow: hidden;
 }
 
@@ -617,7 +617,7 @@ h2 {
   color: rgba(255, 255, 255, 0.48);
 }
 
-.impostor-stage {
+.setup-stage--spotlight {
   width: min(100%, 66rem);
   grid-template-columns: minmax(18rem, 1fr) minmax(22rem, 30rem);
   gap: clamp(1.3rem, 4vw, 4rem);
@@ -625,8 +625,8 @@ h2 {
   isolation: isolate;
 }
 
-.impostor-stage::before,
-.impostor-stage::after {
+.setup-stage--spotlight::before,
+.setup-stage--spotlight::after {
   content: "";
   position: absolute;
   border-radius: 999px;
@@ -636,7 +636,7 @@ h2 {
   pointer-events: none;
 }
 
-.impostor-stage::before {
+.setup-stage--spotlight::before {
   width: min(38vw, 30rem);
   height: min(38vw, 30rem);
   left: -8%;
@@ -644,7 +644,7 @@ h2 {
   background: radial-gradient(circle, rgba(66, 124, 255, 0.26), rgba(66, 124, 255, 0));
 }
 
-.impostor-stage::after {
+.setup-stage--spotlight::after {
   width: min(42vw, 34rem);
   height: min(42vw, 34rem);
   right: -6%;
@@ -652,12 +652,12 @@ h2 {
   background: radial-gradient(circle, rgba(84, 224, 255, 0.18), rgba(84, 224, 255, 0));
 }
 
-.setup-copy--impostor {
+.setup-copy--spotlight {
   gap: 1rem;
   max-width: 30rem;
 }
 
-.setup-copy--impostor h2 {
+.setup-copy--spotlight h2 {
   font-size: clamp(3rem, 6vw, 4.6rem);
   line-height: 0.9;
   text-shadow:
@@ -672,7 +672,7 @@ h2 {
   color: rgba(255, 255, 255, 0.72);
 }
 
-.impostor-copy-actions {
+.setup-copy-actions {
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -770,7 +770,7 @@ h2 {
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
-.setup-card--impostor {
+.setup-card--spotlight {
   width: min(100%, 30rem);
   padding: clamp(1.2rem, 2.8vw, 1.65rem);
   border: 1px solid rgba(129, 166, 255, 0.16);
@@ -784,16 +784,16 @@ h2 {
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.setup-card--impostor .field-label,
-.setup-card--impostor .field-meta {
+.setup-card--spotlight .field-label,
+.setup-card--spotlight .field-meta {
   color: rgba(255, 255, 255, 0.9);
 }
 
-.setup-card--impostor .field-hint {
+.setup-card--spotlight .field-hint {
   color: rgba(203, 216, 255, 0.64);
 }
 
-.setup-card--impostor .feedback {
+.setup-card--spotlight .feedback {
   color: #ffb980;
 }
 
@@ -1336,33 +1336,34 @@ h2 {
   border: 1px solid rgba(22, 50, 74, 0.12);
 }
 
-.setup-card--impostor .stepper-button,
-.setup-card--impostor .stepper-input,
-.setup-card--impostor .text-input,
-.setup-card--impostor .select-input,
-.setup-card--impostor .icon-button,
-.setup-card--impostor .ghost-button {
+.setup-card--spotlight .stepper-button,
+.setup-card--spotlight .stepper-input,
+.setup-card--spotlight .text-input,
+.setup-card--spotlight .select-input,
+.setup-card--spotlight .icon-button,
+.setup-card--spotlight .ghost-button,
+.setup-card--spotlight .secondary-button--quiet {
   background: rgba(255, 255, 255, 0.08);
   color: #f7f9ff;
   border: 1px solid rgba(155, 179, 255, 0.14);
 }
 
-.setup-card--impostor .stepper-button:hover,
-.setup-card--impostor .icon-button:hover,
-.setup-card--impostor .ghost-button:hover,
-.setup-card--impostor .secondary-button--quiet:hover {
+.setup-card--spotlight .stepper-button:hover,
+.setup-card--spotlight .icon-button:hover,
+.setup-card--spotlight .ghost-button:hover,
+.setup-card--spotlight .secondary-button--quiet:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.setup-card--impostor .stepper-button {
+.setup-card--spotlight .stepper-button {
   font-size: 1.45rem;
 }
 
-.setup-card--impostor .stepper-input {
+.setup-card--spotlight .stepper-input {
   color: #ffffff;
 }
 
-.setup-card--impostor .text-input::placeholder {
+.setup-card--spotlight .text-input::placeholder {
   color: rgba(255, 255, 255, 0.38);
 }
 
@@ -1372,7 +1373,7 @@ h2 {
   border-color: rgba(84, 224, 255, 0.22);
 }
 
-.setup-card--impostor .primary-button {
+.setup-card--spotlight .primary-button {
   min-height: 3.2rem;
 }
 
@@ -1760,17 +1761,17 @@ h2 {
     gap: 0.85rem;
   }
 
-  .impostor-stage {
+  .setup-stage--spotlight {
     width: min(100%, 36rem);
     gap: 1.2rem;
   }
 
-  .impostor-stage::before {
+  .setup-stage--spotlight::before {
     left: -14%;
     top: 0;
   }
 
-  .impostor-stage::after {
+  .setup-stage--spotlight::after {
     right: -12%;
     bottom: -2%;
   }
@@ -1781,13 +1782,13 @@ h2 {
     text-align: center;
   }
 
-  .setup-copy--impostor {
+  .setup-copy--spotlight {
     width: 100%;
     justify-items: start;
     text-align: left;
   }
 
-  .setup-copy--impostor h2 {
+  .setup-copy--spotlight h2 {
     font-size: clamp(2.5rem, 9vw, 3.7rem);
   }
 
@@ -1799,7 +1800,7 @@ h2 {
     width: 100%;
   }
 
-  .setup-card--impostor {
+  .setup-card--spotlight {
     width: 100%;
   }
 
@@ -1869,7 +1870,7 @@ h2 {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .setup-card--impostor {
+  .setup-card--spotlight {
     padding: 1rem;
     border-radius: 1.5rem;
   }

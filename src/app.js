@@ -17,7 +17,105 @@ const state = createInitialState();
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
 let lastHubModalTrigger = null;
-let lastImpostorRulesTrigger = null;
+let lastRulesModalTrigger = null;
+
+const rulesContent = {
+  impostor: {
+    title: "Impostor em 3 passos",
+    copy:
+      "Monte a rodada, revele os papéis com privacidade e depois deixem a conversa decidir quem está mentindo.",
+    steps: [
+      {
+        title: "Configure a rodada",
+        copy: "Escolha os jogadores, a categoria e a dificuldade da palavra.",
+      },
+      {
+        title: "Passem o celular",
+        copy: "Cada pessoa vê só a própria tela antes de entregar para a próxima.",
+      },
+      {
+        title: "Discutam em grupo",
+        copy: "Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.",
+      },
+    ],
+  },
+  police: {
+    title: "Polícia e Ladrão em 3 passos",
+    copy:
+      "Você define os papéis da rodada e o app faz a distribuição segura antes do grupo começar a investigar.",
+    steps: [
+      {
+        title: "Monte a composição",
+        copy: "Escolha quantos serão policiais, ladrões e vítimas.",
+      },
+      {
+        title: "Revelem em privacidade",
+        copy: "Cada jogador vê só o próprio papel antes de passar o celular.",
+      },
+      {
+        title: "Comecem a rodada",
+        copy: "Depois da distribuição, o grupo conduz a dinâmica fora do app.",
+      },
+    ],
+  },
+  city: {
+    title: "Cidade Dorme em 3 passos",
+    copy:
+      "O app só prepara a rodada. Depois disso, o narrador assume e a conversa do grupo conduz o jogo.",
+    steps: [
+      {
+        title: "Defina os papéis",
+        copy: "Escolha jogadores, assassinos e detetives. O restante vira cidadão.",
+      },
+      {
+        title: "Distribua com segurança",
+        copy: "Cada participante vê só o próprio papel antes de passar o celular.",
+      },
+      {
+        title: "Narrador conduz",
+        copy: "Quando a distribuição termina, o grupo segue a noite e a votação fora da tela.",
+      },
+    ],
+  },
+  whoami: {
+    title: "Quem sou eu? em 3 passos",
+    copy:
+      "Escolha o universo dos personagens e revele só o nome na tela branca, pronto para jogar com o celular na testa.",
+    steps: [
+      {
+        title: "Escolha a categoria",
+        copy: "Selecione o tema antes da revelação.",
+      },
+      {
+        title: "Passe o celular",
+        copy: "Quem vai jogar coloca o celular na testa antes do clique.",
+      },
+      {
+        title: "Revele e troque se precisar",
+        copy: "A tela final mostra só o personagem, e você pode trocar se vier repetido.",
+      },
+    ],
+  },
+  mimica: {
+    title: "Mímica Rápida em 3 passos",
+    copy:
+      "Ajuste a rodada e só revele a palavra quando o mímico estiver pronto para começar.",
+    steps: [
+      {
+        title: "Defina categoria e tempo",
+        copy: "Escolha tema, dificuldade e duração da rodada.",
+      },
+      {
+        title: "Prepare o mímico",
+        copy: "Outra pessoa toca em mostrar palavra só na hora certa.",
+      },
+      {
+        title: "Joguem em sequência",
+        copy: "Ao fim, avance para a próxima palavra ou troque de mímico.",
+      },
+    ],
+  },
+};
 
 function clampInteger(value, min, max, fallback = min) {
   const parsed = Number.parseInt(value, 10);
@@ -165,26 +263,48 @@ function getHubModalFocusableElements() {
   ].filter((element) => element && !element.hidden && !element.disabled);
 }
 
-function renderImpostorRulesModal() {
-  const isOpen = state.impostorRulesOpen;
-  elements.impostor.rulesModal.hidden = !isOpen;
-  document.body.classList.toggle("is-impostor-rules-open", isOpen);
+function renderRulesModal() {
+  const content = rulesContent[state.rulesModalGameId] ?? null;
+  const isOpen = state.rulesModalOpen && Boolean(content);
+  elements.rules.modal.hidden = !isOpen;
+  document.body.classList.toggle("is-rules-modal-open", isOpen);
 
-  if (!isOpen) {
+  if (!isOpen || !content) {
+    elements.rules.label.textContent = "Como jogar";
+    elements.rules.title.textContent = "";
+    elements.rules.copy.textContent = "";
+    elements.rules.steps.replaceChildren();
     return;
   }
 
+  const items = content.steps.map((step) => {
+    const item = document.createElement("li");
+    const title = document.createElement("strong");
+    const copy = document.createElement("span");
+
+    item.className = "rules-step";
+    title.textContent = step.title;
+    copy.textContent = step.copy;
+    item.append(title, copy);
+    return item;
+  });
+
+  elements.rules.label.textContent = "Como jogar";
+  elements.rules.title.textContent = content.title;
+  elements.rules.copy.textContent = content.copy;
+  elements.rules.steps.replaceChildren(...items);
+
   queueMicrotask(() => {
-    if (state.impostorRulesOpen) {
-      elements.impostor.rulesConfirm.focus();
+    if (state.rulesModalOpen) {
+      elements.rules.confirm.focus();
     }
   });
 }
 
-function getImpostorRulesFocusableElements() {
+function getRulesModalFocusableElements() {
   return [
-    elements.impostor.rulesClose,
-    elements.impostor.rulesConfirm,
+    elements.rules.close,
+    elements.rules.confirm,
   ].filter((element) => element && !element.hidden && !element.disabled);
 }
 
@@ -234,36 +354,42 @@ function closeHubModal() {
   });
 }
 
-function openImpostorRules(trigger = null) {
-  lastImpostorRulesTrigger =
-    trigger instanceof HTMLElement ? trigger : document.activeElement;
-  state.impostorRulesOpen = true;
-  renderImpostorRulesModal();
-}
-
-function closeImpostorRules({ restoreFocus = true } = {}) {
-  if (!state.impostorRulesOpen) {
-    lastImpostorRulesTrigger = restoreFocus ? lastImpostorRulesTrigger : null;
+function openRulesModal(gameId, trigger = null) {
+  if (!rulesContent[gameId]) {
     return;
   }
 
-  state.impostorRulesOpen = false;
-  renderImpostorRulesModal();
+  lastRulesModalTrigger =
+    trigger instanceof HTMLElement ? trigger : document.activeElement;
+  state.rulesModalGameId = gameId;
+  state.rulesModalOpen = true;
+  renderRulesModal();
+}
+
+function closeRulesModal({ restoreFocus = true } = {}) {
+  if (!state.rulesModalOpen) {
+    lastRulesModalTrigger = restoreFocus ? lastRulesModalTrigger : null;
+    return;
+  }
+
+  state.rulesModalOpen = false;
+  state.rulesModalGameId = null;
+  renderRulesModal();
 
   if (!restoreFocus) {
-    lastImpostorRulesTrigger = null;
+    lastRulesModalTrigger = null;
     return;
   }
 
   queueMicrotask(() => {
     if (
-      lastImpostorRulesTrigger instanceof HTMLElement &&
-      lastImpostorRulesTrigger.isConnected
+      lastRulesModalTrigger instanceof HTMLElement &&
+      lastRulesModalTrigger.isConnected
     ) {
-      lastImpostorRulesTrigger.focus();
+      lastRulesModalTrigger.focus();
     }
 
-    lastImpostorRulesTrigger = null;
+    lastRulesModalTrigger = null;
   });
 }
 
@@ -443,8 +569,13 @@ function setActiveScreen(screen) {
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
 
-  if (screen !== "impostorSetup" && state.impostorRulesOpen) {
-    closeImpostorRules({ restoreFocus: false });
+  if (
+    !["impostorSetup", "policeSetup", "citySetup", "whoamiSetup", "mimicaSetup"].includes(
+      screen,
+    ) &&
+    state.rulesModalOpen
+  ) {
+    closeRulesModal({ restoreFocus: false });
   }
 
   if (screen !== "hub") {
@@ -1261,21 +1392,23 @@ elements.impostor.form.addEventListener("submit", (event) => {
 });
 
 elements.impostor.goHub.addEventListener("click", openHub);
-elements.impostor.openRules.addEventListener("click", (event) => {
-  openImpostorRules(event.currentTarget);
+elements.navHome.addEventListener("click", openHub);
+elements.rules.buttons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    openRulesModal(button.dataset.rulesGame, event.currentTarget);
+  });
 });
-elements.impostor.rulesModal.addEventListener("click", (event) => {
-  if (event.target === elements.impostor.rulesModal) {
-    closeImpostorRules();
+elements.rules.modal.addEventListener("click", (event) => {
+  if (event.target === elements.rules.modal) {
+    closeRulesModal();
   }
 });
-elements.impostor.rulesClose.addEventListener("click", () => {
-  closeImpostorRules();
+elements.rules.close.addEventListener("click", () => {
+  closeRulesModal();
 });
-elements.impostor.rulesConfirm.addEventListener("click", () => {
-  closeImpostorRules();
+elements.rules.confirm.addEventListener("click", () => {
+  closeRulesModal();
 });
-elements.navHome.addEventListener("click", openHub);
 
 elements.police.decreaseCount.addEventListener("click", () => {
   syncPoliceRoleInputs("police", Number(elements.police.policeCount.value) - 1);
@@ -1425,9 +1558,9 @@ elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 
 document.addEventListener("keydown", (event) => {
-  if (state.impostorRulesOpen) {
+  if (state.rulesModalOpen) {
     if (event.key === "Escape") {
-      closeImpostorRules();
+      closeRulesModal();
       return;
     }
 
@@ -1435,7 +1568,7 @@ document.addEventListener("keydown", (event) => {
       return;
     }
 
-    const focusable = getImpostorRulesFocusableElements();
+    const focusable = getRulesModalFocusableElements();
 
     if (focusable.length === 0) {
       return;
@@ -1495,7 +1628,7 @@ document.addEventListener("keydown", (event) => {
 preloadHubImages();
 renderHubCards();
 renderHubModal();
-renderImpostorRulesModal();
+renderRulesModal();
 syncImpostorPlayerInput(elements.impostor.playerCount.value);
 syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);

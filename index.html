@@ -381,22 +381,30 @@
         class="screen"
         aria-labelledby="impostor-setup-title"
       >
-        <div class="setup-stage impostor-stage">
-          <div class="setup-copy setup-copy--impostor">
+        <div class="setup-stage setup-stage--spotlight">
+          <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Impostor</p>
             <h2 id="impostor-setup-title">Monte a rodada</h2>
             <p class="setup-description setup-description--impostor">
               Um jogador não verá a palavra. Os outros recebem a mesma pista e precisam
               descobrir quem está blefando.
             </p>
-            <div class="impostor-copy-actions">
-              <button id="open-impostor-rules" class="glass-button" type="button">
+            <div class="setup-copy-actions">
+              <button
+                id="open-impostor-rules"
+                class="glass-button"
+                type="button"
+                data-rules-game="impostor"
+              >
                 Como jogar
               </button>
             </div>
           </div>
 
-          <form id="impostor-setup-form" class="setup-form setup-card setup-card--impostor">
+          <form
+            id="impostor-setup-form"
+            class="setup-form setup-card setup-card--spotlight setup-card--impostor"
+          >
             <label class="field-group" for="impostor-player-count">
               <span class="field-label">Número de jogadores</span>
               <div class="stepper">
@@ -517,17 +525,17 @@
           </form>
         </div>
 
-        <div id="impostor-rules-modal" class="rules-modal" hidden>
+        <div id="game-rules-modal" class="rules-modal" hidden>
           <div
-            id="impostor-rules-dialog"
+            id="game-rules-dialog"
             class="rules-modal-dialog"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="impostor-rules-title"
-            aria-describedby="impostor-rules-copy"
+            aria-labelledby="game-rules-title"
+            aria-describedby="game-rules-copy"
           >
             <button
-              id="close-impostor-rules"
+              id="close-game-rules"
               class="rules-modal-close"
               type="button"
               aria-label="Fechar regras"
@@ -535,29 +543,11 @@
               ×
             </button>
             <div class="rules-modal-content">
-              <p class="rules-modal-label">Como jogar</p>
-              <h3 id="impostor-rules-title" class="rules-modal-title">Impostor em 3 passos</h3>
-              <p id="impostor-rules-copy" class="rules-modal-copy">
-                O fluxo é rápido: monte a rodada, revele os papéis com privacidade e depois
-                deixem a conversa decidir quem está mentindo.
-              </p>
-              <ol class="rules-steps">
-                <li class="rules-step">
-                  <strong>Configure a rodada</strong>
-                  <span>Escolha os jogadores, a categoria e a dificuldade da palavra.</span>
-                </li>
-                <li class="rules-step">
-                  <strong>Passem o celular</strong>
-                  <span>Cada pessoa vê só a própria tela antes de entregar para a próxima.</span>
-                </li>
-                <li class="rules-step">
-                  <strong>Discutam em grupo</strong>
-                  <span>
-                    Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.
-                  </span>
-                </li>
-              </ol>
-              <button id="confirm-impostor-rules" class="rules-modal-action" type="button">
+              <p id="game-rules-label" class="rules-modal-label">Como jogar</p>
+              <h3 id="game-rules-title" class="rules-modal-title"></h3>
+              <p id="game-rules-copy" class="rules-modal-copy"></p>
+              <ol id="game-rules-steps" class="rules-steps"></ol>
+              <button id="confirm-game-rules" class="rules-modal-action" type="button">
                 Entendi
               </button>
             </div>
@@ -570,34 +560,30 @@
         class="screen"
         aria-labelledby="police-setup-title"
       >
-        <div class="setup-stage">
-          <div class="setup-copy">
+        <div class="setup-stage setup-stage--spotlight">
+          <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Polícia e Ladrão</p>
             <h2 id="police-setup-title">Distribua os papéis</h2>
             <p class="setup-description">
-              Escolha quantos serão policiais, ladrões e vítimas. O app
-              embaralha os papéis e revela um por vez no mesmo fluxo do
-              Impostor.
+              Monte a composição da rodada e o app distribui os papéis um por vez,
+              em privacidade, no mesmo fluxo de passa o celular.
             </p>
-            <div class="setup-badges" aria-label="Resumo da rodada">
-              <span class="setup-badge">3 a 20 jogadores</span>
-              <span class="setup-badge">Papéis configuráveis</span>
-              <span class="setup-badge">Ao menos 1 por papel</span>
-              <span class="setup-badge">Papéis aleatórios</span>
-            </div>
-            <div class="setup-points">
-              <article class="setup-point">
-                <strong>Configuração livre</strong>
-                <p>Você define a composição completa da rodada antes de começar.</p>
-              </article>
-              <article class="setup-point">
-                <strong>Distribuição no mesmo estilo</strong>
-                <p>Preparar, revelar o papel e passar o celular para o próximo.</p>
-              </article>
+            <div class="setup-copy-actions">
+              <button
+                id="open-police-rules"
+                class="glass-button"
+                type="button"
+                data-rules-game="police"
+              >
+                Como jogar
+              </button>
             </div>
           </div>
 
-          <form id="police-setup-form" class="setup-form setup-card">
+          <form
+            id="police-setup-form"
+            class="setup-form setup-card setup-card--spotlight"
+          >
             <label class="field-group" for="police-count">
               <span class="field-label">Quantidade de policiais</span>
               <div class="stepper">
@@ -696,11 +682,11 @@
             </p>
             <p id="police-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <div class="action-row">
+            <div class="action-row action-row--single">
               <button id="start-police-game" class="primary-button" type="submit">
                 Iniciar rodada
               </button>
-              <button id="go-hub-from-police" class="ghost-button" type="button">
+              <button id="go-hub-from-police" class="ghost-button" type="button" hidden>
                 Noite de jogos
               </button>
             </div>
@@ -713,33 +699,30 @@
         class="screen"
         aria-labelledby="city-setup-title"
       >
-        <div class="setup-stage">
-          <div class="setup-copy">
+        <div class="setup-stage setup-stage--spotlight">
+          <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Cidade Dorme</p>
             <h2 id="city-setup-title">Configure a rodada</h2>
             <p class="setup-description">
-              Defina quantos jogadores participarão, quantos serão assassinos e
-              quantos serão detetives. O restante vira cidadão.
+              Defina quantos entram na rodada e distribua assassinos, detetives e
+              cidadãos antes de começar a condução do narrador.
             </p>
-            <div class="setup-badges" aria-label="Resumo da rodada">
-              <span class="setup-badge">5 a 20 jogadores</span>
-              <span class="setup-badge">Ao menos 1 assassino</span>
-              <span class="setup-badge">Detetive opcional</span>
-              <span class="setup-badge">Distribuição segura</span>
-            </div>
-            <div class="setup-points">
-              <article class="setup-point">
-                <strong>Narrador fora do app</strong>
-                <p>O app distribui os papéis e depois entrega um roteiro simples para conduzir a rodada.</p>
-              </article>
-              <article class="setup-point">
-                <strong>Mesma lógica do hub</strong>
-                <p>Preparar o jogador, mostrar o papel e passar o celular para o próximo.</p>
-              </article>
+            <div class="setup-copy-actions">
+              <button
+                id="open-city-rules"
+                class="glass-button"
+                type="button"
+                data-rules-game="city"
+              >
+                Como jogar
+              </button>
             </div>
           </div>
 
-          <form id="city-setup-form" class="setup-form setup-card">
+          <form
+            id="city-setup-form"
+            class="setup-form setup-card setup-card--spotlight"
+          >
             <label class="field-group" for="city-player-count">
               <span class="field-label">Número de jogadores</span>
               <div class="stepper">
@@ -838,11 +821,11 @@
             </p>
             <p id="city-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <div class="action-row">
+            <div class="action-row action-row--single">
               <button id="start-city-game" class="primary-button" type="submit">
                 Iniciar distribuição
               </button>
-              <button id="go-hub-from-city" class="ghost-button" type="button">
+              <button id="go-hub-from-city" class="ghost-button" type="button" hidden>
                 Noite de jogos
               </button>
             </div>
@@ -855,33 +838,30 @@
         class="screen"
         aria-labelledby="whoami-setup-title"
       >
-        <div class="setup-stage">
-          <div class="setup-copy">
+        <div class="setup-stage setup-stage--spotlight">
+          <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Quem sou eu?</p>
             <h2 id="whoami-setup-title">Escolha a categoria</h2>
             <p class="setup-description">
-              Defina a categoria, entregue o celular para quem vai jogar e
-              deixe outra pessoa tocar no botão para revelar o personagem.
+              Escolha o universo dos personagens, passe o celular e revele só o
+              nome em tela branca para quem estiver jogando.
             </p>
-            <div class="setup-badges" aria-label="Resumo da rodada">
-              <span class="setup-badge">Tela branca total</span>
-              <span class="setup-badge">Personagem aleatório</span>
-              <span class="setup-badge">Trocar se repetir</span>
-              <span class="setup-badge">Sem categoria na tela final</span>
-            </div>
-            <div class="setup-points">
-              <article class="setup-point">
-                <strong>Feito para a testa</strong>
-                <p>Quem estiver jogando coloca o celular na testa antes do clique.</p>
-              </article>
-              <article class="setup-point">
-                <strong>Troca rápida</strong>
-                <p>Se o personagem vier repetido, é só tocar em trocar na tela branca.</p>
-              </article>
+            <div class="setup-copy-actions">
+              <button
+                id="open-whoami-rules"
+                class="glass-button"
+                type="button"
+                data-rules-game="whoami"
+              >
+                Como jogar
+              </button>
             </div>
           </div>
 
-          <form id="whoami-setup-form" class="setup-form setup-card">
+          <form
+            id="whoami-setup-form"
+            class="setup-form setup-card setup-card--spotlight"
+          >
             <label class="field-group" for="whoami-category">
               <span class="field-label">Categoria</span>
               <select id="whoami-category" class="select-input">
@@ -897,17 +877,14 @@
               </select>
             </label>
 
-            <p class="field-hint">
-              A categoria fica aqui no setup. Na tela do personagem vai aparecer
-              apenas o nome, em fundo branco.
-            </p>
+            <p class="field-hint">A revelação final mostra só o personagem, sem a categoria.</p>
             <p id="whoami-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <div class="action-row">
+            <div class="action-row action-row--single">
               <button id="start-whoami-game" class="primary-button" type="submit">
                 Mostrar personagem
               </button>
-              <button id="go-hub-from-whoami" class="ghost-button" type="button">
+              <button id="go-hub-from-whoami" class="ghost-button" type="button" hidden>
                 Noite de jogos
               </button>
             </div>
@@ -920,33 +897,30 @@
         class="screen"
         aria-labelledby="mimica-setup-title"
       >
-        <div class="setup-stage">
-          <div class="setup-copy">
+        <div class="setup-stage setup-stage--spotlight">
+          <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Mímica Rápida</p>
             <h2 id="mimica-setup-title">Monte a rodada</h2>
             <p class="setup-description">
-              Escolha categoria, dificuldade e tempo. Depois passe o celular
-              para quem vai fazer a mímica.
+              Escolha categoria, dificuldade e tempo. Depois passe o celular para
+              quem vai fazer a mímica e revele a palavra na hora certa.
             </p>
-            <div class="setup-badges" aria-label="Resumo da rodada">
-              <span class="setup-badge">Categoria</span>
-              <span class="setup-badge">Fácil ao difícil</span>
-              <span class="setup-badge">30s a 60s ou sem tempo</span>
-              <span class="setup-badge">Passa o celular</span>
-            </div>
-            <div class="setup-points">
-              <article class="setup-point">
-                <strong>Palavra em foco total</strong>
-                <p>A tela da mímica mostra só a palavra e o tempo, sem distrações.</p>
-              </article>
-              <article class="setup-point">
-                <strong>Privacidade antes de revelar</strong>
-                <p>Outra pessoa toca em mostrar apenas quando o mímico estiver pronto.</p>
-              </article>
+            <div class="setup-copy-actions">
+              <button
+                id="open-mimica-rules"
+                class="glass-button"
+                type="button"
+                data-rules-game="mimica"
+              >
+                Como jogar
+              </button>
             </div>
           </div>
 
-          <form id="mimica-setup-form" class="setup-form setup-card">
+          <form
+            id="mimica-setup-form"
+            class="setup-form setup-card setup-card--spotlight"
+          >
             <label class="field-group" for="mimica-category">
               <span class="field-label">Categoria</span>
               <select id="mimica-category" class="select-input">
@@ -981,17 +955,14 @@
               </select>
             </label>
 
-            <p class="field-hint">
-              Passe o celular para quem vai fazer mímica. Outra pessoa toca em
-              “Mostrar palavra”.
-            </p>
+            <p class="field-hint">Outra pessoa toca em “Mostrar palavra” quando o mímico estiver pronto.</p>
             <p id="mimica-setup-feedback" class="feedback" aria-live="polite"></p>
 
-            <div class="action-row">
+            <div class="action-row action-row--single">
               <button id="start-mimica-game" class="primary-button" type="submit">
                 Iniciar rodada
               </button>
-              <button id="go-hub-from-mimica" class="ghost-button" type="button">
+              <button id="go-hub-from-mimica" class="ghost-button" type="button" hidden>
                 Noite de jogos
               </button>
             </div>
