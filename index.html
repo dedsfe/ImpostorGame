@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=37" />
+    <link rel="stylesheet" href="./styles.css?v=38" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -1103,69 +1103,73 @@
       </section>
 
       <section id="turn-screen" class="screen" aria-labelledby="turn-progress">
-        <div id="turn-panel" class="panel turn-panel is-prep">
-          <div class="turn-topbar">
-            <div>
-              <p id="turn-game-label" class="panel-label">Distribuição</p>
-              <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
+        <div class="flow-stage flow-stage--turn">
+          <div id="turn-panel" class="panel flow-panel turn-panel is-prep" data-game="impostor">
+            <div class="turn-topbar">
+              <div>
+                <p id="turn-game-label" class="panel-label">Distribuição</p>
+                <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
+              </div>
+              <div class="topbar-actions">
+                <button id="go-hub-turn" class="ghost-button" type="button">
+                  Noite de jogos
+                </button>
+                <button id="restart-turn" class="ghost-button" type="button">
+                  Reiniciar
+                </button>
+              </div>
             </div>
-            <div class="topbar-actions">
-              <button id="go-hub-turn" class="ghost-button" type="button">
-                Noite de jogos
-              </button>
-              <button id="restart-turn" class="ghost-button" type="button">
-                Reiniciar
+
+            <div id="prep-view" class="turn-view is-active">
+              <p class="status-pill">Tela de preparação</p>
+              <h2 id="prep-title">Prepare o Jogador 1</h2>
+              <p id="prep-description" class="support-copy">
+                Passe o celular para o próximo jogador e toque em mostrar apenas
+                quando ele estiver pronto.
+              </p>
+              <button id="reveal-role" class="primary-button" type="button">
+                Mostrar papel
               </button>
             </div>
-          </div>
 
-          <div id="prep-view" class="turn-view is-active">
-            <p class="status-pill">Tela de preparação</p>
-            <h2 id="prep-title">Prepare o Jogador 1</h2>
-            <p id="prep-description" class="support-copy">
-              Passe o celular para o próximo jogador e toque em mostrar apenas
-              quando ele estiver pronto.
-            </p>
-            <button id="reveal-role" class="primary-button" type="button">
-              Mostrar papel
-            </button>
-          </div>
-
-          <div id="reveal-view" class="turn-view">
-            <p id="role-badge" class="status-pill">Papel revelado</p>
-            <h2 id="role-title">Você recebeu um papel</h2>
-            <p id="role-description" class="support-copy"></p>
-            <div id="word-card" class="word-card"></div>
-            <button id="next-player" class="primary-button" type="button">
-              Próximo jogador
-            </button>
+            <div id="reveal-view" class="turn-view">
+              <p id="role-badge" class="status-pill">Papel revelado</p>
+              <h2 id="role-title">Você recebeu um papel</h2>
+              <p id="role-description" class="support-copy"></p>
+              <div id="word-card" class="word-card"></div>
+              <button id="next-player" class="primary-button" type="button">
+                Próximo jogador
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="end-screen" class="screen" aria-labelledby="end-title">
-        <div class="panel end-panel">
-          <p id="end-label" class="panel-label">Rodada pronta</p>
-          <h2 id="end-title">Todos já receberam seus papéis</h2>
-          <p id="end-description" class="support-copy">
-            Agora afastem o celular e comecem a rodada.
-          </p>
-          <ol id="end-instructions" class="end-instructions" hidden></ol>
+        <div class="flow-stage flow-stage--end">
+          <div id="end-panel" class="panel flow-panel end-panel" data-game="impostor">
+            <p id="end-label" class="panel-label">Rodada pronta</p>
+            <h2 id="end-title">Todos já receberam seus papéis</h2>
+            <p id="end-description" class="support-copy">
+              Agora afastem o celular e comecem a rodada.
+            </p>
+            <ol id="end-instructions" class="end-instructions" hidden></ol>
 
-          <div id="end-summary-grid" class="summary-grid"></div>
+            <div id="end-summary-grid" class="summary-grid"></div>
 
-          <div class="action-row">
-            <button id="play-again" class="primary-button" type="button">
-              Nova partida
-            </button>
-            <button id="go-hub-end" class="ghost-button" type="button">
-              Noite de jogos
-            </button>
+            <div class="action-row">
+              <button id="play-again" class="primary-button" type="button">
+                Nova partida
+              </button>
+              <button id="go-hub-end" class="ghost-button" type="button">
+                Noite de jogos
+              </button>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <script type="module" src="./script.js?v=21"></script>
+    <script type="module" src="./script.js?v=22"></script>
   </body>
 </html>

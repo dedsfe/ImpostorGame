@@ -1133,6 +1133,7 @@ function renderPreparation() {
     copy:
       "Mantenha a tela coberta e revele o papel somente quando a pessoa certa estiver pronta.",
   });
+  elements.turn.panel.dataset.game = state.currentGame.type;
   elements.turn.gameLabel.textContent = state.currentGame.name;
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
   elements.turn.prepTitle.textContent = `Prepare o Jogador ${playerNumber}`;
@@ -1150,6 +1151,7 @@ function renderReveal() {
   const role = state.currentGame.roles[state.currentPlayer];
 
   setHero(state.currentGame.hero);
+  elements.turn.panel.dataset.game = state.currentGame.type;
   elements.turn.gameLabel.textContent = state.currentGame.name;
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
   elements.turn.roleBadge.textContent = role.badge;
@@ -1189,6 +1191,7 @@ function renderEndScreen() {
     copy: "Todos os papéis foram entregues. Agora o jogo começa fora da tela.",
   });
 
+  elements.end.panel.dataset.game = state.currentGame.type;
   elements.end.label.textContent = state.currentGame.endLabel;
   elements.end.title.textContent = state.currentGame.endTitle;
   elements.end.description.textContent = state.currentGame.endDescription;

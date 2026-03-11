@@ -135,6 +135,7 @@ export function getElements() {
       goHub: document.getElementById("go-hub-turn"),
     },
     end: {
+      panel: document.getElementById("end-panel"),
       label: document.getElementById("end-label"),
       title: document.getElementById("end-title"),
       description: document.getElementById("end-description"),
