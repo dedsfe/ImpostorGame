@@ -37,6 +37,7 @@ Módulos já extraídos:
 
 - `src/app.js`
 - `src/data/catalogs.js`
+- `src/data/tutorials.js`
 - `src/shared/utils.js`
 - `src/viewmodels/app-state.js`
 - `src/viewmodels/game-factories.js`
