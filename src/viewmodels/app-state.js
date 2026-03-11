@@ -7,6 +7,7 @@ export function createInitialState() {
     hubModalGameId: null,
     rulesModalOpen: false,
     rulesModalGameId: null,
+    turnRevealVisible: false,
     whoami: {
       category: "geral",
       currentCharacter: "",

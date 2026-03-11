@@ -129,6 +129,8 @@ export function getElements() {
       roleBadge: document.getElementById("role-badge"),
       roleTitle: document.getElementById("role-title"),
       roleDescription: document.getElementById("role-description"),
+      toggleVisibility: document.getElementById("toggle-role-visibility"),
+      toggleVisibilityLabel: document.getElementById("toggle-role-visibility-label"),
       wordCard: document.getElementById("word-card"),
       nextPlayer: document.getElementById("next-player"),
       restart: document.getElementById("restart-turn"),

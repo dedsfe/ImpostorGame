@@ -660,6 +660,35 @@ function updateMimicaFeedback(message = "") {
   elements.mimica.feedback.textContent = message;
 }
 
+function renderTurnSecret(role) {
+  const isVisible = state.turnRevealVisible;
+
+  elements.turn.toggleVisibility.setAttribute("aria-pressed", String(isVisible));
+  elements.turn.toggleVisibility.setAttribute(
+    "aria-label",
+    isVisible ? "Esconder papel" : "Ver papel",
+  );
+  elements.turn.toggleVisibility.classList.toggle("is-visible", isVisible);
+  elements.turn.toggleVisibilityLabel.textContent = isVisible
+    ? "Esconder papel"
+    : "Ver papel";
+  elements.turn.wordCard.classList.toggle("is-concealed", !isVisible);
+
+  if (!isVisible) {
+    elements.turn.roleBadge.textContent = "Papel oculto";
+    elements.turn.roleTitle.textContent = "Toque para ver seu papel";
+    elements.turn.roleDescription.textContent =
+      "Use o botão de olho para revelar somente quando a tela estiver protegida.";
+    elements.turn.wordCard.textContent = "••••";
+    return;
+  }
+
+  elements.turn.roleBadge.textContent = role.badge;
+  elements.turn.roleTitle.textContent = role.title;
+  elements.turn.roleDescription.textContent = role.description;
+  elements.turn.wordCard.textContent = role.value;
+}
+
 function syncImpostorPlayerInput(nextValue) {
   const safeValue = clampPlayers(nextValue);
   elements.impostor.playerCount.value = safeValue;
@@ -1133,6 +1162,7 @@ function renderPreparation() {
     copy:
       "Mantenha a tela coberta e revele o papel somente quando a pessoa certa estiver pronta.",
   });
+  state.turnRevealVisible = false;
   elements.turn.panel.dataset.game = state.currentGame.type;
   elements.turn.gameLabel.textContent = state.currentGame.name;
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
@@ -1151,13 +1181,10 @@ function renderReveal() {
   const role = state.currentGame.roles[state.currentPlayer];
 
   setHero(state.currentGame.hero);
+  state.turnRevealVisible = false;
   elements.turn.panel.dataset.game = state.currentGame.type;
   elements.turn.gameLabel.textContent = state.currentGame.name;
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
-  elements.turn.roleBadge.textContent = role.badge;
-  elements.turn.roleTitle.textContent = role.title;
-  elements.turn.roleDescription.textContent = role.description;
-  elements.turn.wordCard.textContent = role.value;
   elements.turn.nextPlayer.textContent = isLastPlayer
     ? "Finalizar distribuição"
     : "Próximo jogador";
@@ -1180,6 +1207,7 @@ function renderReveal() {
     elements.turn.wordCard.classList.add("is-victim");
   }
 
+  renderTurnSecret(role);
   setTurnPhase("reveal");
   setActiveScreen("turn");
 }
@@ -1541,6 +1569,17 @@ elements.whoami.close.addEventListener("click", openWhoAmISetup);
 elements.whoami.goHub.addEventListener("click", openHub);
 
 elements.turn.revealRole.addEventListener("click", renderReveal);
+elements.turn.toggleVisibility.addEventListener("click", () => {
+  if (
+    !state.currentGame ||
+    !elements.turn.revealView.classList.contains("is-active")
+  ) {
+    return;
+  }
+
+  state.turnRevealVisible = !state.turnRevealVisible;
+  renderTurnSecret(state.currentGame.roles[state.currentPlayer]);
+});
 
 elements.turn.nextPlayer.addEventListener("click", () => {
   const isLastPlayer = state.currentPlayer === state.currentGame.totalPlayers - 1;

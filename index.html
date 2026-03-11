@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=38" />
+    <link rel="stylesheet" href="./styles.css?v=39" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -1136,6 +1136,37 @@
               <p id="role-badge" class="status-pill">Papel revelado</p>
               <h2 id="role-title">Você recebeu um papel</h2>
               <p id="role-description" class="support-copy"></p>
+              <button
+                id="toggle-role-visibility"
+                class="ghost-button reveal-toggle-button"
+                type="button"
+                aria-label="Ver papel"
+                aria-pressed="false"
+              >
+                <svg
+                  class="icon-eye reveal-eye-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  />
+                </svg>
+                <span id="toggle-role-visibility-label">Ver papel</span>
+              </button>
               <div id="word-card" class="word-card"></div>
               <button id="next-player" class="primary-button" type="button">
                 Próximo jogador
@@ -1170,6 +1201,6 @@
       </section>
     </main>
 
-    <script type="module" src="./script.js?v=22"></script>
+    <script type="module" src="./script.js?v=23"></script>
   </body>
 </html>
