@@ -1318,6 +1318,7 @@ h2 {
   background: #ffffff;
   color: var(--ink);
   border: 1px solid rgba(22, 50, 74, 0.12);
+  border-radius: var(--radius-md);
 }
 
 .icon-button.is-visible {
@@ -1866,6 +1867,18 @@ h2 {
     width: 100%;
   }
 
+  .setup-form {
+    gap: 0.85rem;
+  }
+
+  .field-group {
+    gap: 0.4rem;
+  }
+
+  .field-row {
+    align-items: baseline;
+  }
+
   .word-input-row--impostor {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1873,6 +1886,60 @@ h2 {
   .setup-card--spotlight {
     padding: 1rem;
     border-radius: 1.5rem;
+  }
+
+  .setup-card--spotlight .stepper {
+    grid-template-columns: 4.1rem minmax(0, 1fr) 4.1rem;
+    gap: 0.6rem;
+  }
+
+  .setup-card--spotlight .setup-select-grid,
+  .setup-card--spotlight .word-input-row,
+  .setup-card--spotlight .action-row {
+    gap: 0.6rem;
+  }
+
+  .setup-card--spotlight .stepper-button,
+  .setup-card--spotlight .stepper-input,
+  .setup-card--spotlight .text-input,
+  .setup-card--spotlight .select-input,
+  .setup-card--spotlight .icon-button,
+  .setup-card--spotlight .secondary-button,
+  .setup-card--spotlight .ghost-button {
+    min-height: 3.3rem;
+    border-radius: 1.25rem;
+  }
+
+  .setup-card--spotlight .primary-button {
+    min-height: 3.7rem;
+    border-radius: 1.4rem;
+  }
+
+  .setup-card--spotlight .stepper-button {
+    padding: 0;
+    font-size: 1.7rem;
+  }
+
+  .setup-card--spotlight .stepper-input,
+  .setup-card--spotlight .text-input,
+  .setup-card--spotlight .select-input {
+    padding: 0 0.95rem;
+  }
+
+  .setup-card--spotlight .icon-button,
+  .setup-card--spotlight .secondary-button,
+  .setup-card--spotlight .ghost-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .setup-card--spotlight .field-hint {
+    font-size: 0.84rem;
+    line-height: 1.32;
+  }
+
+  .setup-card--spotlight .feedback {
+    min-height: 0.9rem;
   }
 
   .rules-modal {
