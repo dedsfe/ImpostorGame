@@ -7,26 +7,45 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=31" />
+    <link rel="stylesheet" href="./styles.css?v=33" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
       }
 
+      .app-nav {
+        position: sticky !important;
+        top: 0.7rem !important;
+        z-index: 12 !important;
+        display: grid !important;
+        place-items: center !important;
+        padding: 0.15rem 0 0.35rem !important;
+      }
+
+      .app-nav-title {
+        min-height: 3rem !important;
+        padding: 0 1.4rem !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        background: rgba(10, 10, 10, 0.42) !important;
+        backdrop-filter: blur(18px) saturate(130%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(130%) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: rgba(255, 255, 255, 0.94) !important;
+        font-family: "Rockwell", "Georgia", serif !important;
+        font-size: 1.1rem !important;
+        letter-spacing: 0.01em !important;
+      }
+
       .hero {
-        color: #f6f6f6 !important;
+        display: none !important;
       }
 
-      .hero .eyebrow {
-        color: rgba(255, 255, 255, 0.46) !important;
-      }
-
-      .hero h1 {
-        color: #ffffff !important;
-      }
-
-      .hero-copy {
-        color: rgba(255, 255, 255, 0.68) !important;
+      body.is-whoami-reveal .app-nav,
+      body.is-mimica-play .app-nav {
+        display: none !important;
       }
 
       #hub-screen {
@@ -70,9 +89,49 @@
 
       .hub-card-scrim {
         position: absolute !important;
-        inset: auto 0 0 !important;
-        height: 48% !important;
-        background: linear-gradient(to top, rgba(4, 4, 4, 0.92), rgba(4, 4, 4, 0.02)) !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .hub-card-scrim::before,
+      .hub-card-scrim::after,
+      .hub-modal-scrim::before,
+      .hub-modal-scrim::after {
+        content: "" !important;
+        position: absolute !important;
+        inset: 0 !important;
+      }
+
+      .hub-card-scrim::before {
+        background: linear-gradient(
+          to top,
+          rgba(4, 4, 4, 0.98) 0%,
+          rgba(4, 4, 4, 0.9) 16%,
+          rgba(4, 4, 4, 0.58) 34%,
+          rgba(4, 4, 4, 0.16) 62%,
+          rgba(4, 4, 4, 0) 100%
+        ) !important;
+      }
+
+      .hub-card-scrim::after {
+        backdrop-filter: blur(14px) saturate(110%) !important;
+        -webkit-backdrop-filter: blur(14px) saturate(110%) !important;
+        mask-image: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.9) 18%,
+          rgba(0, 0, 0, 0.56) 42%,
+          rgba(0, 0, 0, 0.16) 70%,
+          transparent 100%
+        ) !important;
+        -webkit-mask-image: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.9) 18%,
+          rgba(0, 0, 0, 0.56) 42%,
+          rgba(0, 0, 0, 0.16) 70%,
+          transparent 100%
+        ) !important;
       }
 
       .hub-card-content {
@@ -164,9 +223,43 @@
 
       .hub-modal-scrim {
         position: absolute !important;
-        inset: auto 0 0 !important;
-        height: 55% !important;
-        background: linear-gradient(to top, rgba(4, 4, 4, 0.95), rgba(4, 4, 4, 0.08)) !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .hub-modal-scrim::before {
+        background: linear-gradient(
+          to top,
+          rgba(4, 4, 4, 0.99) 0%,
+          rgba(4, 4, 4, 0.94) 14%,
+          rgba(4, 4, 4, 0.74) 30%,
+          rgba(4, 4, 4, 0.4) 52%,
+          rgba(4, 4, 4, 0.12) 76%,
+          rgba(4, 4, 4, 0) 100%
+        ) !important;
+      }
+
+      .hub-modal-scrim::after {
+        backdrop-filter: blur(18px) saturate(112%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(112%) !important;
+        mask-image: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.96) 16%,
+          rgba(0, 0, 0, 0.74) 34%,
+          rgba(0, 0, 0, 0.34) 58%,
+          rgba(0, 0, 0, 0.1) 80%,
+          transparent 100%
+        ) !important;
+        -webkit-mask-image: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.96) 16%,
+          rgba(0, 0, 0, 0.74) 34%,
+          rgba(0, 0, 0, 0.34) 58%,
+          rgba(0, 0, 0, 0.1) 80%,
+          transparent 100%
+        ) !important;
       }
 
       .hub-modal-heading {
@@ -223,6 +316,10 @@
     <div class="ambient ambient-right" aria-hidden="true"></div>
 
     <main class="shell">
+      <header class="app-nav" aria-label="Aplicativo">
+        <div class="app-nav-title">Noite de Jogos</div>
+      </header>
+
       <header class="hero">
         <p id="hero-eyebrow" class="eyebrow">Jogos locais</p>
         <h1 id="hero-title">Noite de Jogos</h1>
