@@ -16,10 +16,10 @@ export function createInitialState() {
     },
     mimica: {
       category: "geral",
-      difficulty: "medio",
+      difficulty: "dificil",
       timePerRound: 45,
       currentWord: "",
-      deckKey: "geral:medio",
+      deckKey: "geral:dificil",
       remainingWords: [],
       timerId: null,
       timeRemaining: 45,

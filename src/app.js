@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=30";
+} from "./data/catalogs.js?v=32";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
@@ -772,7 +772,7 @@ function syncImpostorDifficultyInput(nextValue) {
   const safeDifficulty =
     nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
       ? nextValue
-      : "medio";
+      : "dificil";
   elements.impostor.wordDifficulty.value = safeDifficulty;
   return safeDifficulty;
 }
