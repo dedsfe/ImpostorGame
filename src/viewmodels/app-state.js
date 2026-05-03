@@ -3,6 +3,7 @@ export function createInitialState() {
     currentScreen: "hub",
     currentPlayer: 0,
     currentGame: null,
+    playerNames: [],
     hubModalOpen: false,
     hubModalGameId: null,
     rulesModalOpen: false,

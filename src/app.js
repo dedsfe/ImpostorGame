@@ -51,6 +51,10 @@ function normalizeWord(value) {
   return value.replace(/\s+/g, " ").trim();
 }
 
+function normalizePlayerName(value) {
+  return normalizeWord(String(value ?? ""));
+}
+
 function getDifficultyLabel(difficulty) {
   if (difficulty === "facil") {
     return "Fácil";
@@ -629,6 +633,64 @@ function setTurnPhase(phase) {
   elements.turn.panel.classList.toggle("is-reveal", !isPrep);
 }
 
+function resetTurnPlayers() {
+  state.currentPlayer = 0;
+  state.playerNames = [];
+  elements.turn.playerName.value = "";
+  elements.turn.revealRole.disabled = true;
+}
+
+function getCurrentPlayerName() {
+  return state.playerNames[state.currentPlayer] ?? "";
+}
+
+function getCurrentPlayerLabel() {
+  return getCurrentPlayerName() || `Jogador ${state.currentPlayer + 1}`;
+}
+
+function syncCurrentPlayerName() {
+  const playerName = normalizePlayerName(elements.turn.playerName.value);
+  state.playerNames[state.currentPlayer] = playerName;
+  elements.turn.revealRole.disabled = playerName.length === 0;
+  return playerName;
+}
+
+function getPublicRoleLabel(role) {
+  if (role.tone === "impostor") {
+    return "Impostor";
+  }
+
+  return role.value || role.badge || role.title;
+}
+
+function renderRoleRevealList() {
+  const roles = state.currentGame?.roles ?? [];
+
+  elements.end.roleRevealList.replaceChildren(
+    ...roles.map((role, playerIndex) => {
+      const item = document.createElement("article");
+      const name = document.createElement("strong");
+      const roleLabel = document.createElement("span");
+      const fallbackName = `Jogador ${playerIndex + 1}`;
+
+      item.className = "role-reveal-item";
+      item.classList.toggle("is-impostor", role.tone === "impostor");
+      name.textContent = state.playerNames[playerIndex] || fallbackName;
+      roleLabel.textContent = getPublicRoleLabel(role);
+      item.append(name, roleLabel);
+
+      return item;
+    }),
+  );
+}
+
+function setRoleRevealVisible(isVisible) {
+  elements.end.roleRevealPanel.hidden = !isVisible;
+  elements.end.showRoleReveal.textContent = isVisible
+    ? "Ocultar quem é quem"
+    : "Mostrar quem é quem";
+}
+
 function setImpostorWordVisibility(isVisible) {
   elements.impostor.secretWord.type = isVisible ? "text" : "password";
   elements.impostor.toggleVisibility.setAttribute("aria-pressed", String(isVisible));
@@ -1032,7 +1094,7 @@ function syncCityRoleInputs(preferredField = "players", nextValue = null) {
 
 function openHub() {
   state.currentGame = null;
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   closeHubModal();
   clearRoleTone();
   setTurnPhase("prep");
@@ -1046,7 +1108,7 @@ function openHub() {
 
 function openImpostorSetup() {
   state.currentGame = null;
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   clearRoleTone();
   setTurnPhase("prep");
   setImpostorWordVisibility(false);
@@ -1056,7 +1118,7 @@ function openImpostorSetup() {
 
 function openPoliceSetup() {
   state.currentGame = null;
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   clearRoleTone();
   setTurnPhase("prep");
   updatePoliceFeedback("");
@@ -1066,7 +1128,7 @@ function openPoliceSetup() {
 
 function openCitySetup() {
   state.currentGame = null;
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   clearRoleTone();
   setTurnPhase("prep");
   updateCityFeedback("");
@@ -1155,6 +1217,7 @@ function renderWhoAmICharacter() {
 
 function renderPreparation() {
   const playerNumber = state.currentPlayer + 1;
+  const playerName = getCurrentPlayerName();
 
   setHero({
     eyebrow: state.currentGame.name,
@@ -1168,23 +1231,27 @@ function renderPreparation() {
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
   elements.turn.prepTitle.textContent = `Prepare o Jogador ${playerNumber}`;
   elements.turn.prepDescription.textContent =
-    "Passe o celular com a tela coberta e toque em mostrar apenas quando o jogador estiver pronto.";
+    "Digite o nome antes de revelar. Só a pessoa com esse nome deve tocar para ver o papel.";
+  elements.turn.playerName.value = playerName;
+  syncCurrentPlayerName();
 
   clearRoleTone();
   setTurnPhase("prep");
   setActiveScreen("turn");
+  elements.turn.playerName.focus();
 }
 
 function renderReveal() {
   const playerNumber = state.currentPlayer + 1;
   const isLastPlayer = state.currentPlayer === state.currentGame.totalPlayers - 1;
   const role = state.currentGame.roles[state.currentPlayer];
+  const playerLabel = getCurrentPlayerLabel();
 
   setHero(state.currentGame.hero);
   state.turnRevealVisible = false;
   elements.turn.panel.dataset.game = state.currentGame.type;
   elements.turn.gameLabel.textContent = state.currentGame.name;
-  elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
+  elements.turn.progress.textContent = `${playerLabel} (${playerNumber} de ${state.currentGame.totalPlayers})`;
   elements.turn.nextPlayer.textContent = isLastPlayer
     ? "Finalizar distribuição"
     : "Próximo jogador";
@@ -1248,6 +1315,8 @@ function renderEndScreen() {
       return card;
     }),
   );
+  renderRoleRevealList();
+  setRoleRevealVisible(false);
 
   setActiveScreen("end");
 }
@@ -1295,7 +1364,7 @@ function startImpostorGame() {
 
   updateImpostorFeedback("");
   state.currentGame = buildImpostorGame(totalPlayers, secretWord, category, difficulty);
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   renderPreparation();
 }
 
@@ -1309,7 +1378,7 @@ function startPoliceGame() {
     counts.thief,
     counts.victim,
   );
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   renderPreparation();
 }
 
@@ -1327,7 +1396,7 @@ function startCityGame() {
     counts.assassins,
     counts.detectives,
   );
-  state.currentPlayer = 0;
+  resetTurnPlayers();
   renderPreparation();
 }
 
@@ -1568,7 +1637,27 @@ elements.whoami.reroll.addEventListener("click", renderWhoAmICharacter);
 elements.whoami.close.addEventListener("click", openWhoAmISetup);
 elements.whoami.goHub.addEventListener("click", openHub);
 
-elements.turn.revealRole.addEventListener("click", renderReveal);
+elements.turn.playerName.addEventListener("input", syncCurrentPlayerName);
+elements.turn.playerName.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (!elements.turn.revealRole.disabled) {
+    renderReveal();
+  }
+});
+
+elements.turn.revealRole.addEventListener("click", () => {
+  if (!syncCurrentPlayerName()) {
+    elements.turn.playerName.focus();
+    return;
+  }
+
+  renderReveal();
+});
 elements.turn.toggleVisibility.addEventListener("click", () => {
   if (
     !state.currentGame ||
@@ -1595,6 +1684,9 @@ elements.turn.nextPlayer.addEventListener("click", () => {
 
 elements.turn.restart.addEventListener("click", restartCurrentGame);
 elements.turn.goHub.addEventListener("click", openHub);
+elements.end.showRoleReveal.addEventListener("click", () => {
+  setRoleRevealVisible(elements.end.roleRevealPanel.hidden);
+});
 elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 

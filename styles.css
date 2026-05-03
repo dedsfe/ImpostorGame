@@ -970,6 +970,7 @@ h2 {
 }
 
 #end-screen .summary-grid,
+#end-screen .role-reveal-panel,
 #end-screen .action-row {
   width: 100%;
 }
@@ -1375,6 +1376,15 @@ h2 {
   box-shadow: 0 16px 26px rgba(32, 201, 93, 0.3);
 }
 
+.primary-button:disabled,
+.secondary-button:disabled,
+.ghost-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+  box-shadow: none;
+}
+
 .secondary-button {
   background: var(--accent-soft);
   color: #805b00;
@@ -1631,6 +1641,18 @@ h2 {
   display: grid;
 }
 
+.turn-name-field {
+  max-width: 28rem;
+}
+
+.turn-name-field .field-label {
+  color: rgba(247, 249, 255, 0.82);
+}
+
+.turn-name-field .text-input {
+  background: rgba(255, 255, 255, 0.95);
+}
+
 .turn-panel.is-reveal .word-card {
   animation: pop-in 220ms ease;
 }
@@ -1704,6 +1726,61 @@ h2 {
 
 .summary-card .summary-label {
   color: rgba(255, 255, 255, 0.56);
+}
+
+.role-reveal-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(155, 179, 255, 0.14);
+}
+
+.role-reveal-panel[hidden] {
+  display: none;
+}
+
+.role-reveal-panel h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.role-reveal-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.role-reveal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.72rem 0.85rem;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(155, 179, 255, 0.1);
+}
+
+.role-reveal-item strong {
+  color: #ffffff;
+}
+
+.role-reveal-item span {
+  color: rgba(247, 249, 255, 0.72);
+  font-weight: 800;
+  text-align: right;
+}
+
+.role-reveal-item.is-impostor {
+  border-color: rgba(255, 79, 135, 0.45);
+  background: rgba(255, 79, 135, 0.12);
+}
+
+.role-reveal-item.is-impostor span {
+  color: #ffb7cf;
 }
 
 .turn-panel .panel-label,

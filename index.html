@@ -1127,6 +1127,18 @@
                 Passe o celular para o próximo jogador e toque em mostrar apenas
                 quando ele estiver pronto.
               </p>
+              <label class="field-group turn-name-field" for="turn-player-name">
+                <span class="field-label">Nome do jogador</span>
+                <input
+                  id="turn-player-name"
+                  class="text-input"
+                  type="text"
+                  autocomplete="off"
+                  maxlength="24"
+                  placeholder="Digite o nome para liberar"
+                  required
+                />
+              </label>
               <button id="reveal-role" class="primary-button" type="button">
                 Mostrar papel
               </button>
@@ -1188,7 +1200,15 @@
 
             <div id="end-summary-grid" class="summary-grid"></div>
 
+            <div id="role-reveal-panel" class="role-reveal-panel" hidden>
+              <h3>Quem é quem</h3>
+              <div id="role-reveal-list" class="role-reveal-list"></div>
+            </div>
+
             <div class="action-row">
+              <button id="show-role-reveal" class="secondary-button" type="button">
+                Mostrar quem é quem
+              </button>
               <button id="play-again" class="primary-button" type="button">
                 Nova partida
               </button>
@@ -1201,6 +1221,6 @@
       </section>
     </main>
 
-    <script type="module" src="./script.js?v=23"></script>
+    <script type="module" src="./script.js?v=26"></script>
   </body>
 </html>

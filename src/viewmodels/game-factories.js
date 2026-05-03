@@ -1,33 +1,33 @@
 import {
   getDifficultyLabel,
   pluralize,
-  randomIndex,
   shuffleArray,
 } from "../shared/utils.js";
 
 export function buildImpostorGame(totalPlayers, secretWord, category, difficulty) {
-  const impostorIndex = randomIndex(totalPlayers);
-  const roles = Array.from({ length: totalPlayers }, (_, playerIndex) => {
-    if (playerIndex === impostorIndex) {
-      return {
-        badge: "Impostor",
-        title: "Você é o impostor",
-        description:
-          "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
-        value: "IMPOSTOR",
-        tone: "impostor",
-      };
-    }
+  const roles = shuffleArray(
+    Array.from({ length: totalPlayers }, (_, playerIndex) => {
+      if (playerIndex === 0) {
+        return {
+          badge: "Impostor",
+          title: "Você é o impostor",
+          description:
+            "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
+          value: "IMPOSTOR",
+          tone: "impostor",
+        };
+      }
 
-    return {
-      badge: "Palavra secreta",
-      title: "Você recebeu a palavra",
-      description:
-        "Guarde a palavra e use pistas discretas para identificar o impostor.",
-      value: secretWord,
-      tone: "word",
-    };
-  });
+      return {
+        badge: "Palavra secreta",
+        title: "Você recebeu a palavra",
+        description:
+          "Guarde a palavra e use pistas discretas para identificar o impostor.",
+        value: secretWord,
+        tone: "word",
+      };
+    }),
+  );
 
   return {
     type: "impostor",
