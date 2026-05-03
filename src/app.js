@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=28";
+} from "./data/catalogs.js?v=30";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
@@ -808,6 +808,14 @@ function getMimicaWord(category, difficulty) {
   return nextWord;
 }
 
+function updateMimicaPoolInfo() {
+  const categoryPool = mimicaPools[state.mimica.category] ?? mimicaPools.geral;
+  const words = categoryPool[state.mimica.difficulty] ?? mimicaPools.geral.medio;
+  const wordLabel = words.length === 1 ? "palavra" : "palavras";
+
+  elements.mimica.poolInfo.textContent = `${words.length.toLocaleString("pt-BR")} ${wordLabel} disponíveis nesta seleção.`;
+}
+
 function syncMimicaCategoryInput(nextValue) {
   const safeCategory = Object.prototype.hasOwnProperty.call(mimicaPools, nextValue)
     ? nextValue
@@ -821,6 +829,7 @@ function syncMimicaCategoryInput(nextValue) {
 
   state.mimica.category = safeCategory;
   elements.mimica.category.value = safeCategory;
+  updateMimicaPoolInfo();
   return safeCategory;
 }
 
@@ -838,6 +847,7 @@ function syncMimicaDifficultyInput(nextValue) {
 
   state.mimica.difficulty = safeDifficulty;
   elements.mimica.difficulty.value = safeDifficulty;
+  updateMimicaPoolInfo();
   return safeDifficulty;
 }
 
@@ -1146,6 +1156,9 @@ function openMimicaSetup() {
   };
   state.currentPlayer = 0;
   clearMimicaTimer();
+  state.mimica.remainingWords = [];
+  state.mimica.currentWord = "";
+  state.mimica.deckKey = "";
   syncMimicaCategoryInput(elements.mimica.category.value);
   syncMimicaDifficultyInput(elements.mimica.difficulty.value);
   syncMimicaTimeInput(elements.mimica.time.value);

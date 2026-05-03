@@ -88,6 +88,7 @@ export function getElements() {
       category: document.getElementById("mimica-category"),
       difficulty: document.getElementById("mimica-difficulty"),
       time: document.getElementById("mimica-time"),
+      poolInfo: document.getElementById("mimica-pool-info"),
       feedback: document.getElementById("mimica-setup-feedback"),
       goHub: document.getElementById("go-hub-from-mimica"),
       prepTitle: document.getElementById("mimica-prep-title"),
