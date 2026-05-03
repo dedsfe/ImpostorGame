@@ -526,6 +526,324 @@ export const mimicaFilmesSeriesExtras = {
   ],
 };
 
+const MIMICA_HARD_POOL_SIZE = 5000;
+const mimicaHardStyles = [
+  "em câmera lenta",
+  "sem fazer barulho",
+  "com muita pressa",
+  "como se fosse um segredo",
+  "com drama exagerado",
+];
+
+const mimicaHardBlueprints = {
+  geral: {
+    subjects: [
+      "trocar pneu",
+      "montar barraca",
+      "desviar de laser",
+      "surfar em onda gigante",
+      "aterrissar avião",
+      "andar na corda bamba",
+      "apagar incêndio",
+      "mergulhar com cilindro",
+      "fazer malabarismo",
+      "escapar de um labirinto",
+    ],
+    actions: [
+      "durante uma tempestade",
+      "com os olhos vendados",
+      "no meio de uma competição",
+      "usando equipamento imaginário",
+      "enquanto todos observam",
+      "com uma mão ocupada",
+      "em um palco lotado",
+      "sem perder o equilíbrio",
+      "depois de receber uma notícia",
+      "antes do tempo acabar",
+    ],
+    contexts: [
+      "na praia",
+      "em uma cozinha",
+      "numa estação espacial",
+      "dentro de um elevador",
+      "em uma montanha",
+      "no quintal",
+      "em uma biblioteca",
+      "num estádio",
+      "em um acampamento",
+      "num programa de TV",
+    ],
+  },
+  animais: {
+    subjects: [
+      "ornitorrinco",
+      "tamanduá-bandeira",
+      "pangolim",
+      "suricata",
+      "narval",
+      "axolote",
+      "avestruz",
+      "bicho-preguiça",
+      "esquilo-voador",
+      "caranguejo-aranha",
+    ],
+    actions: [
+      "procurando comida",
+      "fugindo de um susto",
+      "tentando se esconder",
+      "dançando sem perceber",
+      "cuidando dos filhotes",
+      "atravessando um obstáculo",
+      "imitando outro animal",
+      "acordando de surpresa",
+      "fazendo pose para foto",
+      "brigando com o vento",
+    ],
+    contexts: [
+      "na floresta",
+      "no deserto",
+      "em um aquário",
+      "no gelo",
+      "em uma savana",
+      "numa árvore alta",
+      "embaixo da chuva",
+      "num documentário",
+      "em um zoológico",
+      "perto de um rio",
+    ],
+  },
+  objetos: {
+    subjects: [
+      "microscópio",
+      "estetoscópio",
+      "retroprojetor",
+      "parafusadeira",
+      "extintor",
+      "catraca",
+      "saca-rolhas",
+      "cronômetro",
+      "impressora 3D",
+      "termostato",
+    ],
+    actions: [
+      "sendo usado pela primeira vez",
+      "quebrando no momento errado",
+      "funcionando sozinho",
+      "sendo carregado com cuidado",
+      "fazendo barulho estranho",
+      "sendo montado às pressas",
+      "sumindo de repente",
+      "sendo consertado sem manual",
+      "escapando da mão",
+      "virando a solução do problema",
+    ],
+    contexts: [
+      "em um laboratório",
+      "numa oficina",
+      "em um hospital",
+      "dentro de uma mochila",
+      "numa sala escura",
+      "em uma feira de ciências",
+      "num escritório lotado",
+      "em casa",
+      "numa emergência",
+      "em uma apresentação",
+    ],
+  },
+  "filmes-series": {
+    subjects: [
+      "Saul Goodman",
+      "Davy Jones",
+      "Raymond Reddington",
+      "Gus Fring",
+      "Cersei Lannister",
+      "Thomas Shelby",
+      "Daenerys Targaryen",
+      "Jean-Luc Picard",
+      "Beth Harmon",
+      "Meredith Grey",
+    ],
+    actions: [
+      "tentando convencer alguém",
+      "entrando em cena",
+      "descobrindo um segredo",
+      "fugindo do vilão",
+      "fazendo uma revelação",
+      "preparando um plano",
+      "respondendo a uma ameaça",
+      "celebrando uma vitória",
+      "perdendo a paciência",
+      "fazendo uma entrada triunfal",
+    ],
+    contexts: [
+      "em um tribunal",
+      "num navio fantasma",
+      "em uma sala de interrogatório",
+      "num castelo",
+      "em uma nave",
+      "num hospital",
+      "em uma partida decisiva",
+      "num restaurante fechado",
+      "em uma guerra medieval",
+      "no fim da temporada",
+    ],
+  },
+  profissoes: {
+    subjects: [
+      "neurologista",
+      "mergulhador",
+      "mímico",
+      "maestro",
+      "arqueólogo",
+      "investigador",
+      "tradutor",
+      "paramédico",
+      "fisioterapeuta",
+      "equilibrista",
+    ],
+    actions: [
+      "resolvendo uma emergência",
+      "explicando algo difícil",
+      "trabalhando sob pressão",
+      "improvisando sem ferramentas",
+      "descobrindo uma pista",
+      "ensinando um iniciante",
+      "corrigindo um erro",
+      "fazendo uma demonstração",
+      "salvando o dia",
+      "tentando manter a calma",
+    ],
+    contexts: [
+      "em um hospital",
+      "no fundo do mar",
+      "em um palco",
+      "numa escavação",
+      "em uma cena de crime",
+      "num aeroporto",
+      "em uma ambulância",
+      "num circo",
+      "em uma coletiva",
+      "durante uma queda de energia",
+    ],
+  },
+  games: {
+    subjects: [
+      "Sephiroth",
+      "Commander Shepard",
+      "Vault Boy",
+      "Handsome Jack",
+      "GLaDOS",
+      "Arthur Morgan",
+      "Geralt de Rivia",
+      "Solid Snake",
+      "Agent 47",
+      "Zagreus",
+    ],
+    actions: [
+      "entrando em combate",
+      "falhando em uma missão",
+      "encontrando um chefão",
+      "usando um item raro",
+      "tentando passar despercebido",
+      "fazendo uma escolha difícil",
+      "ganhando uma habilidade",
+      "perdendo todos os recursos",
+      "explorando uma dungeon",
+      "fazendo speedrun",
+    ],
+    contexts: [
+      "no tutorial",
+      "na fase final",
+      "em modo furtivo",
+      "com pouca vida",
+      "num mapa aberto",
+      "em uma cutscene",
+      "durante um bug",
+      "no inventário",
+      "em uma arena",
+      "antes do checkpoint",
+    ],
+  },
+  "estudios-animacao": {
+    subjects: [
+      "animador da Pixar",
+      "diretor da Disney",
+      "roteirista da DreamWorks",
+      "dublador em gravação",
+      "artista de storyboard",
+      "modelador 3D",
+      "compositor de trilha",
+      "designer de personagem",
+      "produtor de animação",
+      "equipe de efeitos visuais",
+    ],
+    actions: [
+      "apresentando uma ideia",
+      "corrigindo uma cena",
+      "criando um personagem",
+      "dirigindo uma gravação",
+      "desenhando um storyboard",
+      "testando uma expressão",
+      "ajustando uma trilha",
+      "animando uma corrida",
+      "vendendo um pitch",
+      "fazendo uma reunião criativa",
+    ],
+    contexts: [
+      "no estúdio",
+      "em uma estreia",
+      "numa sala de roteiro",
+      "durante uma gravação",
+      "em uma cabine de som",
+      "num festival de cinema",
+      "antes do prazo final",
+      "em uma sessão de testes",
+      "numa reunião com executivos",
+      "em uma cena musical",
+    ],
+  },
+};
+
+function buildMimicaGeneratedHardItems(category, existingItems) {
+  const blueprint = mimicaHardBlueprints[category] ?? mimicaHardBlueprints.geral;
+  const seen = new Set(existingItems);
+  const generatedItems = [];
+
+  for (const subject of blueprint.subjects) {
+    for (const action of blueprint.actions) {
+      for (const context of blueprint.contexts) {
+        for (const style of mimicaHardStyles) {
+          const item = `${subject} ${action} ${context} ${style}`;
+
+          if (!seen.has(item)) {
+            seen.add(item);
+            generatedItems.push(item);
+          }
+
+          if (seen.size >= MIMICA_HARD_POOL_SIZE) {
+            return generatedItems;
+          }
+        }
+      }
+    }
+  }
+
+  return generatedItems;
+}
+
+function ensureMimicaHardPool(items, category) {
+  const uniqueItems = [...new Set(items)];
+
+  if (uniqueItems.length >= MIMICA_HARD_POOL_SIZE) {
+    return uniqueItems;
+  }
+
+  return [
+    ...uniqueItems,
+    ...buildMimicaGeneratedHardItems(category, uniqueItems),
+  ];
+}
+
 export const mimicaPools = {
   geral: {
     facil: [
@@ -759,6 +1077,10 @@ export const mimicaPools = {
     ],
   },
 };
+
+Object.entries(mimicaPools).forEach(([category, pool]) => {
+  pool.dificil = ensureMimicaHardPool(pool.dificil, category);
+});
 
 export const whoAmIFilmesSeries = [
   "Harry Potter",
@@ -2469,7 +2791,10 @@ export const whoAmIPools = {
 mimicaPools["estudios-animacao"] = {
   facil: mimicaAnimationStudioEntries.slice(0, 160),
   medio: mimicaAnimationStudioEntries.slice(160, 320),
-  dificil: mimicaAnimationStudioEntries.slice(320),
+  dificil: ensureMimicaHardPool(
+    mimicaAnimationStudioEntries.slice(320),
+    "estudios-animacao",
+  ),
 };
 
 export const hubGames = [

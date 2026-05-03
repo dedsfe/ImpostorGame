@@ -1702,6 +1702,19 @@ h2 {
   pointer-events: none;
 }
 
+.impostor-hint {
+  max-width: 30rem;
+  margin: -0.15rem 0 0;
+  color: rgba(255, 183, 207, 0.78);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.impostor-hint[hidden] {
+  display: none;
+}
+
 .summary-grid {
   display: grid;
   gap: 0.85rem;

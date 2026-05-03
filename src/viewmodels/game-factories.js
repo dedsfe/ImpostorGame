@@ -13,6 +13,7 @@ export function buildImpostorGame(totalPlayers, secretWord, category, difficulty
           title: "Você é o impostor",
           description:
             "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
+          hint: "Dica: fale pouco no começo, copie o clima da mesa e faça perguntas abertas.",
           value: "IMPOSTOR",
           tone: "impostor",
         };

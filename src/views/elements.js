@@ -133,6 +133,7 @@ export function getElements() {
       toggleVisibility: document.getElementById("toggle-role-visibility"),
       toggleVisibilityLabel: document.getElementById("toggle-role-visibility-label"),
       wordCard: document.getElementById("word-card"),
+      impostorHint: document.getElementById("impostor-hint"),
       nextPlayer: document.getElementById("next-player"),
       restart: document.getElementById("restart-turn"),
       goHub: document.getElementById("go-hub-turn"),
