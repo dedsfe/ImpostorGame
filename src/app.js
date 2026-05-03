@@ -1326,7 +1326,15 @@ function renderEndScreen() {
   elements.end.panel.dataset.game = state.currentGame.type;
   elements.end.label.textContent = state.currentGame.endLabel;
   elements.end.title.textContent = state.currentGame.endTitle;
-  elements.end.description.textContent = state.currentGame.endDescription;
+  let descriptionText = state.currentGame.endDescription;
+
+  if (state.currentGame.type === "impostor") {
+    const starterIndex = Math.floor(Math.random() * state.currentGame.totalPlayers);
+    const starterName = state.playerNames[starterIndex] || `Jogador ${starterIndex + 1}`;
+    descriptionText += ` Sorteio: quem começa perguntando é ${starterName}!`;
+  }
+
+  elements.end.description.textContent = descriptionText;
   const instructions = state.currentGame.instructions ?? [];
   elements.end.instructions.hidden = instructions.length === 0;
   elements.end.instructions.replaceChildren(

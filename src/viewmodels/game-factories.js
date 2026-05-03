@@ -21,7 +21,7 @@ export function buildImpostorGame(
           title: "Você é o impostor",
           description:
             "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
-          hint: "Dica: fale pouco no começo, copie o clima da mesa e faça perguntas abertas.",
+          hint: `Dica de categoria: ${category.toUpperCase()}`,
           value: "IMPOSTOR",
           tone: "impostor",
         };
@@ -49,7 +49,9 @@ export function buildImpostorGame(
     endLabel: "Rodada pronta",
     endTitle: "Todos já receberam seus papéis",
     endDescription:
-      "Agora afastem o celular e comecem a conversa para descobrir quem é o impostor.",
+      `Agora afastem o celular e comecem a conversa para descobrir quem ${
+        safeImpostorCount > 1 ? "são os impostores" : "é o impostor"
+      }.`,
     summary: [
       { label: "Jogadores", value: String(totalPlayers) },
       { label: "Impostores", value: String(safeImpostorCount) },

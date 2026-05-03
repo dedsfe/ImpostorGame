@@ -1,71 +1,29 @@
 export const wordPools = {
   geral: {
-    facil: ["bola", "casa", "pao", "sol", "carro", "flor", "mesa", "praia"],
+    facil: ["bola", "casa", "pao", "sol", "carro", "flor", "mesa", "praia", "janela", "porta", "computador", "celular", "caneta", "papel", "livro", "relogio", "sapato", "camisa", "chave", "telefone", "lapis", "mochila", "oculos", "cama", "travesseiro", "espelho", "faca", "garfo", "colher", "prato", "copo", "garrafa", "arvore", "nuvem", "chuva", "vento", "fogo", "agua", "terra", "areia", "pedra", "montanha"],
     medio: [
-      "astronauta",
-      "abacaxi",
-      "castelo",
-      "violino",
-      "pirata",
-      "labirinto",
-      "sorvete",
-      "lanterna",
+      "astronauta", "abacaxi", "castelo", "violino", "pirata", "labirinto", "sorvete", "lanterna", "diamante", "telescopio", "bussola", "mapa", "tesouro", "ilha", "vulcão", "furacão", "terremoto", "tsunami", "floresta", "deserto", "elefante", "leao", "tigre", "urso", "lobo", "raposa", "coelho", "esquilo", "macaco", "gorila", "chimpanze", "orangotango"
     ],
     dificil: [
-      "constelacao",
-      "metamorfose",
-      "helicoptero",
-      "criptografia",
-      "ampulheta",
-      "termodinamica",
-      "paralelepipedo",
-      "caleidoscopio",
+      "constelacao", "metamorfose", "helicoptero", "criptografia", "ampulheta", "termodinamica", "paralelepipedo", "caleidoscopio", "esquizofrenia", "idiossincrasia", "procrastinacao", "inexoravel", "efemero", "paradoxo", "oximoro", "pleonasmo", "eufemismo", "ironia", "sarcasmo", "cinismo", "hipocrisia", "altruismo", "egoismo", "empatia", "simpatia", "antipatia", "apatia", "telepatia", "telecinese", "clarividencia"
     ],
   },
   animais: {
-    facil: ["gato", "cachorro", "pato", "vaca", "leao", "urso", "coelho", "cobra"],
+    facil: ["gato", "cachorro", "pato", "vaca", "leao", "urso", "coelho", "cobra", "porco", "ovelha", "cavalo", "galinha", "galo", "pintinho", "peru", "ganso", "marreco", "pombo", "pardal", "andorinha", "sapo", "ra", "perereca", "lagarto", "tartaruga", "jabuti", "cagado"],
     medio: [
-      "girafa",
-      "tartaruga",
-      "golfinho",
-      "capivara",
-      "pinguim",
-      "leopardo",
-      "jacare",
-      "coruja",
+      "girafa", "tartaruga", "golfinho", "capivara", "pinguim", "leopardo", "jacare", "coruja", "elefante", "hipopotamo", "rinoceronte", "zebra", "camelo", "dromedario", "lhama", "alpaca", "vicunha", "guanaco", "alce", "cervo", "veado", "rena", "caribu", "antelope", "gazela", "impala", "gnu", "bufalo", "bisao", "touro"
     ],
     dificil: [
-      "ornitorrinco",
-      "suricata",
-      "pangolim",
-      "narval",
-      "tamandua-bandeira",
-      "axolote",
-      "caracal",
-      "alce",
+      "ornitorrinco", "suricata", "pangolim", "narval", "tamandua-bandeira", "axolote", "caracal", "alce", "tarsio", "ay-aye", "quokka", "feneco", "ocapi", "bongo", "mandi", "celacanto", "nautilus", "tuatara", "kiwi", "casuar", "ema", "avestruz", "nandu", "dragao-de-komodo", "monstro-de-gila", "iguana", "camaleao", "gecko", "osga", "lagartixa"
     ],
   },
   comidas: {
-    facil: ["pizza", "bolo", "arroz", "feijao", "pao", "queijo", "suco", "uva"],
+    facil: ["pizza", "bolo", "arroz", "feijao", "pao", "queijo", "suco", "uva", "maca", "banana", "pera", "morango", "melancia", "melao", "abacaxi", "laranja", "limao", "mamao", "goiaba", "manga", "caju", "acerola", "pitanga", "amora", "framboesa", "cereja", "ameixa", "pessego", "nectarina", "kiwi"],
     medio: [
-      "lasanha",
-      "brigadeiro",
-      "hamburguer",
-      "coxinha",
-      "panqueca",
-      "pipoca",
-      "sushi",
-      "taco",
+      "lasanha", "brigadeiro", "hamburguer", "coxinha", "panqueca", "pipoca", "sushi", "taco", "burrito", "nachos", "guacamole", "fajitas", "quesadilla", "enchilada", "tamale", "churros", "empanada", "ceviche", "sashimi", "temaki", "niguiri", "uramaki", "yakisoba", "ramen", "udon", "soba", "tempura", "teriyaki", "sukiyaki", "shabu-shabu"
     ],
     dificil: [
-      "ratatouille",
-      "croissant",
-      "bruschetta",
-      "ceviche",
-      "yakisoba",
-      "gnocchi",
-      "bouillabaisse",
-      "carbonara",
+      "ratatouille", "croissant", "bruschetta", "ceviche", "yakisoba", "gnocchi", "bouillabaisse", "carbonara", "macaron", "profiterole", "eclair", "tiramisu", "panna-cotta", "cannoli", "gelato", "sorbet", "granita", "semifreddo", "zabaglione", "zuppa-inglese", "torta-caprese", "torta-della-nonna", "torta-di-mele", "torta-di-ricotta", "torta-paradiso", "torta-sbrisolona", "torta-tenerina", "torta-tiramisu", "torta-zuppa-inglese"
     ],
   },
   objetos: {
