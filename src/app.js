@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=32";
+} from "./data/catalogs.js?v=33";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
