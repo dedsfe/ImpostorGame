@@ -1082,12 +1082,13 @@ h2 {
 
 .mimica-word {
   margin: 0;
-  max-width: 10ch;
+  max-width: 100%;
   text-align: center;
   color: #09131b;
-  font-size: clamp(4.2rem, 14vw, 10rem);
-  line-height: 0.84;
+  font-size: clamp(2.5rem, 9vw, 8rem);
+  line-height: 1;
   text-wrap: balance;
+  word-break: break-word;
 }
 
 .mimica-word-source {

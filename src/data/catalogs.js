@@ -1126,21 +1126,24 @@ function buildMimicaGeneratedHardItems(category, existingItems) {
 
   for (const subject of blueprint.subjects) {
     for (const action of blueprint.actions) {
-      for (const context of blueprint.contexts) {
-        for (const style of mimicaHardStyles) {
-          const item = `${subject} ${compactMimicaTerm(action)} ${compactMimicaTerm(
-            context,
-          )} ${style}`;
-
-          if (!seen.has(item)) {
-            seen.add(item);
-            generatedItems.push(item);
-          }
-
-          if (seen.size >= MIMICA_HARD_POOL_SIZE) {
-            return generatedItems;
-          }
-        }
+      const item = `${subject} ${compactMimicaTerm(action)}`;
+      if (!seen.has(item)) {
+        seen.add(item);
+        generatedItems.push(item);
+      }
+    }
+    for (const context of blueprint.contexts) {
+      const item = `${subject} ${compactMimicaTerm(context)}`;
+      if (!seen.has(item)) {
+        seen.add(item);
+        generatedItems.push(item);
+      }
+    }
+    for (const style of mimicaHardStyles) {
+      const item = `${subject} ${style}`;
+      if (!seen.has(item)) {
+        seen.add(item);
+        generatedItems.push(item);
       }
     }
   }
