@@ -4,10 +4,17 @@ import {
   shuffleArray,
 } from "../shared/utils.js";
 
-export function buildImpostorGame(totalPlayers, secretWord, category, difficulty) {
+export function buildImpostorGame(
+  totalPlayers,
+  impostorCount,
+  secretWord,
+  category,
+  difficulty,
+) {
+  const safeImpostorCount = Math.min(Math.max(1, impostorCount), totalPlayers - 1);
   const roles = shuffleArray(
     Array.from({ length: totalPlayers }, (_, playerIndex) => {
-      if (playerIndex === 0) {
+      if (playerIndex < safeImpostorCount) {
         return {
           badge: "Impostor",
           title: "Você é o impostor",
@@ -34,6 +41,7 @@ export function buildImpostorGame(totalPlayers, secretWord, category, difficulty
     type: "impostor",
     name: "Impostor",
     totalPlayers,
+    impostorCount: safeImpostorCount,
     roles,
     setupScreen: "impostorSetup",
     endLabel: "Rodada pronta",
@@ -42,7 +50,7 @@ export function buildImpostorGame(totalPlayers, secretWord, category, difficulty
       "Agora afastem o celular e comecem a conversa para descobrir quem é o impostor.",
     summary: [
       { label: "Jogadores", value: String(totalPlayers) },
-      { label: "Impostores", value: "1" },
+      { label: "Impostores", value: String(safeImpostorCount) },
       { label: "Dificuldade", value: getDifficultyLabel(difficulty) },
     ],
     hero: {

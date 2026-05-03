@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=39" />
+    <link rel="stylesheet" href="./styles.css?v=40" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -483,6 +483,40 @@
                   +
                 </button>
               </div>
+            </label>
+
+            <label class="field-group" for="impostor-count">
+              <span class="field-label">Número de impostores</span>
+              <div class="stepper">
+                <button
+                  id="impostor-decrease-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir impostores"
+                >
+                  -
+                </button>
+                <input
+                  id="impostor-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="19"
+                  value="1"
+                />
+                <button
+                  id="impostor-increase-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar impostores"
+                >
+                  +
+                </button>
+              </div>
+              <p class="field-hint">
+                Sempre precisa sobrar pelo menos uma pessoa com a palavra.
+              </p>
             </label>
 
             <label class="field-group" for="impostor-secret-word">
@@ -1221,8 +1255,11 @@
           </div>
         </div>
       </section>
+      <footer class="app-version" aria-label="Versão do aplicativo">
+        <span id="app-version">v0</span>
+      </footer>
     </main>
 
-    <script type="module" src="./script.js?v=33"></script>
+    <script type="module" src="./script.js?v=35"></script>
   </body>
 </html>

@@ -4,6 +4,7 @@ export function getElements() {
     heroEyebrow: document.getElementById("hero-eyebrow"),
     heroTitle: document.getElementById("hero-title"),
     heroCopy: document.getElementById("hero-copy"),
+    appVersion: document.getElementById("app-version"),
     screens: {
       hub: document.getElementById("hub-screen"),
       impostorSetup: document.getElementById("impostor-setup-screen"),
@@ -44,6 +45,9 @@ export function getElements() {
       playerCount: document.getElementById("impostor-player-count"),
       decreasePlayers: document.getElementById("impostor-decrease-players"),
       increasePlayers: document.getElementById("impostor-increase-players"),
+      impostorCount: document.getElementById("impostor-count"),
+      decreaseImpostors: document.getElementById("impostor-decrease-count"),
+      increaseImpostors: document.getElementById("impostor-increase-count"),
       wordCategory: document.getElementById("impostor-word-category"),
       wordDifficulty: document.getElementById("impostor-word-difficulty"),
       secretWord: document.getElementById("impostor-secret-word"),

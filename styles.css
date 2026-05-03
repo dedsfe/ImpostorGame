@@ -78,7 +78,7 @@ body.is-mimica-play .ambient {
   margin: 0 auto;
   min-height: 100svh;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: clamp(0.6rem, 1.6vh, 1rem);
   padding: clamp(0.7rem, 1.6vh, 1.2rem) clamp(0.8rem, 2vw, 1.4rem);
   position: relative;
@@ -119,6 +119,22 @@ body.is-mimica-play .ambient {
 
 .app-nav-title:hover {
   background: rgba(14, 14, 14, 0.58);
+}
+
+.app-version {
+  justify-self: center;
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding-bottom: 0.1rem;
+  text-transform: uppercase;
+}
+
+body.is-whoami-reveal .app-version,
+body.is-mimica-play .app-version {
+  display: none;
 }
 
 .app-nav-title:focus-visible {

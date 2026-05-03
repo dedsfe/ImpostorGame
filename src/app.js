@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=33";
+} from "./data/catalogs.js?v=35";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
@@ -14,6 +14,7 @@ import {
   buildPoliceGame,
 } from "./viewmodels/game-factories.js";
 const state = createInitialState();
+const APP_VERSION = "v35";
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
@@ -722,6 +723,10 @@ function updateMimicaFeedback(message = "") {
   elements.mimica.feedback.textContent = message;
 }
 
+function renderAppVersion() {
+  elements.appVersion.textContent = APP_VERSION;
+}
+
 function renderTurnSecret(role) {
   const isVisible = state.turnRevealVisible;
   const shouldShowImpostorHint = isVisible && role.tone === "impostor";
@@ -757,6 +762,17 @@ function renderTurnSecret(role) {
 function syncImpostorPlayerInput(nextValue) {
   const safeValue = clampPlayers(nextValue);
   elements.impostor.playerCount.value = safeValue;
+  syncImpostorCountInput(elements.impostor.impostorCount.value);
+  return safeValue;
+}
+
+function syncImpostorCountInput(nextValue) {
+  const totalPlayers = clampPlayers(elements.impostor.playerCount.value);
+  const maxImpostors = Math.max(1, totalPlayers - 1);
+  const safeValue = clampInteger(nextValue, 1, maxImpostors, 1);
+
+  elements.impostor.impostorCount.max = maxImpostors;
+  elements.impostor.impostorCount.value = safeValue;
   return safeValue;
 }
 
@@ -1368,6 +1384,7 @@ function restartCurrentGame() {
 
 function startImpostorGame() {
   const totalPlayers = syncImpostorPlayerInput(elements.impostor.playerCount.value);
+  const impostorCount = syncImpostorCountInput(elements.impostor.impostorCount.value);
   const category = syncImpostorCategoryInput(elements.impostor.wordCategory.value);
   const difficulty = syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
   let secretWord = normalizeWord(elements.impostor.secretWord.value);
@@ -1379,7 +1396,13 @@ function startImpostorGame() {
   }
 
   updateImpostorFeedback("");
-  state.currentGame = buildImpostorGame(totalPlayers, secretWord, category, difficulty);
+  state.currentGame = buildImpostorGame(
+    totalPlayers,
+    impostorCount,
+    secretWord,
+    category,
+    difficulty,
+  );
   resetTurnPlayers();
   renderPreparation();
 }
@@ -1477,6 +1500,18 @@ elements.impostor.increasePlayers.addEventListener("click", () => {
 
 elements.impostor.playerCount.addEventListener("change", (event) => {
   syncImpostorPlayerInput(event.target.value);
+});
+
+elements.impostor.decreaseImpostors.addEventListener("click", () => {
+  syncImpostorCountInput(Number(elements.impostor.impostorCount.value) - 1);
+});
+
+elements.impostor.increaseImpostors.addEventListener("click", () => {
+  syncImpostorCountInput(Number(elements.impostor.impostorCount.value) + 1);
+});
+
+elements.impostor.impostorCount.addEventListener("change", (event) => {
+  syncImpostorCountInput(event.target.value);
 });
 
 elements.impostor.wordCategory.addEventListener("change", (event) => {
@@ -1775,10 +1810,12 @@ document.addEventListener("keydown", (event) => {
 });
 
 preloadHubImages();
+renderAppVersion();
 renderHubCards();
 renderHubModal();
 renderRulesModal();
 syncImpostorPlayerInput(elements.impostor.playerCount.value);
+syncImpostorCountInput(elements.impostor.impostorCount.value);
 syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
 setImpostorWordVisibility(false);
