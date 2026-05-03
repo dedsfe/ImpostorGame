@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=36";
+} from "./data/catalogs.js?v=37";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
@@ -14,7 +14,7 @@ import {
   buildPoliceGame,
 } from "./viewmodels/game-factories.js";
 const state = createInitialState();
-const APP_VERSION = "v36";
+const APP_VERSION = "v37";
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
@@ -641,6 +641,10 @@ function resetTurnPlayers() {
   elements.turn.revealRole.disabled = true;
 }
 
+function shouldRequirePlayerNames() {
+  return state.currentGame?.requirePlayerNames !== false;
+}
+
 function getCurrentPlayerName() {
   return state.playerNames[state.currentPlayer] ?? "";
 }
@@ -650,6 +654,11 @@ function getCurrentPlayerLabel() {
 }
 
 function syncCurrentPlayerName() {
+  if (!shouldRequirePlayerNames()) {
+    elements.turn.revealRole.disabled = false;
+    return "";
+  }
+
   const playerName = normalizePlayerName(elements.turn.playerName.value);
   state.playerNames[state.currentPlayer] = playerName;
   elements.turn.revealRole.disabled = playerName.length === 0;
@@ -1240,6 +1249,7 @@ function renderWhoAmICharacter() {
 function renderPreparation() {
   const playerNumber = state.currentPlayer + 1;
   const playerName = getCurrentPlayerName();
+  const requirePlayerNames = shouldRequirePlayerNames();
 
   setHero({
     eyebrow: state.currentGame.name,
@@ -1253,14 +1263,19 @@ function renderPreparation() {
   elements.turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
   elements.turn.prepTitle.textContent = `Prepare o Jogador ${playerNumber}`;
   elements.turn.prepDescription.textContent =
-    "Digite o nome antes de revelar. Só a pessoa com esse nome deve tocar para ver o papel.";
+    requirePlayerNames
+      ? "Digite o nome antes de revelar. Só a pessoa com esse nome deve tocar para ver o papel."
+      : "Passe o celular com a tela coberta e toque em mostrar apenas quando a pessoa estiver pronta.";
+  elements.turn.playerName.closest(".turn-name-field").hidden = !requirePlayerNames;
   elements.turn.playerName.value = playerName;
   syncCurrentPlayerName();
 
   clearRoleTone();
   setTurnPhase("prep");
   setActiveScreen("turn");
-  elements.turn.playerName.focus();
+  if (requirePlayerNames) {
+    elements.turn.playerName.focus();
+  }
 }
 
 function renderReveal() {
@@ -1375,6 +1390,7 @@ function restartCurrentGame() {
 function startImpostorGame() {
   const totalPlayers = syncImpostorPlayerInput(elements.impostor.playerCount.value);
   const impostorCount = syncImpostorCountInput(elements.impostor.impostorCount.value);
+  const requirePlayerNames = elements.impostor.requireNames.value !== "optional";
   const category = syncImpostorCategoryInput(elements.impostor.wordCategory.value);
   const difficulty = syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
   let secretWord = normalizeWord(elements.impostor.secretWord.value);
@@ -1389,6 +1405,7 @@ function startImpostorGame() {
   state.currentGame = buildImpostorGame(
     totalPlayers,
     impostorCount,
+    requirePlayerNames,
     secretWord,
     category,
     difficulty,
@@ -1692,7 +1709,7 @@ elements.turn.playerName.addEventListener("keydown", (event) => {
 });
 
 elements.turn.revealRole.addEventListener("click", () => {
-  if (!syncCurrentPlayerName()) {
+  if (shouldRequirePlayerNames() && !syncCurrentPlayerName()) {
     elements.turn.playerName.focus();
     return;
   }

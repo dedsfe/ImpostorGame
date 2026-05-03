@@ -48,6 +48,7 @@ export function getElements() {
       impostorCount: document.getElementById("impostor-count"),
       decreaseImpostors: document.getElementById("impostor-decrease-count"),
       increaseImpostors: document.getElementById("impostor-increase-count"),
+      requireNames: document.getElementById("impostor-require-names"),
       wordCategory: document.getElementById("impostor-word-category"),
       wordDifficulty: document.getElementById("impostor-word-difficulty"),
       secretWord: document.getElementById("impostor-secret-word"),

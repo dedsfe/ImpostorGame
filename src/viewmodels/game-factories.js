@@ -7,6 +7,7 @@ import {
 export function buildImpostorGame(
   totalPlayers,
   impostorCount,
+  requirePlayerNames,
   secretWord,
   category,
   difficulty,
@@ -42,6 +43,7 @@ export function buildImpostorGame(
     name: "Impostor",
     totalPlayers,
     impostorCount: safeImpostorCount,
+    requirePlayerNames,
     roles,
     setupScreen: "impostorSetup",
     endLabel: "Rodada pronta",
