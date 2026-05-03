@@ -526,7 +526,7 @@ export const mimicaFilmesSeriesExtras = {
   ],
 };
 
-const MIMICA_HARD_POOL_SIZE = 5000;
+const MIMICA_HARD_POOL_SIZE = 5001;
 const mimicaHardStyles = [
   "em câmera lenta",
   "sem fazer barulho",
