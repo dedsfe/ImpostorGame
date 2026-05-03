@@ -526,7 +526,7 @@ export const mimicaFilmesSeriesExtras = {
   ],
 };
 
-const MIMICA_HARD_POOL_SIZE = 5001;
+const MIMICA_HARD_POOL_SIZE = 500;
 const mimicaHardStyles = [
   "lento",
   "mudo",
@@ -1194,13 +1194,13 @@ function ensureMimicaHardPool(items, category) {
   const uniqueItems = [...new Set(items)];
 
   if (uniqueItems.length >= MIMICA_HARD_POOL_SIZE) {
-    return uniqueItems;
+    return uniqueItems.slice(0, MIMICA_HARD_POOL_SIZE);
   }
 
   return [
     ...uniqueItems,
     ...buildMimicaGeneratedHardItems(category, uniqueItems),
-  ];
+  ].slice(0, MIMICA_HARD_POOL_SIZE);
 }
 
 export const mimicaPools = {

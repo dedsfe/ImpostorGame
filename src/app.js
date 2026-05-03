@@ -4,7 +4,7 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=35";
+} from "./data/catalogs.js?v=36";
 import { rulesContent } from "./data/tutorials.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
@@ -14,7 +14,7 @@ import {
   buildPoliceGame,
 } from "./viewmodels/game-factories.js";
 const state = createInitialState();
-const APP_VERSION = "v35";
+const APP_VERSION = "v36";
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
@@ -802,23 +802,13 @@ function getWordFromCategory(category, difficulty) {
 function getMimicaWord(category, difficulty) {
   const categoryPool = mimicaPools[category] ?? mimicaPools.geral;
   const words = categoryPool[difficulty] ?? mimicaPools.geral.medio;
-  const deckKey = `${category}:${difficulty}`;
-
-  if (state.mimica.deckKey !== deckKey) {
-    state.mimica.deckKey = deckKey;
-    state.mimica.remainingWords = [];
-    state.mimica.currentWord = "";
-  }
-
-  if (state.mimica.remainingWords.length === 0) {
-    state.mimica.remainingWords = buildShuffledDeck(
-      words,
-      state.mimica.currentWord,
-      getMimicaEntryKey,
-    );
-  }
-
-  const nextWord = state.mimica.remainingWords.pop() ?? words[randomIndex(words.length)];
+  const currentKey =
+    state.mimica.currentWord === "" ? "" : getMimicaEntryKey(state.mimica.currentWord);
+  const candidateWords =
+    words.length > 1
+      ? words.filter((word) => getMimicaEntryKey(word) !== currentKey)
+      : words;
+  const nextWord = candidateWords[randomIndex(candidateWords.length)];
 
   state.mimica.currentWord = nextWord;
   return nextWord;
