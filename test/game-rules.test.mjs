@@ -17,9 +17,12 @@ import {
   randomIndex,
   shuffleArray,
 } from "../src/shared/utils.js";
-import { createCityGame } from "../src/games/city.js";
-import { createImpostorGame } from "../src/games/impostor.js";
-import { createPoliceGame } from "../src/games/police.js";
+import { createCityGame, normalizeCitySetup } from "../src/games/city.js";
+import {
+  createImpostorGame,
+  normalizeImpostorSetup,
+} from "../src/games/impostor.js";
+import { createPoliceGame, normalizePoliceSetup } from "../src/games/police.js";
 
 test("normalizes setup values with the game limits", () => {
   assert.equal(clampInteger("x", 1, 10, 4), 4);
@@ -91,4 +94,27 @@ test("prevents an impostor-only round", () => {
 
   assert.equal(game.impostorCount, 2);
   assert.equal(game.roles.filter((role) => role.value === "IMPOSTOR").length, 2);
+});
+
+test("normalizes every role setup before creating a round", () => {
+  assert.deepEqual(normalizeImpostorSetup({ totalPlayers: 3, impostorCount: 9 }), {
+    totalPlayers: 3,
+    impostorCount: 2,
+    maxImpostors: 2,
+  });
+
+  const police = normalizePoliceSetup(
+    { police: 12, thief: 12, victim: 12 },
+    { preferredRole: "victim", nextValue: 12 },
+  );
+  assert.equal(police.totalPlayers, 20);
+  assert.ok(police.police >= 1 && police.thief >= 1 && police.victim >= 1);
+
+  const city = normalizeCitySetup(
+    { players: 5, assassins: 10, detectives: 10 },
+    { preferredField: "detectives", nextValue: 10 },
+  );
+  assert.equal(city.players, 5);
+  assert.equal(city.citizens, 1);
+  assert.ok(city.assassins >= 1 && city.detectives >= 0);
 });

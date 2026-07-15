@@ -9,16 +9,14 @@ import { rulesContent } from "./data/tutorials.js";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
-import { createCityGame } from "./games/city.js";
-import { createImpostorGame } from "./games/impostor.js";
-import { createPoliceGame } from "./games/police.js";
+import { createCityGame, normalizeCitySetup } from "./games/city.js";
+import {
+  createImpostorGame,
+  normalizeImpostorSetup,
+} from "./games/impostor.js";
+import { createPoliceGame, normalizePoliceSetup } from "./games/police.js";
 import {
   buildShuffledDeck,
-  clampCityPlayers,
-  clampInteger,
-  clampOptionalRoleCount,
-  clampPlayers,
-  clampRoleCount,
   getMimicaEntryKey,
   getWhoAmIEntryKey,
   normalizeMimicaEntry,
@@ -651,20 +649,27 @@ function renderTurnSecret(role) {
 }
 
 function syncImpostorPlayerInput(nextValue) {
-  const safeValue = clampPlayers(nextValue);
-  elements.impostor.playerCount.value = safeValue;
-  syncImpostorCountInput(elements.impostor.impostorCount.value);
-  return safeValue;
+  const setup = normalizeImpostorSetup({
+    totalPlayers: nextValue,
+    impostorCount: elements.impostor.impostorCount.value,
+  });
+
+  elements.impostor.playerCount.value = setup.totalPlayers;
+  elements.impostor.impostorCount.max = setup.maxImpostors;
+  elements.impostor.impostorCount.value = setup.impostorCount;
+  return setup.totalPlayers;
 }
 
 function syncImpostorCountInput(nextValue) {
-  const totalPlayers = clampPlayers(elements.impostor.playerCount.value);
-  const maxImpostors = Math.max(1, totalPlayers - 1);
-  const safeValue = clampInteger(nextValue, 1, maxImpostors, 1);
+  const setup = normalizeImpostorSetup({
+    totalPlayers: elements.impostor.playerCount.value,
+    impostorCount: nextValue,
+  });
 
-  elements.impostor.impostorCount.max = maxImpostors;
-  elements.impostor.impostorCount.value = safeValue;
-  return safeValue;
+  elements.impostor.playerCount.value = setup.totalPlayers;
+  elements.impostor.impostorCount.max = setup.maxImpostors;
+  elements.impostor.impostorCount.value = setup.impostorCount;
+  return setup.impostorCount;
 }
 
 function syncImpostorCategoryInput(nextValue) {
@@ -870,46 +875,20 @@ function getWhoAmICharacter(category) {
 }
 
 function syncPoliceRoleInputs(preferredRole = "victim", nextValue = null) {
-  const counts = {
-    police: clampRoleCount(elements.police.policeCount.value),
-    thief: clampRoleCount(elements.police.thiefCount.value),
-    victim: clampRoleCount(elements.police.victimCount.value),
-  };
-
-  if (preferredRole in counts && nextValue !== null) {
-    counts[preferredRole] = clampRoleCount(nextValue);
-  }
-
-  const totalPlayers = counts.police + counts.thief + counts.victim;
-  let overflow = totalPlayers - 20;
-  const roleOrder = [
-    preferredRole,
-    ...["police", "thief", "victim"].filter((role) => role !== preferredRole),
-  ];
-
-  roleOrder.forEach((role) => {
-    if (overflow <= 0) {
-      return;
-    }
-
-    const reducible = counts[role] - 1;
-
-    if (reducible <= 0) {
-      return;
-    }
-
-    const reduction = Math.min(reducible, overflow);
-    counts[role] -= reduction;
-    overflow -= reduction;
-  });
-
-  const safeTotalPlayers = counts.police + counts.thief + counts.victim;
+  const counts = normalizePoliceSetup(
+    {
+      police: elements.police.policeCount.value,
+      thief: elements.police.thiefCount.value,
+      victim: elements.police.victimCount.value,
+    },
+    { preferredRole, nextValue },
+  );
 
   elements.police.policeCount.value = counts.police;
   elements.police.thiefCount.value = counts.thief;
   elements.police.victimCount.value = counts.victim;
-  elements.police.roleSummary.textContent = `Total: ${safeTotalPlayers} ${pluralize(
-    safeTotalPlayers,
+  elements.police.roleSummary.textContent = `Total: ${counts.totalPlayers} ${pluralize(
+    counts.totalPlayers,
     "jogador",
     "jogadores",
   )}. Serão ${counts.police} ${pluralize(
@@ -922,62 +901,18 @@ function syncPoliceRoleInputs(preferredRole = "victim", nextValue = null) {
     "ladrões",
   )} e ${counts.victim} ${pluralize(counts.victim, "vítima", "vítimas")}.`;
 
-  return {
-    ...counts,
-    totalPlayers: safeTotalPlayers,
-  };
+  return counts;
 }
 
 function syncCityRoleInputs(preferredField = "players", nextValue = null) {
-  const counts = {
-    players: clampCityPlayers(elements.city.playerCount.value),
-    assassins: clampRoleCount(elements.city.assassinCount.value),
-    detectives: clampOptionalRoleCount(elements.city.detectiveCount.value),
-  };
-
-  if (preferredField in counts && nextValue !== null) {
-    if (preferredField === "players") {
-      counts.players = clampCityPlayers(nextValue);
-    }
-    if (preferredField === "assassins") {
-      counts.assassins = clampRoleCount(nextValue);
-    }
-    if (preferredField === "detectives") {
-      counts.detectives = clampOptionalRoleCount(nextValue);
-    }
-  }
-
-  counts.assassins = Math.min(counts.assassins, counts.players - 1);
-  counts.detectives = Math.min(counts.detectives, counts.players - 1);
-
-  let citizens = counts.players - counts.assassins - counts.detectives;
-
-  if (citizens < 1) {
-    let overflow = 1 - citizens;
-    const roleOrder =
-      preferredField === "detectives"
-        ? ["assassins", "detectives"]
-        : ["detectives", "assassins"];
-
-    roleOrder.forEach((role) => {
-      if (overflow <= 0) {
-        return;
-      }
-
-      const minValue = role === "assassins" ? 1 : 0;
-      const reducible = counts[role] - minValue;
-
-      if (reducible <= 0) {
-        return;
-      }
-
-      const reduction = Math.min(reducible, overflow);
-      counts[role] -= reduction;
-      overflow -= reduction;
-    });
-  }
-
-  citizens = counts.players - counts.assassins - counts.detectives;
+  const counts = normalizeCitySetup(
+    {
+      players: elements.city.playerCount.value,
+      assassins: elements.city.assassinCount.value,
+      detectives: elements.city.detectiveCount.value,
+    },
+    { preferredField, nextValue },
+  );
 
   elements.city.playerCount.value = counts.players;
   elements.city.assassinCount.value = counts.assassins;
@@ -994,12 +929,13 @@ function syncCityRoleInputs(preferredField = "players", nextValue = null) {
     counts.detectives,
     "detetive",
     "detetives",
-  )} e ${citizens} ${pluralize(citizens, "cidadão", "cidadãos")}.`;
+  )} e ${counts.citizens} ${pluralize(
+    counts.citizens,
+    "cidadão",
+    "cidadãos",
+  )}.`;
 
-  return {
-    ...counts,
-    citizens,
-  };
+  return counts;
 }
 
 function openHub() {

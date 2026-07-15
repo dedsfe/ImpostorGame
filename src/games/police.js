@@ -1,4 +1,43 @@
-import { pluralize, shuffleArray } from "../shared/utils.js";
+import { clampRoleCount, pluralize, shuffleArray } from "../shared/utils.js";
+
+export function normalizePoliceSetup(
+  currentCounts,
+  { preferredRole = "victim", nextValue = null } = {},
+) {
+  const counts = {
+    police: clampRoleCount(currentCounts.police),
+    thief: clampRoleCount(currentCounts.thief),
+    victim: clampRoleCount(currentCounts.victim),
+  };
+
+  if (preferredRole in counts && nextValue !== null) {
+    counts[preferredRole] = clampRoleCount(nextValue);
+  }
+
+  let overflow = counts.police + counts.thief + counts.victim - 20;
+  const roleOrder = [
+    preferredRole,
+    ...["police", "thief", "victim"].filter((role) => role !== preferredRole),
+  ];
+
+  roleOrder.forEach((role) => {
+    if (overflow <= 0) {
+      return;
+    }
+
+    const reduction = Math.min(counts[role] - 1, overflow);
+
+    if (reduction > 0) {
+      counts[role] -= reduction;
+      overflow -= reduction;
+    }
+  });
+
+  return {
+    ...counts,
+    totalPlayers: counts.police + counts.thief + counts.victim,
+  };
+}
 
 export function createPoliceGame({ totalPlayers, policeCount, thiefCount, victimCount }) {
   const roles = shuffleArray([

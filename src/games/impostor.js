@@ -1,4 +1,20 @@
-import { getDifficultyLabel, shuffleArray } from "../shared/utils.js";
+import {
+  clampInteger,
+  clampPlayers,
+  getDifficultyLabel,
+  shuffleArray,
+} from "../shared/utils.js";
+
+export function normalizeImpostorSetup({ totalPlayers, impostorCount }) {
+  const safeTotalPlayers = clampPlayers(totalPlayers);
+  const maxImpostors = Math.max(1, safeTotalPlayers - 1);
+
+  return {
+    totalPlayers: safeTotalPlayers,
+    impostorCount: clampInteger(impostorCount, 1, maxImpostors, 1),
+    maxImpostors,
+  };
+}
 
 export function createImpostorGame({
   totalPlayers,

@@ -1,4 +1,61 @@
-import { pluralize, shuffleArray } from "../shared/utils.js";
+import {
+  clampCityPlayers,
+  clampOptionalRoleCount,
+  clampRoleCount,
+  pluralize,
+  shuffleArray,
+} from "../shared/utils.js";
+
+export function normalizeCitySetup(
+  currentCounts,
+  { preferredField = "players", nextValue = null } = {},
+) {
+  const counts = {
+    players: clampCityPlayers(currentCounts.players),
+    assassins: clampRoleCount(currentCounts.assassins),
+    detectives: clampOptionalRoleCount(currentCounts.detectives),
+  };
+
+  if (preferredField in counts && nextValue !== null) {
+    const normalizers = {
+      players: clampCityPlayers,
+      assassins: clampRoleCount,
+      detectives: clampOptionalRoleCount,
+    };
+    counts[preferredField] = normalizers[preferredField](nextValue);
+  }
+
+  counts.assassins = Math.min(counts.assassins, counts.players - 1);
+  counts.detectives = Math.min(counts.detectives, counts.players - 1);
+
+  let citizens = counts.players - counts.assassins - counts.detectives;
+
+  if (citizens < 1) {
+    let overflow = 1 - citizens;
+    const roleOrder =
+      preferredField === "detectives"
+        ? ["assassins", "detectives"]
+        : ["detectives", "assassins"];
+
+    roleOrder.forEach((role) => {
+      if (overflow <= 0) {
+        return;
+      }
+
+      const minimum = role === "assassins" ? 1 : 0;
+      const reduction = Math.min(counts[role] - minimum, overflow);
+
+      if (reduction > 0) {
+        counts[role] -= reduction;
+        overflow -= reduction;
+      }
+    });
+  }
+
+  citizens = counts.players - counts.assassins - counts.detectives;
+
+  return { ...counts, citizens };
+}
 
 export function createCityGame({ totalPlayers, assassinCount, detectiveCount }) {
   const citizenCount = totalPlayers - assassinCount - detectiveCount;
