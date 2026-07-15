@@ -1,224 +1,82 @@
-# Arquitetura
+# Arquitetura simples
 
-## Objetivo
+## Decisão
 
-Organizar o projeto Noite de Jogos em uma arquitetura incremental, mantendo o app atual estável e abrindo caminho para:
+O site usa módulos organizados por jogo, não MVVM formal.
 
-- MVVM no frontend
-- backend separado por módulos
-- banco de dados para catálogo e sessões
+Cada jogo concentra suas regras, validação, eventos e telas relacionadas em um
+arquivo dentro de `src/games/`. O `src/app.js` mantém somente o que é realmente
+compartilhado: hub, navegação, modais e distribuição de papéis.
 
-## Estado atual
+Essa organização foi escolhida porque responde diretamente à pergunta mais
+comum de manutenção: “onde altero este jogo?”.
 
-O app web roda sem build, mas já está dividido em módulos ES:
+## Contrato de um jogo
 
-- `src/data` concentra catálogo e tutoriais;
-- `src/viewmodels` concentra estado e criação de partidas;
-- `src/views` concentra referências do DOM;
-- `src/app.js` ainda concentra boa parte da orquestração da interface.
+Cada controller registrado no site expõe:
 
-O Supabase é o backend canônico. As migrations ficam em `supabase/`, enquanto
-`backend/` contém somente rotinas administrativas que usam a chave secreta.
-
-## Segurança do backend
-
-- o catálogo ativo é legível por `anon` e `authenticated`;
-- nenhuma escrita pública é permitida no catálogo;
-- sessões, jogadores e atribuições não têm acesso público;
-- a chave `publishable` pertence ao site e ao app iOS;
-- a chave `secret` pertence somente ao backend ou a Edge Functions;
-- futuras sessões remotas exigirão Supabase Auth e políticas por proprietário.
-
-## Arquitetura alvo de frontend
-
-### View
-
-Responsável por:
-
-- HTML e CSS
-- renderização de tela
-- atualização visual
-- binding de botões e inputs
-
-Arquivos alvo:
-
-- `src/views/dom-elements.js`
-- `src/views/hero-view.js`
-- `src/views/game-flow-view.js`
-- `src/views/whoami-view.js`
-- `src/views/mimica-view.js`
-
-### ViewModel
-
-Responsável por:
-
-- estado da aplicação
-- estado de cada jogo
-- validação de setup
-- sorteio de papéis, palavras e personagens
-- composição de rodada
-
-Arquivos alvo:
-
-- `src/viewmodels/app-session.js`
-- `src/viewmodels/impostor-viewmodel.js`
-- `src/viewmodels/police-viewmodel.js`
-- `src/viewmodels/city-viewmodel.js`
-- `src/viewmodels/whoami-viewmodel.js`
-- `src/viewmodels/mimica-viewmodel.js`
-
-### Model
-
-Responsável por:
-
-- catálogos de conteúdo
-- contratos de dados
-- entidades conceituais
-
-Arquivos alvo:
-
-- `src/models/game.js`
-- `src/models/category.js`
-- `src/models/content-item.js`
-- `src/models/session.js`
-
-### Shared
-
-Responsável por:
-
-- aleatoriedade
-- formatação
-- clamp e normalização
-- utilitários puros
-
-Arquivos alvo:
-
-- `src/shared/random.js`
-- `src/shared/formatters.js`
-- `src/shared/normalizers.js`
-
-### Data
-
-Responsável por:
-
-- pools de palavras
-- pools de personagens
-- categorias
-- dificuldades
-- textos de apoio
-
-Arquivos alvo:
-
-- `src/data/word-pools.js`
-- `src/data/character-pools.js`
-- `src/data/game-configs.js`
-
-## Fluxo de dados sugerido
-
-1. A `View` recebe interação do usuário.
-2. A `View` chama o `ViewModel`.
-3. O `ViewModel` valida, atualiza estado e resolve regras de rodada.
-4. O `ViewModel` busca dados nos `Models/Data`.
-5. A `View` renderiza o novo estado.
-
-## Arquitetura do backend administrativo
-
-O Supabase fornece PostgreSQL, Data API e autenticação. Código Node privilegiado
-continua organizado por módulos de negócio, não por tipo técnico puro.
-
-Estrutura recomendada:
-
-```text
-backend/
-  src/
-    http/
-      routes/
-      controllers/
-      middlewares/
-    modules/
-      catalog/
-        application/
-        domain/
-        infra/
-      sessions/
-        application/
-        domain/
-        infra/
-      games/
-        application/
-        domain/
-        infra/
-    shared/
-      db/
-      env/
-      errors/
-      utils/
+```js
+{
+  id,
+  setupScreen,
+  bind,
+  initialize,
+  openSetup,
+  cleanup // opcional
+}
 ```
 
-## Responsabilidades do backend
+- `bind`: conecta os eventos uma única vez.
+- `initialize`: ajusta valores iniciais e pode ser chamado após atualizar o
+  catálogo.
+- `openSetup`: abre o jogo a partir do hub ou de “jogar novamente”.
+- `cleanup`: encerra recursos como timers ao sair do jogo.
 
-### Módulo `catalog`
+Adicionar um jogo significa criar um módulo, implementar esse contrato e
+registrá-lo em `gameControllers`.
 
-- listar jogos
-- listar categorias
-- listar dificuldades
-- listar palavras e personagens por jogo
-- alimentar o frontend com conteúdo sem depender de hardcode
+## Separação mantida
 
-### Módulo `games`
+- Regras e cálculos são funções puras sempre que possível.
+- Controllers traduzem eventos do DOM para regras do jogo.
+- O estado compartilhado fica em `src/state.js`.
+- Funções usadas por mais de um jogo ficam em `src/shared/utils.js`.
+- Referências ao HTML ficam em `src/views/elements.js`.
 
-- metadados de cada jogo
-- regras configuráveis
-- limites mínimos e máximos
+Não criamos classes, repositories, services ou novas camadas preventivamente.
 
-### Módulo `sessions`
+## Catálogo e backend
 
-- criar sessão opcional
-- salvar configuração da rodada
-- registrar composição da rodada
-- permitir futura sincronização entre dispositivos
+O Supabase é o catálogo canônico de produção. A função da Vercel em
+`api/catalog.js` entrega um snapshot compatível com o site. O catálogo local é
+um fallback para o jogo continuar abrindo sem rede.
 
-## Organização de banco
+O acesso público é somente leitura. Ferramentas que usam a chave secreta ficam
+isoladas em `backend/` e não são enviadas no deploy do site.
 
-O banco precisa suportar dois casos:
+As tabelas de sessões estão fechadas e não fazem parte do runtime atual. Só
+serão ativadas quando existir uma funcionalidade concreta de sincronização
+entre aparelhos.
 
-- catálogo estático de conteúdo
-- sessões opcionais de jogo
+## App iOS
 
-Principais entidades:
+O futuro app SwiftUI pode usar MVVM leve porque o padrão combina com o ciclo de
+estado e renderização da plataforma. O site não precisa imitar a arquitetura do
+iOS.
 
-- `games`
-- `categories`
-- `difficulties`
-- `content_items`
-- `sessions`
-- `session_players`
-- `session_assignments`
+As duas plataformas compartilharão:
 
-Detalhamento inicial do schema está em:
+- schema e catálogo do Supabase;
+- nomes e contratos dos jogos;
+- regras documentadas;
+- casos de teste equivalentes.
 
-- `database/schema.sql`
+Não tentaremos compartilhar código JavaScript com Swift.
 
-## Estratégia incremental
+## Regras para manter simples
 
-### Fase 1
-
-- manter app atual funcionando
-- documentar estrutura alvo
-- preparar backend e database
-
-### Fase 2
-
-- extrair catálogos de `script.js`
-- extrair utilitários puros
-- extrair estado e regras para viewmodels
-
-### Fase 3
-
-- introduzir backend para catálogo
-- mover pools do frontend para banco/API
-
-### Fase 4
-
-- adicionar sessões persistidas
-- eventual sincronização entre aparelhos
+1. Um jogo novo começa com um único módulo.
+2. Uma função só vai para `shared/` depois de ser usada por mais de um jogo.
+3. Regras devem ser testáveis sem navegador.
+4. Todo commit precisa passar em `npm run check`.
+5. Não adicionar dependência ou camada sem um problema atual que a justifique.

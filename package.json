@@ -1,0 +1,11 @@
+{
+  "name": "noite-de-jogos",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx vercel dev",
+    "test": "node --test test/*.test.cjs test/*.test.mjs && npm test --prefix backend",
+    "check": "npm test && node --check src/app.js && node --check server/catalog-snapshot.cjs && node --check api/catalog.js",
+    "catalog:build": "node database/scripts/build-seed.mjs"
+  }
+}

@@ -1,56 +1,69 @@
 # Noite de Jogos
 
-App web local para jogos presenciais de festa:
+Site de jogos presenciais para jogar usando um único celular:
 
-- `Impostor`
-- `Polícia e Ladrão`
-- `Cidade Dorme`
-- `Quem sou eu?`
-- `Mímica Rápida`
+- Impostor
+- Polícia e Ladrão
+- Cidade Dorme
+- Quem sou eu?
+- Mímica Rápida
 
-## Estrutura atual
+## Começar
 
-O runtime web é modular e continua sem etapa de build:
+```bash
+npm run dev
+```
 
-- `index.html` e `styles.css`
-- `script.js`, ponto de entrada do navegador
-- `src/app.js`, fluxo da interface
-- `src/data/`, catálogo e tutoriais
-- `src/viewmodels/`, estado e regras de rodada
-- `src/views/`, referências e renderização do DOM
+O comando inicia o ambiente local da Vercel. As variáveis públicas do Supabase
+ficam no Vercel e em `.env.local`, que nunca deve entrar no Git.
 
-## Organização adicionada
+## Verificar tudo
 
-Para preparar a evolução para o app iOS e conteúdo remoto, a base também tem:
+```bash
+npm run check
+```
 
-- `docs/architecture.md`
-- `supabase/`, migrations PostgreSQL, RLS e seed do catálogo
-- `backend/`, ferramentas administrativas protegidas
-- `database/`, gerador reprodutível das seeds
+Esse é o comando que deve passar antes de qualquer commit.
 
-## Direção de arquitetura
+## Estrutura
 
-Frontend alvo:
+```text
+index.html                 telas e conteúdo visual
+styles.css                estilos
+src/app.js                inicialização, hub e fluxo compartilhado
+src/state.js              estado inicial
+src/games/                um módulo por jogo
+src/data/                 catálogo e tutoriais
+src/shared/utils.js       funções reutilizadas
+src/views/elements.js     referências do HTML
+api/catalog.js            endpoint público da Vercel
+server/catalog-snapshot.cjs
+supabase/                 schema, migrations e verificação
+```
 
-- `models`
-  - dados puros, catálogos, entidades e contratos
-- `viewmodels`
-  - estado de tela, regras de rodada, sincronização de inputs, seleção aleatória
-- `views`
-  - renderização, telas, bindings de DOM e feedback visual
-- `shared`
-  - utilitários puros, normalizadores, formatadores e helpers
-- `data`
-  - pools de palavras, personagens, categorias e dificuldades
+Para alterar um jogo, comece pelo arquivo com seu nome em `src/games/`. Consulte
+`src/README.md` para adicionar um jogo novo.
 
-Backend:
+## Catálogo
 
-- Supabase como banco PostgreSQL e Data API
-- catálogo público somente para leitura, protegido por RLS
-- sessões e atribuições secretas fechadas até a introdução de autenticação
-- chave privilegiada restrita às ferramentas de `backend/`
+O site tenta carregar o catálogo do Supabase em segundo plano. Se a rede ou a
+API falhar, o catálogo local assume imediatamente.
 
-## Inicializar o Supabase
+Para regenerar as migrations do catálogo:
 
-As instruções e o arquivo único para o SQL Editor estão em
-`supabase/README.md` e `supabase/SQL_EDITOR_SETUP.sql`.
+```bash
+npm run catalog:build
+```
+
+Os arquivos SQL gerados não devem ser editados manualmente.
+
+## Segurança
+
+- O navegador usa somente a chave publicável do Supabase.
+- A chave secreta é aceita apenas pelas ferramentas administrativas em
+  `backend/`.
+- O catálogo é público somente para leitura e protegido por RLS.
+- Sessões de jogo continuam locais; nenhuma atribuição secreta é enviada ao
+  banco.
+
+Veja `docs/architecture.md` para as decisões técnicas do projeto.
