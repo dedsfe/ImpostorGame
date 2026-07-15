@@ -3,7 +3,25 @@ import { applyRemoteRulesContent } from "./tutorials.js";
 
 const DEFAULT_TIMEOUT_MS = 5000;
 
-function validateSnapshot(snapshot) {
+function hasNonEmptyPools(catalog) {
+  if (!catalog || typeof catalog !== "object" || Array.isArray(catalog)) {
+    return false;
+  }
+
+  const pools = Object.values(catalog);
+  return (
+    pools.length > 0 &&
+    pools.every((pool) => {
+      if (Array.isArray(pool)) {
+        return pool.length > 0;
+      }
+
+      return hasNonEmptyPools(pool);
+    })
+  );
+}
+
+export function validateSnapshot(snapshot) {
   if (
     !snapshot ||
     snapshot.source !== "supabase" ||
@@ -11,6 +29,14 @@ function validateSnapshot(snapshot) {
     snapshot.counts.contentItems <= 0
   ) {
     throw new Error("Remote catalog snapshot is empty or invalid");
+  }
+
+  if (
+    !hasNonEmptyPools(snapshot.wordPools) ||
+    !hasNonEmptyPools(snapshot.whoAmIPools) ||
+    !hasNonEmptyPools(snapshot.mimicaPools)
+  ) {
+    throw new Error("Remote catalog pools are empty or invalid");
   }
 
   return snapshot;
@@ -56,4 +82,3 @@ export async function hydrateCatalogFromApi({
     clearTimeout(timeout);
   }
 }
-
