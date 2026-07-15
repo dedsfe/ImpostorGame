@@ -1,0 +1,17 @@
+{
+  "name": "impostor-game-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "catalog:health": "node --env-file=.env src/cli/catalog-health.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.5"
+  }
+}
+

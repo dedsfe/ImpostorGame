@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,43 +12,52 @@ import { rulesContent } from "../../src/data/tutorials.js";
 
 const NOW = "2026-03-11T00:00:00Z";
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outputPath = resolve(__dirname, "../migrations/001_catalog_seed.sql");
+const sqliteOutputPath = resolve(__dirname, "../migrations/001_catalog_seed.sql");
+const supabaseOutputPath = resolve(
+  __dirname,
+  "../../supabase/migrations/20260715000200_catalog_seed.sql",
+);
+const supabaseSchemaPath = resolve(
+  __dirname,
+  "../../supabase/migrations/20260715000100_initial_schema.sql",
+);
+const supabaseBundlePath = resolve(__dirname, "../../supabase/SQL_EDITOR_SETUP.sql");
 
 const gameConfig = {
   impostor: {
     minPlayers: 3,
     maxPlayers: 20,
-    supportsCategories: 1,
-    supportsDifficulties: 1,
-    supportsTimer: 0,
+    supportsCategories: true,
+    supportsDifficulties: true,
+    supportsTimer: false,
   },
   police: {
     minPlayers: 3,
     maxPlayers: 20,
-    supportsCategories: 0,
-    supportsDifficulties: 0,
-    supportsTimer: 0,
+    supportsCategories: false,
+    supportsDifficulties: false,
+    supportsTimer: false,
   },
   city: {
     minPlayers: 5,
     maxPlayers: 20,
-    supportsCategories: 0,
-    supportsDifficulties: 0,
-    supportsTimer: 0,
+    supportsCategories: false,
+    supportsDifficulties: false,
+    supportsTimer: false,
   },
   whoami: {
     minPlayers: 2,
     maxPlayers: null,
-    supportsCategories: 1,
-    supportsDifficulties: 0,
-    supportsTimer: 0,
+    supportsCategories: true,
+    supportsDifficulties: false,
+    supportsTimer: false,
   },
   mimica: {
     minPlayers: 2,
     maxPlayers: null,
-    supportsCategories: 1,
-    supportsDifficulties: 1,
-    supportsTimer: 1,
+    supportsCategories: true,
+    supportsDifficulties: true,
+    supportsTimer: true,
   },
 };
 
@@ -193,13 +202,13 @@ function sqlValue(value) {
   }
 
   if (typeof value === "boolean") {
-    return value ? "1" : "0";
+    return value ? "true" : "false";
   }
 
   return `'${String(value).replace(/'/g, "''")}'`;
 }
 
-function toSqlInsert(tableName, columns, rows, batchSize = 250) {
+function toSqlInsert(tableName, columns, rows, batchSize = 250, conflictClause = "") {
   if (rows.length === 0) {
     return "";
   }
@@ -213,11 +222,23 @@ function toSqlInsert(tableName, columns, rows, batchSize = 250) {
       .join(",\n");
 
     statements.push(
-      `insert into ${tableName} (${columns.join(", ")}) values\n${values};`,
+      `insert into ${tableName} (${columns.join(", ")}) values\n${values}${
+        conflictClause ? `\n${conflictClause}` : ""
+      };`,
     );
   }
 
   return statements.join("\n\n");
+}
+
+function toSqlUpsert(tableName, columns, rows, batchSize = 250) {
+  const updateColumns = columns.filter((column) => column !== "id");
+  const conflictClause = [
+    "on conflict (id) do update set",
+    updateColumns.map((column) => `  ${column} = excluded.${column}`).join(",\n"),
+  ].join("\n");
+
+  return toSqlInsert(tableName, columns, rows, batchSize, conflictClause);
 }
 
 function normalizeLabel(value) {
@@ -281,10 +302,10 @@ function buildRows() {
       game.modalImage ?? null,
       config?.minPlayers ?? null,
       config?.maxPlayers ?? null,
-      config?.supportsCategories ?? 0,
-      config?.supportsDifficulties ?? 0,
-      config?.supportsTimer ?? 0,
-      1,
+      config?.supportsCategories ?? false,
+      config?.supportsDifficulties ?? false,
+      config?.supportsTimer ?? false,
+      true,
       NOW,
       NOW,
     ]);
@@ -318,7 +339,7 @@ function buildRows() {
         role.description,
         role.tone,
         index + 1,
-        1,
+        true,
         NOW,
         NOW,
       ]);
@@ -336,7 +357,7 @@ function buildRows() {
           name,
           categories.contentKind,
           index + 1,
-          1,
+          true,
           NOW,
           NOW,
         ]);
@@ -352,7 +373,7 @@ function buildRows() {
         difficulty.slug,
         difficulty.name,
         index + 1,
-        1,
+        true,
         NOW,
         NOW,
       ]);
@@ -408,7 +429,7 @@ function buildRows() {
               normalized.sourceStudio,
               normalized.metadataJson,
               index + 1,
-              1,
+              true,
               NOW,
               NOW,
             ]);
@@ -433,7 +454,7 @@ function buildRows() {
           normalized.sourceStudio,
           normalized.metadataJson,
           index + 1,
-          1,
+          true,
           NOW,
           NOW,
         ]);
@@ -555,6 +576,7 @@ function buildSeedSql() {
 
   return {
     sql: sections.filter(Boolean).join("\n\n"),
+    supabaseSql: buildSupabaseSeedSql(rows),
     stats: {
       games: rows.gamesRows.length,
       tutorials: rows.tutorialsRows.length,
@@ -567,16 +589,135 @@ function buildSeedSql() {
   };
 }
 
+function buildSupabaseSeedSql(rows) {
+  const sections = [
+    "-- ImpostorGame / Noite de Jogos",
+    "-- PostgreSQL seed generated from src/data/catalogs.js and src/data/tutorials.js.",
+    "-- Re-running this migration updates rows with the same stable IDs.",
+    "begin;",
+    toSqlUpsert(
+      "public.games",
+      [
+        "id",
+        "slug",
+        "name",
+        "short_description",
+        "setup_screen",
+        "card_image_path",
+        "modal_image_path",
+        "min_players",
+        "max_players",
+        "supports_categories",
+        "supports_difficulties",
+        "supports_timer",
+        "is_active",
+        "created_at",
+        "updated_at",
+      ],
+      rows.gamesRows,
+    ),
+    toSqlUpsert(
+      "public.game_tutorials",
+      ["id", "game_id", "title", "copy", "created_at", "updated_at"],
+      rows.tutorialsRows,
+    ),
+    toSqlUpsert(
+      "public.tutorial_steps",
+      ["id", "tutorial_id", "step_order", "title", "copy", "created_at", "updated_at"],
+      rows.tutorialStepsRows,
+    ),
+    toSqlUpsert(
+      "public.role_templates",
+      [
+        "id",
+        "game_id",
+        "slug",
+        "name",
+        "badge",
+        "title",
+        "description",
+        "tone",
+        "sort_order",
+        "is_active",
+        "created_at",
+        "updated_at",
+      ],
+      rows.roleTemplateRows,
+    ),
+    toSqlUpsert(
+      "public.categories",
+      [
+        "id",
+        "game_id",
+        "slug",
+        "name",
+        "content_kind",
+        "sort_order",
+        "is_active",
+        "created_at",
+        "updated_at",
+      ],
+      rows.categoryRows,
+    ),
+    toSqlUpsert(
+      "public.difficulties",
+      ["id", "game_id", "slug", "name", "sort_order", "is_active", "created_at", "updated_at"],
+      rows.difficultyRows,
+    ),
+    toSqlUpsert(
+      "public.content_items",
+      [
+        "id",
+        "game_id",
+        "category_id",
+        "difficulty_id",
+        "content_kind",
+        "label",
+        "normalized_label",
+        "source_title",
+        "source_studio",
+        "metadata_json",
+        "sort_order",
+        "is_active",
+        "created_at",
+        "updated_at",
+      ],
+      rows.contentItemRows,
+      150,
+    ),
+    "select setval(pg_get_serial_sequence('public.games', 'id'), (select max(id) from public.games), true);",
+    "select setval(pg_get_serial_sequence('public.game_tutorials', 'id'), (select max(id) from public.game_tutorials), true);",
+    "select setval(pg_get_serial_sequence('public.tutorial_steps', 'id'), (select max(id) from public.tutorial_steps), true);",
+    "select setval(pg_get_serial_sequence('public.role_templates', 'id'), (select max(id) from public.role_templates), true);",
+    "select setval(pg_get_serial_sequence('public.categories', 'id'), (select max(id) from public.categories), true);",
+    "select setval(pg_get_serial_sequence('public.difficulties', 'id'), (select max(id) from public.difficulties), true);",
+    "select setval(pg_get_serial_sequence('public.content_items', 'id'), (select max(id) from public.content_items), true);",
+    "commit;",
+    "",
+  ];
+
+  return sections.filter(Boolean).join("\n\n");
+}
+
 function main() {
   mkdirSync(resolve(__dirname, "../migrations"), { recursive: true });
+  mkdirSync(resolve(__dirname, "../../supabase/migrations"), { recursive: true });
 
-  const { sql, stats } = buildSeedSql();
-  writeFileSync(outputPath, sql, "utf8");
+  const { sql, supabaseSql, stats } = buildSeedSql();
+  writeFileSync(sqliteOutputPath, sql, "utf8");
+  writeFileSync(supabaseOutputPath, supabaseSql, "utf8");
+  writeFileSync(
+    supabaseBundlePath,
+    `${readFileSync(supabaseSchemaPath, "utf8").trim()}\n\n${supabaseSql}`,
+    "utf8",
+  );
 
   console.log(
     JSON.stringify(
       {
-        outputPath,
+        sqliteOutputPath,
+        supabaseOutputPath,
+        supabaseBundlePath,
         ...stats,
       },
       null,

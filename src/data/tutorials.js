@@ -96,3 +96,18 @@ export const rulesContent = {
     ],
   },
 };
+
+export function applyRemoteRulesContent(nextRulesContent) {
+  if (
+    !nextRulesContent ||
+    typeof nextRulesContent !== "object" ||
+    Array.isArray(nextRulesContent)
+  ) {
+    throw new Error("Remote catalog has an invalid tutorial structure");
+  }
+
+  Object.keys(rulesContent).forEach((gameId) => {
+    delete rulesContent[gameId];
+  });
+  Object.assign(rulesContent, nextRulesContent);
+}

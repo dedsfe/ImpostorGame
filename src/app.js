@@ -4,8 +4,9 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=37";
+} from "./data/catalogs.js";
 import { rulesContent } from "./data/tutorials.js";
+import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
 import {
@@ -13,8 +14,12 @@ import {
   buildImpostorGame,
   buildPoliceGame,
 } from "./viewmodels/game-factories.js";
+
+const catalogRuntime = await hydrateCatalogFromApi();
+document.documentElement.dataset.catalogSource = catalogRuntime.source;
+
 const state = createInitialState();
-const APP_VERSION = "v37";
+const APP_VERSION = "v38";
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));

@@ -1,24 +1,47 @@
--- Seed inicial gerada automaticamente a partir dos catálogos do frontend
+-- ImpostorGame / Noite de Jogos
 
--- Arquivo gerado por database/scripts/build-seed.mjs
+-- PostgreSQL seed generated from src/data/catalogs.js and src/data/tutorials.js.
 
-begin transaction;
+-- Re-running this migration updates rows with the same stable IDs.
 
-insert into games (id, slug, name, short_description, setup_screen, card_image_path, modal_image_path, min_players, max_players, supports_categories, supports_difficulties, supports_timer, is_active, created_at, updated_at) values
+begin;
+
+insert into public.games (id, slug, name, short_description, setup_screen, card_image_path, modal_image_path, min_players, max_players, supports_categories, supports_difficulties, supports_timer, is_active, created_at, updated_at) values
   (1, 'impostor', 'Impostor', 'Um jogador não recebe a palavra e precisa blefar durante a conversa.', 'impostorSetup', './assets/impostor.png', './assets/HorizontalImgs/Impostor.png', 3, 20, true, true, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 'police', 'Polícia e Ladrão', 'O app distribui aleatoriamente quem é polícia, ladrão e vítima na rodada.', 'policeSetup', './assets/policiaeladrao.png', './assets/HorizontalImgs/policiaeladrao.png', 3, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 'city', 'Cidade Dorme', 'A cidade dorme, o assassino ataca, o detetive investiga e todos tentam descobrir quem está mentindo.', 'citySetup', './assets/cidadedorme.png', './assets/HorizontalImgs/CidadeDorme.png', 5, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 'whoami', 'Quem sou eu?', 'Escolha a categoria, coloque o celular na testa e revele um personagem em tela branca.', 'whoamiSetup', './assets/quemsoueu.png', './assets/HorizontalImgs/Quem sou Eu.png', 2, null, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (5, 'mimica', 'Mímica Rápida', 'Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.', 'mimicaSetup', './assets/mimica.png', './assets/HorizontalImgs/Mimica Rápida.png', 2, null, true, true, true, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (5, 'mimica', 'Mímica Rápida', 'Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.', 'mimicaSetup', './assets/mimica.png', './assets/HorizontalImgs/Mimica Rápida.png', 2, null, true, true, true, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  slug = excluded.slug,
+  name = excluded.name,
+  short_description = excluded.short_description,
+  setup_screen = excluded.setup_screen,
+  card_image_path = excluded.card_image_path,
+  modal_image_path = excluded.modal_image_path,
+  min_players = excluded.min_players,
+  max_players = excluded.max_players,
+  supports_categories = excluded.supports_categories,
+  supports_difficulties = excluded.supports_difficulties,
+  supports_timer = excluded.supports_timer,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into game_tutorials (id, game_id, title, copy, created_at, updated_at) values
+insert into public.game_tutorials (id, game_id, title, copy, created_at, updated_at) values
   (1, 1, 'Impostor em 3 passos', 'Monte a rodada, revele os papéis com privacidade e depois deixem a conversa decidir quem está mentindo.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 2, 'Polícia e Ladrão em 3 passos', 'Você define os papéis da rodada e o app faz a distribuição segura antes do grupo começar a investigar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 3, 'Cidade Dorme em 3 passos', 'O app só prepara a rodada. Depois disso, o narrador assume e a conversa do grupo conduz o jogo.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 4, 'Quem sou eu? em 3 passos', 'Escolha o universo dos personagens e revele o nome em tela branca, pronto para jogar com o celular na testa.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (5, 5, 'Mímica Rápida em 3 passos', 'Ajuste a rodada e só revele a palavra quando o mímico estiver pronto para começar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (5, 5, 'Mímica Rápida em 3 passos', 'Ajuste a rodada e só revele a palavra quando o mímico estiver pronto para começar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  title = excluded.title,
+  copy = excluded.copy,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into tutorial_steps (id, tutorial_id, step_order, title, copy, created_at, updated_at) values
+insert into public.tutorial_steps (id, tutorial_id, step_order, title, copy, created_at, updated_at) values
   (1, 1, 1, 'Configure a rodada', 'Escolha os jogadores, a categoria e a dificuldade da palavra.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 1, 2, 'Passem o celular', 'Cada pessoa vê só a própria tela antes de entregar para a próxima.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 1, 3, 'Discutam em grupo', 'Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -33,9 +56,16 @@ insert into tutorial_steps (id, tutorial_id, step_order, title, copy, created_at
   (12, 4, 3, 'Revele e troque se precisar', 'A tela final destaca o personagem e, quando fizer sentido, mostra a obra em texto pequeno.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (13, 5, 1, 'Defina categoria e tempo', 'Escolha tema, dificuldade e duração da rodada.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (14, 5, 2, 'Prepare o mímico', 'Outra pessoa toca em mostrar palavra só na hora certa.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (15, 5, 3, 'Joguem em sequência', 'Ao fim, avance para a próxima palavra ou troque de mímico.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (15, 5, 3, 'Joguem em sequência', 'Ao fim, avance para a próxima palavra ou troque de mímico.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  tutorial_id = excluded.tutorial_id,
+  step_order = excluded.step_order,
+  title = excluded.title,
+  copy = excluded.copy,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into role_templates (id, game_id, slug, name, badge, title, description, tone, sort_order, is_active, created_at, updated_at) values
+insert into public.role_templates (id, game_id, slug, name, badge, title, description, tone, sort_order, is_active, created_at, updated_at) values
   (1, 1, 'impostor', 'Impostor', 'Impostor', 'Você é o impostor', 'Escute a conversa, tente entender a palavra e não entregue que você não a conhece.', 'impostor', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 1, 'word-holder', 'Palavra secreta', 'Palavra secreta', 'Você recebeu a palavra', 'Guarde a palavra e use pistas discretas para identificar o impostor.', 'word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 2, 'police', 'Polícia', 'Polícia', 'Você é a polícia', 'Observe a rodada com cuidado e tente identificar quem está agindo como ladrão.', 'police', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -43,9 +73,21 @@ insert into role_templates (id, game_id, slug, name, badge, title, description, 
   (5, 2, 'victim', 'Vítima', 'Vítima', 'Você é a vítima', 'Observe os outros jogadores e tente perceber quem pode estar do seu lado ou contra você.', 'victim', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (6, 3, 'assassin', 'Assassino', 'Assassino', 'Você é o assassino', 'Durante a noite, escolha alguém para eliminar em silêncio e tente não levantar suspeitas durante o dia.', 'thief', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (7, 3, 'detective', 'Detetive', 'Detetive', 'Você é o detetive', 'Durante a noite, investigue alguém com a ajuda do narrador e tente revelar os assassinos.', 'police', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (8, 3, 'citizen', 'Cidadão', 'Cidadão', 'Você é cidadão', 'Discuta, observe e vote em quem você acha que está mentindo para proteger a cidade.', 'victim', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (8, 3, 'citizen', 'Cidadão', 'Cidadão', 'Você é cidadão', 'Discuta, observe e vote em quem você acha que está mentindo para proteger a cidade.', 'victim', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  slug = excluded.slug,
+  name = excluded.name,
+  badge = excluded.badge,
+  title = excluded.title,
+  description = excluded.description,
+  tone = excluded.tone,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into categories (id, game_id, slug, name, content_kind, sort_order, is_active, created_at, updated_at) values
+insert into public.categories (id, game_id, slug, name, content_kind, sort_order, is_active, created_at, updated_at) values
   (1, 1, 'geral', 'Geral', 'secret_word', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 1, 'animais', 'Animais', 'secret_word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 1, 'comidas', 'Comidas', 'secret_word', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -64,17 +106,34 @@ insert into categories (id, game_id, slug, name, content_kind, sort_order, is_ac
   (16, 5, 'filmes-series', 'Filmes e séries', 'mimica_word', 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (17, 5, 'estudios-animacao', 'Disney, Pixar, DreamWorks e estúdios', 'mimica_word', 5, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (18, 5, 'profissoes', 'Profissões', 'mimica_word', 6, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (19, 5, 'games', 'Games', 'mimica_word', 7, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (19, 5, 'games', 'Games', 'mimica_word', 7, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  slug = excluded.slug,
+  name = excluded.name,
+  content_kind = excluded.content_kind,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into difficulties (id, game_id, slug, name, sort_order, is_active, created_at, updated_at) values
+insert into public.difficulties (id, game_id, slug, name, sort_order, is_active, created_at, updated_at) values
   (1, 1, 'facil', 'Fácil', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 1, 'medio', 'Média', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 1, 'dificil', 'Difícil', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 5, 'facil', 'Fácil', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 5, 'medio', 'Média', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (6, 5, 'dificil', 'Difícil', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (6, 5, 'dificil', 'Difícil', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  slug = excluded.slug,
+  name = excluded.name,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1, 1, 1, 1, 'secret_word', 'bola', 'bola', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 1, 1, 1, 'secret_word', 'casa', 'casa', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 1, 1, 1, 'secret_word', 'pao', 'pao', null, null, null, 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -224,9 +283,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (147, 1, 2, 2, 'secret_word', 'alpaca', 'alpaca', null, null, null, 16, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (148, 1, 2, 2, 'secret_word', 'vicunha', 'vicunha', null, null, null, 17, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (149, 1, 2, 2, 'secret_word', 'guanaco', 'guanaco', null, null, null, 18, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (150, 1, 2, 2, 'secret_word', 'alce', 'alce', null, null, null, 19, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (150, 1, 2, 2, 'secret_word', 'alce', 'alce', null, null, null, 19, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (151, 1, 2, 2, 'secret_word', 'cervo', 'cervo', null, null, null, 20, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (152, 1, 2, 2, 'secret_word', 'veado', 'veado', null, null, null, 21, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (153, 1, 2, 2, 'secret_word', 'rena', 'rena', null, null, null, 22, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -376,9 +449,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (297, 1, 4, 3, 'secret_word', 'microscopio', 'microscopio', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (298, 1, 4, 3, 'secret_word', 'estetoscopio', 'estetoscopio', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (299, 1, 4, 3, 'secret_word', 'cronometro', 'cronometro', null, null, null, 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (300, 1, 4, 3, 'secret_word', 'termostato', 'termostato', null, null, null, 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (300, 1, 4, 3, 'secret_word', 'termostato', 'termostato', null, null, null, 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (301, 1, 4, 3, 'secret_word', 'binoculo', 'binoculo', null, null, null, 5, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (302, 1, 4, 3, 'secret_word', 'bumerangue', 'bumerangue', null, null, null, 6, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (303, 1, 4, 3, 'secret_word', 'amplificador', 'amplificador', null, null, null, 7, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -528,9 +615,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (447, 5, 13, 6, 'mimica_word', 'surfar onda gigante no elevador', 'surfar onda gigante no elevador', null, null, null, 99, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (448, 5, 13, 6, 'mimica_word', 'surfar onda gigante na montanha', 'surfar onda gigante na montanha', null, null, null, 100, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (449, 5, 13, 6, 'mimica_word', 'surfar onda gigante no quintal', 'surfar onda gigante no quintal', null, null, null, 101, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (450, 5, 13, 6, 'mimica_word', 'surfar onda gigante na biblioteca', 'surfar onda gigante na biblioteca', null, null, null, 102, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (450, 5, 13, 6, 'mimica_word', 'surfar onda gigante na biblioteca', 'surfar onda gigante na biblioteca', null, null, null, 102, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (451, 5, 13, 6, 'mimica_word', 'surfar onda gigante no estádio', 'surfar onda gigante no estadio', null, null, null, 103, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (452, 5, 13, 6, 'mimica_word', 'surfar onda gigante no camping', 'surfar onda gigante no camping', null, null, null, 104, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (453, 5, 13, 6, 'mimica_word', 'surfar onda gigante na TV', 'surfar onda gigante na tv', null, null, null, 105, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -680,9 +781,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (597, 5, 13, 6, 'mimica_word', 'fugir do labirinto no elevador', 'fugir do labirinto no elevador', null, null, null, 249, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (598, 5, 13, 6, 'mimica_word', 'fugir do labirinto na montanha', 'fugir do labirinto na montanha', null, null, null, 250, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (599, 5, 13, 6, 'mimica_word', 'fugir do labirinto no quintal', 'fugir do labirinto no quintal', null, null, null, 251, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (600, 5, 13, 6, 'mimica_word', 'fugir do labirinto na biblioteca', 'fugir do labirinto na biblioteca', null, null, null, 252, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (600, 5, 13, 6, 'mimica_word', 'fugir do labirinto na biblioteca', 'fugir do labirinto na biblioteca', null, null, null, 252, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (601, 5, 13, 6, 'mimica_word', 'fugir do labirinto no estádio', 'fugir do labirinto no estadio', null, null, null, 253, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (602, 5, 13, 6, 'mimica_word', 'fugir do labirinto no camping', 'fugir do labirinto no camping', null, null, null, 254, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (603, 5, 13, 6, 'mimica_word', 'fugir do labirinto na TV', 'fugir do labirinto na tv', null, null, null, 255, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -832,9 +947,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (747, 5, 14, 6, 'mimica_word', 'narval posando', 'narval posando', null, null, null, 119, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (748, 5, 14, 6, 'mimica_word', 'narval no vento', 'narval no vento', null, null, null, 120, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (749, 5, 14, 6, 'mimica_word', 'narval na floresta', 'narval na floresta', null, null, null, 121, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (750, 5, 14, 6, 'mimica_word', 'narval no deserto', 'narval no deserto', null, null, null, 122, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (750, 5, 14, 6, 'mimica_word', 'narval no deserto', 'narval no deserto', null, null, null, 122, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (751, 5, 14, 6, 'mimica_word', 'narval no aquário', 'narval no aquario', null, null, null, 123, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (752, 5, 14, 6, 'mimica_word', 'narval no gelo', 'narval no gelo', null, null, null, 124, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (753, 5, 14, 6, 'mimica_word', 'narval na savana', 'narval na savana', null, null, null, 125, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -984,9 +1113,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (897, 5, 15, 4, 'mimica_word', 'bola', 'bola', null, null, null, 9, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (898, 5, 15, 4, 'mimica_word', 'guarda-chuva', 'guarda-chuva', null, null, null, 10, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (899, 5, 15, 5, 'mimica_word', 'aspirador', 'aspirador', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (900, 5, 15, 5, 'mimica_word', 'controle remoto', 'controle remoto', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (900, 5, 15, 5, 'mimica_word', 'controle remoto', 'controle remoto', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (901, 5, 15, 5, 'mimica_word', 'microfone', 'microfone', null, null, null, 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (902, 5, 15, 5, 'mimica_word', 'violão', 'violao', null, null, null, 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (903, 5, 15, 5, 'mimica_word', 'geladeira', 'geladeira', null, null, null, 5, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1136,9 +1279,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1047, 5, 15, 6, 'mimica_word', 'baixo cor preta', 'baixo cor preta', null, null, null, 139, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1048, 5, 15, 6, 'mimica_word', 'baixo cor branca', 'baixo cor branca', null, null, null, 140, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1049, 5, 15, 6, 'mimica_word', 'baixo cor vermelha', 'baixo cor vermelha', null, null, null, 141, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1050, 5, 15, 6, 'mimica_word', 'baixo cor azul', 'baixo cor azul', null, null, null, 142, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1050, 5, 15, 6, 'mimica_word', 'baixo cor azul', 'baixo cor azul', null, null, null, 142, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1051, 5, 15, 6, 'mimica_word', 'baixo cor verde', 'baixo cor verde', null, null, null, 143, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1052, 5, 15, 6, 'mimica_word', 'baixo cor amarela', 'baixo cor amarela', null, null, null, 144, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1053, 5, 15, 6, 'mimica_word', 'baixo tamanho pequeno', 'baixo tamanho pequeno', null, null, null, 145, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1288,9 +1445,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1197, 5, 15, 6, 'mimica_word', 'teclado de escritório', 'teclado de escritorio', null, null, null, 289, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1198, 5, 15, 6, 'mimica_word', 'teclado de brinquedo', 'teclado de brinquedo', null, null, null, 290, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1199, 5, 15, 6, 'mimica_word', 'teclado com tampa', 'teclado com tampa', null, null, null, 291, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1200, 5, 15, 6, 'mimica_word', 'teclado com fio', 'teclado com fio', null, null, null, 292, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1200, 5, 15, 6, 'mimica_word', 'teclado com fio', 'teclado com fio', null, null, null, 292, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1201, 5, 15, 6, 'mimica_word', 'teclado sem fio', 'teclado sem fio', null, null, null, 293, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1202, 5, 15, 6, 'mimica_word', 'teclado com roda', 'teclado com roda', null, null, null, 294, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1203, 5, 15, 6, 'mimica_word', 'teclado com alça', 'teclado com alca', null, null, null, 295, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1440,9 +1611,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1347, 5, 15, 6, 'mimica_word', 'saxofone cor amarela', 'saxofone cor amarela', null, null, null, 439, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1348, 5, 15, 6, 'mimica_word', 'saxofone tamanho pequeno', 'saxofone tamanho pequeno', null, null, null, 440, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1349, 5, 15, 6, 'mimica_word', 'saxofone tamanho grande', 'saxofone tamanho grande', null, null, null, 441, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1350, 5, 15, 6, 'mimica_word', 'saxofone tamanho gigante', 'saxofone tamanho gigante', null, null, null, 442, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1350, 5, 15, 6, 'mimica_word', 'saxofone tamanho gigante', 'saxofone tamanho gigante', null, null, null, 442, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1351, 5, 15, 6, 'mimica_word', 'saxofone versão mini', 'saxofone versao mini', null, null, null, 443, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1352, 5, 15, 6, 'mimica_word', 'saxofone modelo dobrável', 'saxofone modelo dobravel', null, null, null, 444, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1353, 5, 15, 6, 'mimica_word', 'saxofone modelo portátil', 'saxofone modelo portatil', null, null, null, 445, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1592,9 +1777,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1497, 5, 16, 4, 'mimica_word', 'Minnie Mouse', 'minnie mouse', null, null, null, 89, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1498, 5, 16, 4, 'mimica_word', 'Pato Donald', 'pato donald', null, null, null, 90, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1499, 5, 16, 4, 'mimica_word', 'Margarida', 'margarida', null, null, null, 91, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1500, 5, 16, 4, 'mimica_word', 'Pateta', 'pateta', null, null, null, 92, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1500, 5, 16, 4, 'mimica_word', 'Pateta', 'pateta', null, null, null, 92, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1501, 5, 16, 4, 'mimica_word', 'Pluto', 'pluto', null, null, null, 93, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1502, 5, 16, 4, 'mimica_word', 'Stitch', 'stitch', null, null, null, 94, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1503, 5, 16, 4, 'mimica_word', 'Lilo', 'lilo', null, null, null, 95, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1744,9 +1943,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1647, 5, 16, 5, 'mimica_word', 'Duende Verde', 'duende verde', null, null, null, 91, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1648, 5, 16, 5, 'mimica_word', 'Mística', 'mistica', null, null, null, 92, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1649, 5, 16, 5, 'mimica_word', 'Magneto', 'magneto', null, null, null, 93, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1650, 5, 16, 5, 'mimica_word', 'Professor Xavier', 'professor xavier', null, null, null, 94, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1650, 5, 16, 5, 'mimica_word', 'Professor Xavier', 'professor xavier', null, null, null, 94, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1651, 5, 16, 5, 'mimica_word', 'Ciclope', 'ciclope', null, null, null, 95, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1652, 5, 16, 5, 'mimica_word', 'Wolverine', 'wolverine', null, null, null, 96, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1653, 5, 16, 5, 'mimica_word', 'Jean Grey', 'jean grey', null, null, null, 97, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -1896,9 +2109,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1797, 5, 16, 6, 'mimica_word', 'Dr. King Schultz', 'dr. king schultz', null, null, null, 100, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1798, 5, 16, 6, 'mimica_word', 'Calvin Candie', 'calvin candie', null, null, null, 101, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1799, 5, 16, 6, 'mimica_word', 'Anton Chigurh', 'anton chigurh', null, null, null, 102, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1800, 5, 16, 6, 'mimica_word', 'Llewelyn Moss', 'llewelyn moss', null, null, null, 103, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1800, 5, 16, 6, 'mimica_word', 'Llewelyn Moss', 'llewelyn moss', null, null, null, 103, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1801, 5, 16, 6, 'mimica_word', 'Tyler Durden', 'tyler durden', null, null, null, 104, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1802, 5, 16, 6, 'mimica_word', 'Marla Singer', 'marla singer', null, null, null, 105, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1803, 5, 16, 6, 'mimica_word', 'Lisbeth Salander', 'lisbeth salander', null, null, null, 106, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2048,9 +2275,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (1947, 5, 16, 6, 'mimica_word', 'Cersei Lannister celebrando', 'cersei lannister celebrando', null, null, null, 250, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1948, 5, 16, 6, 'mimica_word', 'Cersei Lannister irritado', 'cersei lannister irritado', null, null, null, 251, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1949, 5, 16, 6, 'mimica_word', 'Cersei Lannister triunfal', 'cersei lannister triunfal', null, null, null, 252, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (1950, 5, 16, 6, 'mimica_word', 'Cersei Lannister no tribunal', 'cersei lannister no tribunal', null, null, null, 253, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1950, 5, 16, 6, 'mimica_word', 'Cersei Lannister no tribunal', 'cersei lannister no tribunal', null, null, null, 253, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (1951, 5, 16, 6, 'mimica_word', 'Cersei Lannister no navio', 'cersei lannister no navio', null, null, null, 254, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1952, 5, 16, 6, 'mimica_word', 'Cersei Lannister interrogado', 'cersei lannister interrogado', null, null, null, 255, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (1953, 5, 16, 6, 'mimica_word', 'Cersei Lannister no castelo', 'cersei lannister no castelo', null, null, null, 256, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2200,9 +2441,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2097, 5, 18, 4, 'mimica_word', 'bombeiro', 'bombeiro', null, null, null, 8, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2098, 5, 18, 4, 'mimica_word', 'pintor', 'pintor', null, null, null, 9, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2099, 5, 18, 4, 'mimica_word', 'garçom', 'garcom', null, null, null, 10, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2100, 5, 18, 5, 'mimica_word', 'piloto', 'piloto', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2100, 5, 18, 5, 'mimica_word', 'piloto', 'piloto', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2101, 5, 18, 5, 'mimica_word', 'jornalista', 'jornalista', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2102, 5, 18, 5, 'mimica_word', 'ator', 'ator', null, null, null, 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2103, 5, 18, 5, 'mimica_word', 'veterinário', 'veterinario', null, null, null, 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2352,9 +2607,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2247, 5, 18, 6, 'mimica_word', 'investigador sob pressão', 'investigador sob pressao', null, null, null, 138, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2248, 5, 18, 6, 'mimica_word', 'investigador improvisando', 'investigador improvisando', null, null, null, 139, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2249, 5, 18, 6, 'mimica_word', 'investigador com pista', 'investigador com pista', null, null, null, 140, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2250, 5, 18, 6, 'mimica_word', 'investigador ensinando', 'investigador ensinando', null, null, null, 141, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2250, 5, 18, 6, 'mimica_word', 'investigador ensinando', 'investigador ensinando', null, null, null, 141, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2251, 5, 18, 6, 'mimica_word', 'investigador corrigindo', 'investigador corrigindo', null, null, null, 142, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2252, 5, 18, 6, 'mimica_word', 'investigador demonstrando', 'investigador demonstrando', null, null, null, 143, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2253, 5, 18, 6, 'mimica_word', 'investigador salvando', 'investigador salvando', null, null, null, 144, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2504,9 +2773,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2397, 5, 19, 6, 'mimica_word', 'Solid Snake', 'solid snake', null, null, null, 8, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2398, 5, 19, 6, 'mimica_word', 'Agent 47', 'agent 47', null, null, null, 9, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2399, 5, 19, 6, 'mimica_word', 'Zagreus', 'zagreus', null, null, null, 10, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2400, 5, 19, 6, 'mimica_word', 'Sephiroth em combate', 'sephiroth em combate', null, null, null, 11, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2400, 5, 19, 6, 'mimica_word', 'Sephiroth em combate', 'sephiroth em combate', null, null, null, 11, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2401, 5, 19, 6, 'mimica_word', 'Sephiroth falhando', 'sephiroth falhando', null, null, null, 12, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2402, 5, 19, 6, 'mimica_word', 'Sephiroth com chefão', 'sephiroth com chefao', null, null, null, 13, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2403, 5, 19, 6, 'mimica_word', 'Sephiroth com item raro', 'sephiroth com item raro', null, null, null, 14, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2656,9 +2939,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2547, 5, 19, 6, 'mimica_word', 'Geralt de Rivia com item raro', 'geralt de rivia com item raro', null, null, null, 158, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2548, 5, 19, 6, 'mimica_word', 'Geralt de Rivia furtivo', 'geralt de rivia furtivo', null, null, null, 159, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2549, 5, 19, 6, 'mimica_word', 'Geralt de Rivia decidindo', 'geralt de rivia decidindo', null, null, null, 160, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2550, 5, 19, 6, 'mimica_word', 'Geralt de Rivia evoluindo', 'geralt de rivia evoluindo', null, null, null, 161, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2550, 5, 19, 6, 'mimica_word', 'Geralt de Rivia evoluindo', 'geralt de rivia evoluindo', null, null, null, 161, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2551, 5, 19, 6, 'mimica_word', 'Geralt de Rivia sem recurso', 'geralt de rivia sem recurso', null, null, null, 162, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2552, 5, 19, 6, 'mimica_word', 'Geralt de Rivia na dungeon', 'geralt de rivia na dungeon', null, null, null, 163, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2553, 5, 19, 6, 'mimica_word', 'Geralt de Rivia speedrun', 'geralt de rivia speedrun', null, null, null, 164, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2808,9 +3105,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2697, 5, 17, 4, 'mimica_word', 'Lumière', 'lumiere', 'A Bela e a Fera', null, '{"name":"Lumière","source":"A Bela e a Fera"}', 58, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2698, 5, 17, 4, 'mimica_word', 'Horloge', 'horloge', 'A Bela e a Fera', null, '{"name":"Horloge","source":"A Bela e a Fera"}', 59, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2699, 5, 17, 4, 'mimica_word', 'Senhora Potts', 'senhora potts', 'A Bela e a Fera', null, '{"name":"Senhora Potts","source":"A Bela e a Fera"}', 60, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2700, 5, 17, 4, 'mimica_word', 'Zip', 'zip', 'A Bela e a Fera', null, '{"name":"Zip","source":"A Bela e a Fera"}', 61, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2700, 5, 17, 4, 'mimica_word', 'Zip', 'zip', 'A Bela e a Fera', null, '{"name":"Zip","source":"A Bela e a Fera"}', 61, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2701, 5, 17, 4, 'mimica_word', 'Maurice', 'maurice', 'A Bela e a Fera', null, '{"name":"Maurice","source":"A Bela e a Fera"}', 62, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2702, 5, 17, 4, 'mimica_word', 'Babette', 'babette', 'A Bela e a Fera', null, '{"name":"Babette","source":"A Bela e a Fera"}', 63, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2703, 5, 17, 4, 'mimica_word', 'Aladdin', 'aladdin', 'Aladdin', null, '{"name":"Aladdin","source":"Aladdin"}', 64, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -2960,9 +3271,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2847, 5, 17, 5, 'mimica_word', 'Gabby Gabby', 'gabby gabby', 'Toy Story', null, '{"name":"Gabby Gabby","source":"Toy Story"}', 48, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2848, 5, 17, 5, 'mimica_word', 'Duke Caboom', 'duke caboom', 'Toy Story', null, '{"name":"Duke Caboom","source":"Toy Story"}', 49, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2849, 5, 17, 5, 'mimica_word', 'Zurg', 'zurg', 'Toy Story', null, '{"name":"Zurg","source":"Toy Story"}', 50, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2850, 5, 17, 5, 'mimica_word', 'Sulley', 'sulley', 'Monstros S.A.', null, '{"name":"Sulley","source":"Monstros S.A."}', 51, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (2850, 5, 17, 5, 'mimica_word', 'Sulley', 'sulley', 'Monstros S.A.', null, '{"name":"Sulley","source":"Monstros S.A."}', 51, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (2851, 5, 17, 5, 'mimica_word', 'Mike Wazowski', 'mike wazowski', 'Monstros S.A.', null, '{"name":"Mike Wazowski","source":"Monstros S.A."}', 52, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2852, 5, 17, 5, 'mimica_word', 'Boo', 'boo', 'Monstros S.A.', null, '{"name":"Boo","source":"Monstros S.A."}', 53, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2853, 5, 17, 5, 'mimica_word', 'Randall', 'randall', 'Monstros S.A.', null, '{"name":"Randall","source":"Monstros S.A."}', 54, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3112,9 +3437,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (2997, 5, 17, 6, 'mimica_word', 'Louva-a-deus', 'louva-a-deus', 'Kung Fu Panda', null, '{"name":"Louva-a-deus","source":"Kung Fu Panda"}', 38, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2998, 5, 17, 6, 'mimica_word', 'Mestre Shifu', 'mestre shifu', 'Kung Fu Panda', null, '{"name":"Mestre Shifu","source":"Kung Fu Panda"}', 39, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2999, 5, 17, 6, 'mimica_word', 'Tai Lung', 'tai lung', 'Kung Fu Panda', null, '{"name":"Tai Lung","source":"Kung Fu Panda"}', 40, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3000, 5, 17, 6, 'mimica_word', 'Oogway', 'oogway', 'Kung Fu Panda', null, '{"name":"Oogway","source":"Kung Fu Panda"}', 41, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3000, 5, 17, 6, 'mimica_word', 'Oogway', 'oogway', 'Kung Fu Panda', null, '{"name":"Oogway","source":"Kung Fu Panda"}', 41, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3001, 5, 17, 6, 'mimica_word', 'Lord Shen', 'lord shen', 'Kung Fu Panda', null, '{"name":"Lord Shen","source":"Kung Fu Panda"}', 42, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3002, 5, 17, 6, 'mimica_word', 'Kai', 'kai', 'Kung Fu Panda', null, '{"name":"Kai","source":"Kung Fu Panda"}', 43, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3003, 5, 17, 6, 'mimica_word', 'Soluço', 'soluco', 'Como Treinar o Seu Dragão', null, '{"name":"Soluço","source":"Como Treinar o Seu Dragão"}', 44, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3264,9 +3603,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3147, 5, 17, 6, 'mimica_word', 'Rafael', 'rafael', 'Rio', null, '{"name":"Rafael","source":"Rio"}', 188, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3148, 5, 17, 6, 'mimica_word', 'Nico', 'nico', 'Rio', null, '{"name":"Nico","source":"Rio"}', 189, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3149, 5, 17, 6, 'mimica_word', 'Pedro', 'pedro', 'Rio', null, '{"name":"Pedro","source":"Rio"}', 190, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3150, 5, 17, 6, 'mimica_word', 'Luiz', 'luiz', 'Rio', null, '{"name":"Luiz","source":"Rio"}', 191, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3150, 5, 17, 6, 'mimica_word', 'Luiz', 'luiz', 'Rio', null, '{"name":"Luiz","source":"Rio"}', 191, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3151, 5, 17, 6, 'mimica_word', 'Linda', 'linda', 'Rio', null, '{"name":"Linda","source":"Rio"}', 192, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3152, 5, 17, 6, 'mimica_word', 'Túlio', 'tulio', 'Rio', null, '{"name":"Túlio","source":"Rio"}', 193, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3153, 5, 17, 6, 'mimica_word', 'Gabi', 'gabi', 'Rio', null, '{"name":"Gabi","source":"Rio"}', 194, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3416,9 +3769,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3297, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks ajustando', 'roteirista da dreamworks ajustando', null, null, null, 338, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3298, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks animando', 'roteirista da dreamworks animando', null, null, null, 339, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3299, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks no pitch', 'roteirista da dreamworks no pitch', null, null, null, 340, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3300, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks em reunião', 'roteirista da dreamworks em reuniao', null, null, null, 341, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3300, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks em reunião', 'roteirista da dreamworks em reuniao', null, null, null, 341, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3301, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks no estúdio', 'roteirista da dreamworks no estudio', null, null, null, 342, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3302, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks na estreia', 'roteirista da dreamworks na estreia', null, null, null, 343, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3303, 5, 17, 6, 'mimica_word', 'roteirista da DreamWorks no roteiro', 'roteirista da dreamworks no roteiro', null, null, null, 344, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3568,9 +3935,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3447, 5, 17, 6, 'mimica_word', 'produtor de animação ajustando', 'produtor de animacao ajustando', null, null, null, 488, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3448, 5, 17, 6, 'mimica_word', 'produtor de animação animando', 'produtor de animacao animando', null, null, null, 489, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3449, 5, 17, 6, 'mimica_word', 'produtor de animação no pitch', 'produtor de animacao no pitch', null, null, null, 490, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3450, 5, 17, 6, 'mimica_word', 'produtor de animação em reunião', 'produtor de animacao em reuniao', null, null, null, 491, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3450, 5, 17, 6, 'mimica_word', 'produtor de animação em reunião', 'produtor de animacao em reuniao', null, null, null, 491, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3451, 5, 17, 6, 'mimica_word', 'produtor de animação no estúdio', 'produtor de animacao no estudio', null, null, null, 492, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3452, 5, 17, 6, 'mimica_word', 'produtor de animação na estreia', 'produtor de animacao na estreia', null, null, null, 493, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3453, 5, 17, 6, 'mimica_word', 'produtor de animação no roteiro', 'produtor de animacao no roteiro', null, null, null, 494, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3720,9 +4101,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3597, 4, 7, null, 'character', 'Indiana Jones', 'indiana jones', null, null, null, 28, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3598, 4, 7, null, 'character', 'Marty McFly', 'marty mcfly', null, null, null, 29, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3599, 4, 7, null, 'character', 'Doc Brown', 'doc brown', null, null, null, 30, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3600, 4, 7, null, 'character', 'Rocky Balboa', 'rocky balboa', null, null, null, 31, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3600, 4, 7, null, 'character', 'Rocky Balboa', 'rocky balboa', null, null, null, 31, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3601, 4, 7, null, 'character', 'Rambo', 'rambo', null, null, null, 32, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3602, 4, 7, null, 'character', 'John McClane', 'john mcclane', null, null, null, 33, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3603, 4, 7, null, 'character', 'Ellen Ripley', 'ellen ripley', null, null, null, 34, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -3872,9 +4267,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3747, 4, 8, null, 'character', 'Jake', 'jake', null, null, null, 68, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3748, 4, 8, null, 'character', 'Marceline', 'marceline', null, null, null, 69, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3749, 4, 8, null, 'character', 'Princesa Jujuba', 'princesa jujuba', null, null, null, 70, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3750, 4, 8, null, 'character', 'Rei Gelado', 'rei gelado', null, null, null, 71, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3750, 4, 8, null, 'character', 'Rei Gelado', 'rei gelado', null, null, null, 71, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3751, 4, 8, null, 'character', 'Gumball', 'gumball', null, null, null, 72, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3752, 4, 8, null, 'character', 'Darwin', 'darwin', null, null, null, 73, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3753, 4, 8, null, 'character', 'Anais', 'anais', null, null, null, 74, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4024,9 +4433,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (3897, 4, 9, null, 'character', 'Cobra Bubbles', 'cobra bubbles', 'Lilo & Stitch', null, '{"name":"Cobra Bubbles","source":"Lilo & Stitch"}', 108, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3898, 4, 9, null, 'character', 'David', 'david', 'Lilo & Stitch', null, '{"name":"David","source":"Lilo & Stitch"}', 109, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3899, 4, 9, null, 'character', 'Angel', 'angel', 'Lilo & Stitch', null, '{"name":"Angel","source":"Lilo & Stitch"}', 110, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3900, 4, 9, null, 'character', 'Tiana', 'tiana', 'A Princesa e o Sapo', null, '{"name":"Tiana","source":"A Princesa e o Sapo"}', 111, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (3900, 4, 9, null, 'character', 'Tiana', 'tiana', 'A Princesa e o Sapo', null, '{"name":"Tiana","source":"A Princesa e o Sapo"}', 111, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (3901, 4, 9, null, 'character', 'Naveen', 'naveen', 'A Princesa e o Sapo', null, '{"name":"Naveen","source":"A Princesa e o Sapo"}', 112, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3902, 4, 9, null, 'character', 'Dr. Facilier', 'dr. facilier', 'A Princesa e o Sapo', null, '{"name":"Dr. Facilier","source":"A Princesa e o Sapo"}', 113, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3903, 4, 9, null, 'character', 'Charlotte', 'charlotte', 'A Princesa e o Sapo', null, '{"name":"Charlotte","source":"A Princesa e o Sapo"}', 114, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4176,9 +4599,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4047, 4, 9, null, 'character', 'Carl Fredricksen', 'carl fredricksen', 'Up: Altas Aventuras', null, '{"name":"Carl Fredricksen","source":"Up: Altas Aventuras"}', 258, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4048, 4, 9, null, 'character', 'Russell', 'russell', 'Up: Altas Aventuras', null, '{"name":"Russell","source":"Up: Altas Aventuras"}', 259, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4049, 4, 9, null, 'character', 'Dug', 'dug', 'Up: Altas Aventuras', null, '{"name":"Dug","source":"Up: Altas Aventuras"}', 260, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4050, 4, 9, null, 'character', 'Kevin', 'kevin', 'Up: Altas Aventuras', null, '{"name":"Kevin","source":"Up: Altas Aventuras"}', 261, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4050, 4, 9, null, 'character', 'Kevin', 'kevin', 'Up: Altas Aventuras', null, '{"name":"Kevin","source":"Up: Altas Aventuras"}', 261, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (4051, 4, 9, null, 'character', 'Charles Muntz', 'charles muntz', 'Up: Altas Aventuras', null, '{"name":"Charles Muntz","source":"Up: Altas Aventuras"}', 262, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4052, 4, 9, null, 'character', 'WALL-E', 'wall-e', 'WALL-E', null, '{"name":"WALL-E","source":"WALL-E"}', 263, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4053, 4, 9, null, 'character', 'EVE', 'eve', 'WALL-E', null, '{"name":"EVE","source":"WALL-E"}', 264, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4328,9 +4765,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4197, 4, 9, null, 'character', 'Ken', 'ken', 'Bee Movie', null, '{"name":"Ken","source":"Bee Movie"}', 408, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4198, 4, 9, null, 'character', 'Jack Frost', 'jack frost', 'A Origem dos Guardiões', null, '{"name":"Jack Frost","source":"A Origem dos Guardiões"}', 409, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4199, 4, 9, null, 'character', 'Norte', 'norte', 'A Origem dos Guardiões', null, '{"name":"Norte","source":"A Origem dos Guardiões"}', 410, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4200, 4, 9, null, 'character', 'Fada do Dente', 'fada do dente', 'A Origem dos Guardiões', null, '{"name":"Fada do Dente","source":"A Origem dos Guardiões"}', 411, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4200, 4, 9, null, 'character', 'Fada do Dente', 'fada do dente', 'A Origem dos Guardiões', null, '{"name":"Fada do Dente","source":"A Origem dos Guardiões"}', 411, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (4201, 4, 9, null, 'character', 'Coelhão', 'coelhao', 'A Origem dos Guardiões', null, '{"name":"Coelhão","source":"A Origem dos Guardiões"}', 412, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4202, 4, 9, null, 'character', 'Sandman', 'sandman', 'A Origem dos Guardiões', null, '{"name":"Sandman","source":"A Origem dos Guardiões"}', 413, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4203, 4, 9, null, 'character', 'Breu', 'breu', 'A Origem dos Guardiões', null, '{"name":"Breu","source":"A Origem dos Guardiões"}', 414, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4480,9 +4931,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4347, 4, 9, null, 'character', 'Homem-Aranha Noir', 'homem-aranha noir', 'Homem-Aranha no Aranhaverso', null, '{"name":"Homem-Aranha Noir","source":"Homem-Aranha no Aranhaverso"}', 558, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4348, 4, 9, null, 'character', 'Peni Parker', 'peni parker', 'Homem-Aranha no Aranhaverso', null, '{"name":"Peni Parker","source":"Homem-Aranha no Aranhaverso"}', 559, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4349, 4, 9, null, 'character', 'Spider-Ham', 'spider-ham', 'Homem-Aranha no Aranhaverso', null, '{"name":"Spider-Ham","source":"Homem-Aranha no Aranhaverso"}', 560, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4350, 4, 9, null, 'character', 'Rei do Crime', 'rei do crime', 'Homem-Aranha no Aranhaverso', null, '{"name":"Rei do Crime","source":"Homem-Aranha no Aranhaverso"}', 561, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4350, 4, 9, null, 'character', 'Rei do Crime', 'rei do crime', 'Homem-Aranha no Aranhaverso', null, '{"name":"Rei do Crime","source":"Homem-Aranha no Aranhaverso"}', 561, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (4351, 4, 9, null, 'character', 'Mancha', 'mancha', 'Homem-Aranha no Aranhaverso', null, '{"name":"Mancha","source":"Homem-Aranha no Aranhaverso"}', 562, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4352, 4, 9, null, 'character', 'Miguel O''Hara', 'miguel o''hara', 'Homem-Aranha no Aranhaverso', null, '{"name":"Miguel O''Hara","source":"Homem-Aranha no Aranhaverso"}', 563, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4353, 4, 9, null, 'character', 'Jessica Drew', 'jessica drew', 'Homem-Aranha no Aranhaverso', null, '{"name":"Jessica Drew","source":"Homem-Aranha no Aranhaverso"}', 564, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4632,9 +5097,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4497, 4, 10, null, 'character', 'Silk Spectre', 'silk spectre', null, null, null, 107, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4498, 4, 10, null, 'character', 'Doutor Manhattan', 'doutor manhattan', null, null, null, 108, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4499, 4, 10, null, 'character', 'Rocket Raccoon', 'rocket raccoon', null, null, null, 109, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4500, 4, 11, null, 'character', 'Neymar', 'neymar', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4500, 4, 11, null, 'character', 'Neymar', 'neymar', null, null, null, 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (4501, 4, 11, null, 'character', 'Messi', 'messi', null, null, null, 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4502, 4, 11, null, 'character', 'Cristiano Ronaldo', 'cristiano ronaldo', null, null, null, 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4503, 4, 11, null, 'character', 'Pele', 'pele', null, null, null, 4, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4784,9 +5263,23 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4647, 4, 12, null, 'character', 'Commander Shepard', 'commander shepard', null, null, null, 39, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4648, 4, 12, null, 'character', 'Garrus Vakarian', 'garrus vakarian', null, null, null, 40, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4649, 4, 12, null, 'character', 'Tali', 'tali', null, null, null, 41, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4650, 4, 12, null, 'character', 'Geralt of Rivia', 'geralt of rivia', null, null, null, 42, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4650, 4, 12, null, 'character', 'Geralt of Rivia', 'geralt of rivia', null, null, null, 42, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
 
-insert into content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
+insert into public.content_items (id, game_id, category_id, difficulty_id, content_kind, label, normalized_label, source_title, source_studio, metadata_json, sort_order, is_active, created_at, updated_at) values
   (4651, 4, 12, null, 'character', 'Ciri', 'ciri', null, null, null, 43, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4652, 4, 12, null, 'character', 'Yennefer', 'yennefer', null, null, null, 44, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4653, 4, 12, null, 'character', 'Triss Merigold', 'triss merigold', null, null, null, 45, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -4852,6 +5345,34 @@ insert into content_items (id, game_id, category_id, difficulty_id, content_kind
   (4713, 4, 12, null, 'character', 'Waluigi', 'waluigi', null, null, null, 105, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4714, 4, 12, null, 'character', 'Isabelle', 'isabelle', null, null, null, 106, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4715, 4, 12, null, 'character', 'Tom Nook', 'tom nook', null, null, null, 107, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4716, 4, 12, null, 'character', 'Villager', 'villager', null, null, null, 108, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (4716, 4, 12, null, 'character', 'Villager', 'villager', null, null, null, 108, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z')
+on conflict (id) do update set
+  game_id = excluded.game_id,
+  category_id = excluded.category_id,
+  difficulty_id = excluded.difficulty_id,
+  content_kind = excluded.content_kind,
+  label = excluded.label,
+  normalized_label = excluded.normalized_label,
+  source_title = excluded.source_title,
+  source_studio = excluded.source_studio,
+  metadata_json = excluded.metadata_json,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active,
+  created_at = excluded.created_at,
+  updated_at = excluded.updated_at;
+
+select setval(pg_get_serial_sequence('public.games', 'id'), (select max(id) from public.games), true);
+
+select setval(pg_get_serial_sequence('public.game_tutorials', 'id'), (select max(id) from public.game_tutorials), true);
+
+select setval(pg_get_serial_sequence('public.tutorial_steps', 'id'), (select max(id) from public.tutorial_steps), true);
+
+select setval(pg_get_serial_sequence('public.role_templates', 'id'), (select max(id) from public.role_templates), true);
+
+select setval(pg_get_serial_sequence('public.categories', 'id'), (select max(id) from public.categories), true);
+
+select setval(pg_get_serial_sequence('public.difficulties', 'id'), (select max(id) from public.difficulties), true);
+
+select setval(pg_get_serial_sequence('public.content_items', 'id'), (select max(id) from public.content_items), true);
 
 commit;

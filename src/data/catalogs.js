@@ -3169,6 +3169,33 @@ export const hubGames = [
   },
 ];
 
+function replaceCatalog(target, nextValue) {
+  Object.keys(target).forEach((key) => {
+    delete target[key];
+  });
+  Object.assign(target, nextValue);
+}
+
+export function applyRemoteCatalogs(snapshot) {
+  const requiredCatalogs = [
+    snapshot?.wordPools,
+    snapshot?.whoAmIPools,
+    snapshot?.mimicaPools,
+  ];
+
+  if (
+    requiredCatalogs.some(
+      (catalog) => !catalog || typeof catalog !== "object" || Array.isArray(catalog),
+    )
+  ) {
+    throw new Error("Remote catalog has an invalid pool structure");
+  }
+
+  replaceCatalog(wordPools, snapshot.wordPools);
+  replaceCatalog(whoAmIPools, snapshot.whoAmIPools);
+  replaceCatalog(mimicaPools, snapshot.mimicaPools);
+}
+
 export const heroContent = {
   hub: {
     eyebrow: "Jogos locais",

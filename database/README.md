@@ -1,55 +1,34 @@
-# Database
+# Catálogo e geração de seeds
 
-Esta pasta concentra a base relacional da `Noite de Jogos`.
+Os catálogos JavaScript em `src/data/` ainda são a fonte usada pelo site. O
+gerador desta pasta transforma esse conteúdo em seeds reprodutíveis para:
 
-## Objetivo desta etapa
+- SQLite, apenas para validação local e compatibilidade;
+- PostgreSQL/Supabase, que é o banco canônico daqui para frente.
 
-Sair do hardcode puro de frontend e preparar uma fonte centralizada para:
-
-- jogos e metadados do hub
-- tutoriais de `Como jogar`
-- categorias e dificuldades
-- bancos de palavras e personagens
-- papéis-base dos jogos sociais
-- futuras sessões com distribuição persistida
-
-## Arquivos
-
-- `schema.sql`
-  - schema relacional atual
-- `migrations/001_catalog_seed.sql`
-  - seed gerada a partir dos catálogos atuais do frontend
-- `scripts/build-seed.mjs`
-  - gerador da seed SQL
-
-## Como regenerar a seed
+## Regenerar as seeds
 
 ```bash
 node database/scripts/build-seed.mjs
 ```
 
-## Como validar localmente com SQLite
+O comando atualiza:
+
+- `database/migrations/001_catalog_seed.sql`;
+- `supabase/migrations/20260715000200_catalog_seed.sql`;
+- `supabase/SQL_EDITOR_SETUP.sql`.
+
+Nunca edite esses três arquivos gerados manualmente. Altere os catálogos em
+`src/data/` ou o próprio gerador e execute o comando novamente.
+
+## SQLite local
+
+`schema.sql` é mantido como schema auxiliar SQLite. Ele não deve ser colado no
+Supabase.
 
 ```bash
 sqlite3 /tmp/noite-de-jogos.db < database/schema.sql
 sqlite3 /tmp/noite-de-jogos.db < database/migrations/001_catalog_seed.sql
 ```
 
-## Tabelas principais
-
-- `games`
-  - catálogo do hub e capacidades de cada jogo
-- `game_tutorials`
-  - tutorial principal por jogo
-- `tutorial_steps`
-  - passos curtos do modal `Como jogar`
-- `role_templates`
-  - papéis base de jogos como `Impostor`, `Polícia e Ladrão` e `Cidade Dorme`
-- `categories`
-  - categorias por jogo
-- `difficulties`
-  - dificuldades por jogo quando existirem
-- `content_items`
-  - palavras, personagens e entradas de mímica
-- `sessions`, `session_players`, `session_assignments`
-  - base para persistir rodadas no futuro
+As migrations oficiais do backend ficam em `supabase/migrations/`.

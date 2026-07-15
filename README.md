@@ -10,19 +10,23 @@ App web local para jogos presenciais de festa:
 
 ## Estrutura atual
 
-Hoje o runtime do app continua simples para não quebrar o localhost:
+O runtime web é modular e continua sem etapa de build:
 
-- `index.html`
-- `styles.css`
-- `script.js`
+- `index.html` e `styles.css`
+- `script.js`, ponto de entrada do navegador
+- `src/app.js`, fluxo da interface
+- `src/data/`, catálogo e tutoriais
+- `src/viewmodels/`, estado e regras de rodada
+- `src/views/`, referências e renderização do DOM
 
 ## Organização adicionada
 
-Para preparar a evolução para MVVM, backend e banco, a base agora também tem:
+Para preparar a evolução para o app iOS e conteúdo remoto, a base também tem:
 
 - `docs/architecture.md`
-- `backend/`
-- `database/`
+- `supabase/`, migrations PostgreSQL, RLS e seed do catálogo
+- `backend/`, ferramentas administrativas protegidas
+- `database/`, gerador reprodutível das seeds
 
 ## Direção de arquitetura
 
@@ -39,25 +43,14 @@ Frontend alvo:
 - `data`
   - pools de palavras, personagens, categorias e dificuldades
 
-Backend alvo:
+Backend:
 
-- catálogo central de jogos, categorias, palavras e personagens
-- sessões de jogo opcionais
-- persistência de conteúdo e administração futura
+- Supabase como banco PostgreSQL e Data API
+- catálogo público somente para leitura, protegido por RLS
+- sessões e atribuições secretas fechadas até a introdução de autenticação
+- chave privilegiada restrita às ferramentas de `backend/`
 
-Banco alvo:
+## Inicializar o Supabase
 
-- catálogo unificado de conteúdo por jogo
-- categorias
-- dificuldades
-- sessões e composição de rodada quando necessário
-
-## Próximo passo recomendado
-
-Migrar o monolito de `script.js` para módulos ES seguindo:
-
-1. `src/data/catalogs.js`
-2. `src/shared/helpers.js`
-3. `src/viewmodels/game-session.js`
-4. `src/views/dom.js`
-5. `src/app.js`
+As instruções e o arquivo único para o SQL Editor estão em
+`supabase/README.md` e `supabase/SQL_EDITOR_SETUP.sql`.

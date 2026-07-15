@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+!.env.example
+
+backend
+database
+docs
+supabase
+test
+
+*.md
+node_modules
+npm-debug.log*

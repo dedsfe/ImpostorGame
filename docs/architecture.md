@@ -10,19 +10,24 @@ Organizar o projeto Noite de Jogos em uma arquitetura incremental, mantendo o ap
 
 ## Estado atual
 
-O app ainda roda em uma camada única:
+O app web roda sem build, mas já está dividido em módulos ES:
 
-- `index.html`
-- `styles.css`
-- `script.js`
+- `src/data` concentra catálogo e tutoriais;
+- `src/viewmodels` concentra estado e criação de partidas;
+- `src/views` concentra referências do DOM;
+- `src/app.js` ainda concentra boa parte da orquestração da interface.
 
-Isso funciona bem para prototipação, mas hoje mistura:
+O Supabase é o backend canônico. As migrations ficam em `supabase/`, enquanto
+`backend/` contém somente rotinas administrativas que usam a chave secreta.
 
-- catálogo de dados
-- regras de jogo
-- estado de tela
-- renderização
-- wiring de eventos
+## Segurança do backend
+
+- o catálogo ativo é legível por `anon` e `authenticated`;
+- nenhuma escrita pública é permitida no catálogo;
+- sessões, jogadores e atribuições não têm acesso público;
+- a chave `publishable` pertence ao site e ao app iOS;
+- a chave `secret` pertence somente ao backend ou a Edge Functions;
+- futuras sessões remotas exigirão Supabase Auth e políticas por proprietário.
 
 ## Arquitetura alvo de frontend
 
@@ -116,9 +121,10 @@ Arquivos alvo:
 4. O `ViewModel` busca dados nos `Models/Data`.
 5. A `View` renderiza o novo estado.
 
-## Arquitetura alvo de backend
+## Arquitetura do backend administrativo
 
-Backend organizado por módulos, não por tipo técnico puro.
+O Supabase fornece PostgreSQL, Data API e autenticação. Código Node privilegiado
+continua organizado por módulos de negócio, não por tipo técnico puro.
 
 Estrutura recomendada:
 
