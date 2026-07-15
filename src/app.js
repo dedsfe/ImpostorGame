@@ -9,11 +9,9 @@ import { rulesContent } from "./data/tutorials.js";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
-import {
-  buildCityGame,
-  buildImpostorGame,
-  buildPoliceGame,
-} from "./viewmodels/game-factories.js";
+import { createCityGame } from "./games/city.js";
+import { createImpostorGame } from "./games/impostor.js";
+import { createPoliceGame } from "./games/police.js";
 import {
   buildShuffledDeck,
   clampCityPlayers,
@@ -1294,14 +1292,14 @@ function startImpostorGame() {
   }
 
   updateImpostorFeedback("");
-  state.currentGame = buildImpostorGame(
+  state.currentGame = createImpostorGame({
     totalPlayers,
     impostorCount,
     requirePlayerNames,
     secretWord,
     category,
     difficulty,
-  );
+  });
   resetTurnPlayers();
   renderPreparation();
 }
@@ -1310,12 +1308,12 @@ function startPoliceGame() {
   const counts = syncPoliceRoleInputs();
 
   updatePoliceFeedback("");
-  state.currentGame = buildPoliceGame(
-    counts.totalPlayers,
-    counts.police,
-    counts.thief,
-    counts.victim,
-  );
+  state.currentGame = createPoliceGame({
+    totalPlayers: counts.totalPlayers,
+    policeCount: counts.police,
+    thiefCount: counts.thief,
+    victimCount: counts.victim,
+  });
   resetTurnPlayers();
   renderPreparation();
 }
@@ -1329,11 +1327,11 @@ function startCityGame() {
   }
 
   updateCityFeedback("");
-  state.currentGame = buildCityGame(
-    counts.players,
-    counts.assassins,
-    counts.detectives,
-  );
+  state.currentGame = createCityGame({
+    totalPlayers: counts.players,
+    assassinCount: counts.assassins,
+    detectiveCount: counts.detectives,
+  });
   resetTurnPlayers();
   renderPreparation();
 }

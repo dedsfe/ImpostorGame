@@ -17,11 +17,9 @@ import {
   randomIndex,
   shuffleArray,
 } from "../src/shared/utils.js";
-import {
-  buildCityGame,
-  buildImpostorGame,
-  buildPoliceGame,
-} from "../src/viewmodels/game-factories.js";
+import { createCityGame } from "../src/games/city.js";
+import { createImpostorGame } from "../src/games/impostor.js";
+import { createPoliceGame } from "../src/games/police.js";
 
 test("normalizes setup values with the game limits", () => {
   assert.equal(clampInteger("x", 1, 10, 4), 4);
@@ -55,9 +53,25 @@ test("builds shuffled collections without mutating their input", () => {
 });
 
 test("creates the requested number of roles for every role game", () => {
-  const impostor = buildImpostorGame(8, 2, true, "bola", "geral", "facil");
-  const police = buildPoliceGame(7, 2, 2, 3);
-  const city = buildCityGame(9, 2, 1);
+  const impostor = createImpostorGame({
+    totalPlayers: 8,
+    impostorCount: 2,
+    requirePlayerNames: true,
+    secretWord: "bola",
+    category: "geral",
+    difficulty: "facil",
+  });
+  const police = createPoliceGame({
+    totalPlayers: 7,
+    policeCount: 2,
+    thiefCount: 2,
+    victimCount: 3,
+  });
+  const city = createCityGame({
+    totalPlayers: 9,
+    assassinCount: 2,
+    detectiveCount: 1,
+  });
 
   assert.equal(impostor.roles.length, 8);
   assert.equal(impostor.roles.filter((role) => role.value === "IMPOSTOR").length, 2);
@@ -66,7 +80,14 @@ test("creates the requested number of roles for every role game", () => {
 });
 
 test("prevents an impostor-only round", () => {
-  const game = buildImpostorGame(3, 10, false, "bola", "geral", "medio");
+  const game = createImpostorGame({
+    totalPlayers: 3,
+    impostorCount: 10,
+    requirePlayerNames: false,
+    secretWord: "bola",
+    category: "geral",
+    difficulty: "medio",
+  });
 
   assert.equal(game.impostorCount, 2);
   assert.equal(game.roles.filter((role) => role.value === "IMPOSTOR").length, 2);
