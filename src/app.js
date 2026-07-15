@@ -17,10 +17,9 @@ import {
   pickMimicaWord,
 } from "./games/mimica.js";
 import { createPoliceController } from "./games/police.js";
-import { drawWhoAmICharacter } from "./games/whoami.js";
+import { createWhoAmIController } from "./games/whoami.js";
 import {
   normalizeMimicaEntry,
-  normalizeWhoAmIEntry,
   normalizeWord,
 } from "./shared/utils.js";
 
@@ -356,10 +355,10 @@ function closeRulesModal({ restoreFocus = true } = {}) {
 }
 
 function openGameFromHubScreen(screen) {
-  const roleController = roleControllersByScreen.get(screen);
+  const controller = gameControllersByScreen.get(screen);
 
-  if (roleController) {
-    roleController.openSetup();
+  if (controller) {
+    controller.openSetup();
     return;
   }
 
@@ -368,9 +367,6 @@ function openGameFromHubScreen(screen) {
     return;
   }
 
-  if (screen === "whoamiSetup") {
-    openWhoAmISetup();
-  }
 }
 
 function startHubModalGame() {
@@ -571,10 +567,6 @@ function setRoleRevealVisible(isVisible) {
     : "Mostrar quem é quem";
 }
 
-function updateWhoAmIFeedback(message = "") {
-  elements.whoami.feedback.textContent = message;
-}
-
 function updateMimicaFeedback(message = "") {
   elements.mimica.feedback.textContent = message;
 }
@@ -749,34 +741,6 @@ function startMimicaTimer() {
   }, 1000);
 }
 
-function syncWhoAmICategoryInput(nextValue) {
-  const safeCategory = Object.prototype.hasOwnProperty.call(whoAmIPools, nextValue)
-    ? nextValue
-    : "geral";
-
-  if (state.whoami.category !== safeCategory) {
-    state.whoami.remainingCharacters = [];
-    state.whoami.currentCharacter = "";
-  }
-
-  state.whoami.category = safeCategory;
-  elements.whoami.category.value = safeCategory;
-  return safeCategory;
-}
-
-function getWhoAmICharacter(category) {
-  const pool = whoAmIPools[category] ?? whoAmIPools.geral;
-  const draw = drawWhoAmICharacter({
-    pool,
-    remainingCharacters: state.whoami.remainingCharacters,
-    currentCharacter: state.whoami.currentCharacter,
-  });
-
-  state.whoami.remainingCharacters = draw.remainingCharacters;
-  state.whoami.currentCharacter = draw.character;
-  return draw.character;
-}
-
 function openHub() {
   state.currentGame = null;
   resetTurnPlayers();
@@ -858,30 +822,6 @@ function markMimicaSuccess() {
   state.mimica.timedOut = false;
   clearMimicaTimer();
   updateMimicaVisualState();
-}
-
-function openWhoAmISetup() {
-  state.currentGame = {
-    type: "whoami",
-    name: "Quem sou eu?",
-  };
-  state.currentPlayer = 0;
-  syncWhoAmICategoryInput(elements.whoami.category.value);
-  updateWhoAmIFeedback("");
-  setActiveScreen("whoamiSetup");
-}
-
-function renderWhoAmICharacter() {
-  const category = syncWhoAmICategoryInput(elements.whoami.category.value);
-  const character = getWhoAmICharacter(category);
-  const characterData = normalizeWhoAmIEntry(character);
-
-  elements.whoami.characterName.textContent = characterData.name;
-  elements.whoami.characterSource.textContent = characterData.source;
-  elements.whoami.characterSource.hidden = characterData.source === "";
-  updateWhoAmIFeedback("");
-  setActiveScreen("whoamiReveal");
-  enterWhoAmIFullscreen();
 }
 
 function renderPreparation() {
@@ -1010,10 +950,10 @@ function restartCurrentGame() {
     return;
   }
 
-  const roleController = roleControllersById.get(state.currentGame.type);
+  const controller = gameControllersById.get(state.currentGame.type);
 
-  if (roleController) {
-    roleController.openSetup();
+  if (controller) {
+    controller.openSetup();
     return;
   }
 
@@ -1022,10 +962,6 @@ function restartCurrentGame() {
     return;
   }
 
-  if (state.currentGame.type === "whoami") {
-    openWhoAmISetup();
-    return;
-  }
   openHub();
 }
 
@@ -1038,12 +974,7 @@ function startMimicaGame() {
   renderMimicaPreparation();
 }
 
-function startWhoAmIGame() {
-  syncWhoAmICategoryInput(elements.whoami.category.value);
-  renderWhoAmICharacter();
-}
-
-const roleControllers = [
+const gameControllers = [
   createImpostorController({
     elements: elements.impostor,
     openHub,
@@ -1063,15 +994,23 @@ const roleControllers = [
     openRoleSetup,
     startRoleGame,
   }),
+  createWhoAmIController({
+    elements: elements.whoami,
+    enterFullscreen: enterWhoAmIFullscreen,
+    openHub,
+    pools: whoAmIPools,
+    showScreen: setActiveScreen,
+    state,
+  }),
 ];
-const roleControllersById = new Map(
-  roleControllers.map((controller) => [controller.id, controller]),
+const gameControllersById = new Map(
+  gameControllers.map((controller) => [controller.id, controller]),
 );
-const roleControllersByScreen = new Map(
-  roleControllers.map((controller) => [controller.setupScreen, controller]),
+const gameControllersByScreen = new Map(
+  gameControllers.map((controller) => [controller.setupScreen, controller]),
 );
 
-roleControllers.forEach((controller) => {
+gameControllers.forEach((controller) => {
   controller.bind();
   controller.initialize();
 });
@@ -1159,19 +1098,6 @@ elements.mimica.close.addEventListener("click", openMimicaSetup);
 elements.mimica.goHub.addEventListener("click", openHub);
 elements.mimica.goHubPrep.addEventListener("click", openHub);
 elements.mimica.goSetupPrep.addEventListener("click", openMimicaSetup);
-
-elements.whoami.category.addEventListener("change", (event) => {
-  syncWhoAmICategoryInput(event.target.value);
-});
-
-elements.whoami.form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startWhoAmIGame();
-});
-
-elements.whoami.reroll.addEventListener("click", renderWhoAmICharacter);
-elements.whoami.close.addEventListener("click", openWhoAmISetup);
-elements.whoami.goHub.addEventListener("click", openHub);
 
 elements.turn.playerName.addEventListener("input", syncCurrentPlayerName);
 elements.turn.playerName.addEventListener("keydown", (event) => {
@@ -1302,5 +1228,4 @@ renderRulesModal();
 syncMimicaCategoryInput(elements.mimica.category.value);
 syncMimicaDifficultyInput(elements.mimica.difficulty.value);
 syncMimicaTimeInput(elements.mimica.time.value);
-syncWhoAmICategoryInput(elements.whoami.category.value);
 setActiveScreen("hub");
