@@ -29,6 +29,7 @@ src/
 - `role-flow.js`: preparação, revelação e encerramento dos jogos com papéis.
 - `state.js`: estado inicial da aplicação.
 - `games/`: regras, controles e eventos específicos de cada jogo.
+- `games/impostor-deck.js`: filas `remaining` e `used` do Impostor.
 - `data/`: catálogo remoto, fallback local e textos de tutorial.
 - `shared/`: funções pequenas que mais de um jogo utiliza.
 - `views/elements.js`: referências dos elementos existentes no HTML.
@@ -37,7 +38,7 @@ src/
 
 1. Crie `games/novo-jogo.js`.
 2. Exporte um controller com `id`, `setupScreen`, `bind`, `initialize` e
-   `openSetup`.
+   `openSetup`. Use `playAgain` apenas quando o jogo puder reiniciar sem setup.
 3. Registre o controller na lista `gameControllers` em `app.js`.
 4. Adicione a tela no HTML e suas referências em `views/elements.js`.
 5. Cubra as regras puras com testes em `test/game-rules.test.mjs`.

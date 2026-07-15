@@ -35,6 +35,7 @@ src/hub.js                 cards, regras e modais do hub
 src/role-flow.js           distribuição compartilhada de papéis
 src/state.js               estado inicial
 src/games/                 um módulo por jogo
+src/games/impostor-deck.js baralho persistente de palavras
 src/data/                  catálogo e tutoriais
 src/shared/utils.js        funções reutilizadas
 src/views/elements.js      referências do HTML
@@ -50,6 +51,10 @@ Para alterar um jogo, comece pelo arquivo com seu nome em `src/games/`. Consulte
 
 O site tenta carregar o catálogo do Supabase em segundo plano. Se a rede ou a
 API falhar, o catálogo local assume imediatamente.
+
+No Impostor, as dificuldades continuam como metadado do catálogo, mas o jogador
+escolhe somente o tema. O progresso do baralho fica no `sessionStorage` e nunca
+envia palavras ou papéis da rodada ao servidor.
 
 Para regenerar as migrations do catálogo:
 

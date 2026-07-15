@@ -23,6 +23,7 @@ Cada controller registrado no site expõe:
   bind,
   initialize,
   openSetup,
+  playAgain, // opcional
   cleanup // opcional
 }
 ```
@@ -30,7 +31,8 @@ Cada controller registrado no site expõe:
 - `bind`: conecta os eventos uma única vez.
 - `initialize`: ajusta valores iniciais e pode ser chamado após atualizar o
   catálogo.
-- `openSetup`: abre o jogo a partir do hub ou de “jogar novamente”.
+- `openSetup`: abre a configuração do jogo a partir do hub ou de um reinício.
+- `playAgain`: inicia outra rodada mantendo as configurações atuais.
 - `cleanup`: encerra recursos como timers ao sair do jogo.
 
 Adicionar um jogo significa criar um módulo, implementar esse contrato e
@@ -47,6 +49,16 @@ registrá-lo em `gameControllers`.
 - Referências ao HTML ficam em `src/views/elements.js`.
 
 Não criamos classes, repositories, services ou novas camadas preventivamente.
+
+## Sessão do Impostor
+
+`src/games/impostor-deck.js` mantém um baralho separado por tema com duas filas:
+`remaining` e `used`. O estado fica no `sessionStorage`, sobrevive a recargas da
+aba e nunca é enviado ao Supabase. Palavra personalizada é um modo separado e
+não consome o baralho.
+
+Quando um ciclo termina, as palavras usadas são embaralhadas novamente e a
+fronteira evita repetir imediatamente a última palavra do ciclo anterior.
 
 ## Catálogo e backend
 

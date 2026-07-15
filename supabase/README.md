@@ -11,10 +11,14 @@ Para um projeto Supabase vazio:
 3. Cole no editor e clique em **Run**.
 4. Abra uma segunda query, cole `verify.sql` e execute a validação.
 
-`SQL_EDITOR_SETUP.sql` é um bundle gerado das duas migrations abaixo:
+`SQL_EDITOR_SETUP.sql` é um bundle gerado do schema e da seed atuais:
 
 1. `migrations/20260715000100_initial_schema.sql`;
 2. `migrations/20260715000200_catalog_seed.sql`.
+
+Em um projeto que já recebeu o setup inicial, execute também a migration
+incremental `migrations/20260715000300_simplify_impostor.sql`. Ela desativa a
+dificuldade como opção pública do Impostor e atualiza o tutorial remoto.
 
 O bundle pode ser executado novamente. O schema usa `if not exists`, recria
 triggers e políticas com segurança, e a seed atualiza registros pelos IDs
