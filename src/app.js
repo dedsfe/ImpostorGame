@@ -24,6 +24,7 @@ import {
 import { createRoleFlow } from "./role-flow.js?v=47";
 import { animateElement } from "./motion.js";
 import { track } from "./analytics.js?v=1";
+import { initAds } from "./ads.js?v=1";
 
 document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
@@ -386,6 +387,7 @@ hubController.initialize();
 setActiveScreen("hub");
 
 track("app_loaded", { version: APP_VERSION });
+initAds();
 
 void catalogRuntimePromise.then((catalogRuntime) => {
   document.documentElement.dataset.catalogSource = catalogRuntime.source;
