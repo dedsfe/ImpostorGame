@@ -14,6 +14,21 @@ import {
   buildImpostorGame,
   buildPoliceGame,
 } from "./viewmodels/game-factories.js";
+import {
+  buildShuffledDeck,
+  clampCityPlayers,
+  clampInteger,
+  clampOptionalRoleCount,
+  clampPlayers,
+  clampRoleCount,
+  getMimicaEntryKey,
+  getWhoAmIEntryKey,
+  normalizeMimicaEntry,
+  normalizeWhoAmIEntry,
+  normalizeWord,
+  pluralize,
+  randomIndex,
+} from "./shared/utils.js";
 
 const catalogRuntime = await hydrateCatalogFromApi();
 document.documentElement.dataset.catalogSource = catalogRuntime.source;
@@ -27,54 +42,8 @@ const hubHoverMediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)
 let lastHubModalTrigger = null;
 let lastRulesModalTrigger = null;
 
-function clampInteger(value, min, max, fallback = min) {
-  const parsed = Number.parseInt(value, 10);
-
-  if (Number.isNaN(parsed)) {
-    return fallback;
-  }
-
-  return Math.min(max, Math.max(min, parsed));
-}
-
-function clampPlayers(value) {
-  return clampInteger(value, 3, 20, 3);
-}
-
-function clampCityPlayers(value) {
-  return clampInteger(value, 5, 20, 5);
-}
-
-function clampRoleCount(value) {
-  return clampInteger(value, 1, 20, 1);
-}
-
-function clampOptionalRoleCount(value) {
-  return clampInteger(value, 0, 20, 0);
-}
-
-function normalizeWord(value) {
-  return value.replace(/\s+/g, " ").trim();
-}
-
 function normalizePlayerName(value) {
   return normalizeWord(String(value ?? ""));
-}
-
-function getDifficultyLabel(difficulty) {
-  if (difficulty === "facil") {
-    return "Fácil";
-  }
-
-  if (difficulty === "dificil") {
-    return "Difícil";
-  }
-
-  return "Média";
-}
-
-function pluralize(count, singular, plural) {
-  return count === 1 ? singular : plural;
 }
 
 function setHero(content) {
@@ -471,96 +440,6 @@ async function exitFullscreenIfNeeded() {
       document.webkitExitFullscreen();
     }
   } catch {}
-}
-
-function getCryptoRandomUint32() {
-  if (globalThis.crypto?.getRandomValues) {
-    const values = new Uint32Array(1);
-    globalThis.crypto.getRandomValues(values);
-    return values[0];
-  }
-
-  return Math.floor(Math.random() * 4294967296);
-}
-
-function randomIndex(max) {
-  if (max <= 1) {
-    return 0;
-  }
-
-  const maxUint32 = 4294967296;
-  const safeLimit = maxUint32 - (maxUint32 % max);
-  let randomValue = getCryptoRandomUint32();
-
-  while (randomValue >= safeLimit) {
-    randomValue = getCryptoRandomUint32();
-  }
-
-  return randomValue % max;
-}
-
-function shuffleArray(items) {
-  const shuffled = [...items];
-
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const targetIndex = randomIndex(index + 1);
-    [shuffled[index], shuffled[targetIndex]] = [
-      shuffled[targetIndex],
-      shuffled[index],
-    ];
-  }
-
-  return shuffled;
-}
-
-function buildShuffledDeck(items, currentItem = "", getKey = (item) => item) {
-  const currentKey = currentItem === "" || currentItem === null ? "" : getKey(currentItem);
-  const nextItems = items.filter((item) => getKey(item) !== currentKey);
-  return shuffleArray(nextItems.length > 0 ? nextItems : items);
-}
-
-function getWhoAmIEntryKey(entry) {
-  if (entry && typeof entry === "object") {
-    return `${entry.source ?? ""}::${entry.name ?? ""}`;
-  }
-
-  return String(entry ?? "");
-}
-
-function normalizeWhoAmIEntry(entry) {
-  if (entry && typeof entry === "object") {
-    return {
-      name: entry.name ?? "",
-      source: entry.source ?? "",
-    };
-  }
-
-  return {
-    name: String(entry ?? ""),
-    source: "",
-  };
-}
-
-function getMimicaEntryKey(entry) {
-  if (entry && typeof entry === "object") {
-    return `${entry.source ?? ""}::${entry.name ?? ""}`;
-  }
-
-  return String(entry ?? "");
-}
-
-function normalizeMimicaEntry(entry) {
-  if (entry && typeof entry === "object") {
-    return {
-      name: entry.name ?? "",
-      source: entry.source ?? "",
-    };
-  }
-
-  return {
-    name: String(entry ?? ""),
-    source: "",
-  };
 }
 
 function setActiveScreen(screen) {
