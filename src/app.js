@@ -14,6 +14,7 @@ import { createImpostorController } from "./games/impostor.js";
 import { createMimicaController } from "./games/mimica.js";
 import { createPoliceController } from "./games/police.js";
 import { createWhoAmIController } from "./games/whoami.js";
+import { createHubController } from "./hub.js";
 import { normalizeWord } from "./shared/utils.js";
 
 document.documentElement.dataset.catalogSource = "local";
@@ -23,10 +24,6 @@ const state = createInitialState();
 const APP_VERSION = "v39";
 
 const elements = getElements();
-const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
-const hubHoverMediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-let lastHubModalTrigger = null;
-let lastRulesModalTrigger = null;
 
 function normalizePlayerName(value) {
   return normalizeWord(String(value ?? ""));
@@ -38,335 +35,12 @@ function setHero(content) {
   elements.heroCopy.textContent = content.copy;
 }
 
-function getHubGame(gameId) {
-  return hubGamesById.get(gameId) ?? null;
-}
-
-function createHubCard(game) {
-  const article = document.createElement("article");
-  const media = document.createElement("div");
-  const image = document.createElement("img");
-  const video = game.hoverVideo ? document.createElement("video") : null;
-  const scrim = document.createElement("div");
-  const content = document.createElement("div");
-  const label = document.createElement("p");
-  const title = document.createElement("h2");
-  const action = document.createElement("button");
-
-  article.className = "hub-card";
-  article.dataset.gameId = game.id;
-  article.tabIndex = 0;
-  article.setAttribute("role", "button");
-  article.setAttribute("aria-haspopup", "dialog");
-  article.setAttribute("aria-label", `Ver jogo ${game.title}`);
-
-  media.className = "hub-card-media has-image";
-  image.className = "hub-card-media-image";
-  image.src = game.cardImage;
-  image.alt = "";
-  image.setAttribute("aria-hidden", "true");
-  image.loading = "lazy";
-  image.decoding = "async";
-
-  if (video) {
-    article.dataset.hoverVideo = "true";
-    media.classList.add("has-hover-video");
-    video.className = "hub-card-media-video";
-    video.src = game.hoverVideo;
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.preload = "metadata";
-    video.poster = game.cardImage;
-    video.setAttribute("aria-hidden", "true");
-    video.tabIndex = -1;
-  }
-
-  scrim.className = "hub-card-scrim";
-
-  content.className = "hub-card-content";
-  label.className = "hub-card-label";
-  label.textContent = game.label;
-  title.className = "hub-card-title";
-  title.textContent = game.title;
-
-  action.className = "hub-card-action";
-  action.type = "button";
-  action.textContent = "Ver jogo";
-  action.setAttribute("aria-label", `Ver jogo ${game.title}`);
-
-  content.append(label, title, action);
-  if (video) {
-    media.append(image, video, scrim, content);
-  } else {
-    media.append(image, scrim, content);
-  }
-  article.append(media);
-
-  if (video) {
-    article.addEventListener("mouseenter", () => {
-      playHubCardVideo(article);
-    });
-    article.addEventListener("mouseleave", () => {
-      stopHubCardVideo(article);
-    });
-  }
-
-  return article;
-}
-
-function renderHubCards() {
-  elements.hub.grid.replaceChildren(...hubGames.map((game) => createHubCard(game)));
-}
-
-function renderHubModal() {
-  const game = getHubGame(state.hubModalGameId);
-  const isOpen = state.hubModalOpen && Boolean(game);
-
-  elements.hub.modal.hidden = !isOpen;
-  document.body.classList.toggle("is-hub-modal-open", isOpen);
-
-  if (!isOpen || !game) {
-    elements.hub.modalImage.removeAttribute("src");
-    elements.hub.modalImage.alt = "";
-    elements.hub.modal.removeAttribute("data-media-fit");
-    elements.hub.modalLabel.textContent = "";
-    elements.hub.modalTitle.textContent = "";
-    elements.hub.modalDescription.textContent = "";
-    elements.hub.modalStart.dataset.gameId = "";
-    return;
-  }
-
-  const imageSrc = game.modalImage ?? game.cardImage;
-  const mediaFit = game.modalImage ? "cover" : "contain";
-
-  elements.hub.modal.dataset.mediaFit = mediaFit;
-  elements.hub.modalImage.src = imageSrc;
-  elements.hub.modalImage.alt = game.title;
-  elements.hub.modalLabel.textContent = game.label;
-  elements.hub.modalTitle.textContent = game.title;
-  elements.hub.modalDescription.textContent = game.description;
-  elements.hub.modalStart.dataset.gameId = game.id;
-  queueMicrotask(() => {
-    if (state.hubModalOpen && state.hubModalGameId === game.id) {
-      elements.hub.modalStart.focus();
-    }
-  });
-}
-
-function getHubModalFocusableElements() {
-  return [
-    elements.hub.modalClose,
-    elements.hub.modalStart,
-  ].filter((element) => element && !element.hidden && !element.disabled);
-}
-
-function renderRulesModal() {
-  const content = rulesContent[state.rulesModalGameId] ?? null;
-  const isOpen = state.rulesModalOpen && Boolean(content);
-  elements.rules.modal.hidden = !isOpen;
-  document.body.classList.toggle("is-rules-modal-open", isOpen);
-
-  if (!isOpen || !content) {
-    elements.rules.label.textContent = "Como jogar";
-    elements.rules.title.textContent = "";
-    elements.rules.copy.textContent = "";
-    elements.rules.steps.replaceChildren();
-    return;
-  }
-
-  const items = content.steps.map((step) => {
-    const item = document.createElement("li");
-    const title = document.createElement("strong");
-    const copy = document.createElement("span");
-
-    item.className = "rules-step";
-    title.textContent = step.title;
-    copy.textContent = step.copy;
-    item.append(title, copy);
-    return item;
-  });
-
-  elements.rules.label.textContent = "Como jogar";
-  elements.rules.title.textContent = content.title;
-  elements.rules.copy.textContent = content.copy;
-  elements.rules.steps.replaceChildren(...items);
-
-  queueMicrotask(() => {
-    if (state.rulesModalOpen) {
-      elements.rules.confirm.focus();
-    }
-  });
-}
-
-function getRulesModalFocusableElements() {
-  return [
-    elements.rules.close,
-    elements.rules.confirm,
-  ].filter((element) => element && !element.hidden && !element.disabled);
-}
-
-function preloadHubImages() {
-  const imageSources = new Set();
-
-  hubGames.forEach((game) => {
-    imageSources.add(game.cardImage);
-    imageSources.add(game.modalImage ?? game.cardImage);
-  });
-
-  imageSources.forEach((src) => {
-    if (!src) {
-      return;
-    }
-
-    const image = new Image();
-    image.src = src;
-  });
-}
-
-function stopHubCardVideo(card, { reset = true } = {}) {
-  if (!(card instanceof HTMLElement)) {
-    return;
-  }
-
-  const video = card.querySelector(".hub-card-media-video");
-
-  if (!(video instanceof HTMLVideoElement)) {
-    return;
-  }
-
-  card.classList.remove("is-video-active");
-  video.pause();
-
-  if (reset) {
-    try {
-      video.currentTime = 0;
-    } catch {}
-  }
-}
-
-function stopHubCardVideos({ reset = true } = {}) {
-  document.querySelectorAll(".hub-card[data-hover-video='true']").forEach((card) => {
-    stopHubCardVideo(card, { reset });
-  });
-}
-
-function playHubCardVideo(card) {
-  if (
-    !hubHoverMediaQuery.matches ||
-    !(card instanceof HTMLElement) ||
-    state.currentScreen !== "hub" ||
-    state.hubModalOpen
-  ) {
-    return;
-  }
-
-  const video = card.querySelector(".hub-card-media-video");
-
-  if (!(video instanceof HTMLVideoElement)) {
-    return;
-  }
-
-  stopHubCardVideos({ reset: true });
-  card.classList.add("is-video-active");
-
-  const playAttempt = video.play();
-
-  if (playAttempt && typeof playAttempt.catch === "function") {
-    playAttempt.catch(() => {
-      stopHubCardVideo(card);
-    });
-  }
-}
-
-function openHubModal(gameId, trigger = null) {
-  if (!getHubGame(gameId)) {
-    return;
-  }
-
-  stopHubCardVideos();
-  lastHubModalTrigger = trigger instanceof HTMLElement ? trigger : document.activeElement;
-  state.hubModalGameId = gameId;
-  state.hubModalOpen = true;
-  renderHubModal();
-}
-
-function closeHubModal() {
-  if (!state.hubModalOpen && state.hubModalGameId === null) {
-    return;
-  }
-
-  state.hubModalOpen = false;
-  state.hubModalGameId = null;
-  renderHubModal();
-
-  queueMicrotask(() => {
-    if (lastHubModalTrigger instanceof HTMLElement && lastHubModalTrigger.isConnected) {
-      lastHubModalTrigger.focus();
-    }
-    lastHubModalTrigger = null;
-  });
-}
-
-function openRulesModal(gameId, trigger = null) {
-  if (!rulesContent[gameId]) {
-    return;
-  }
-
-  lastRulesModalTrigger =
-    trigger instanceof HTMLElement ? trigger : document.activeElement;
-  state.rulesModalGameId = gameId;
-  state.rulesModalOpen = true;
-  renderRulesModal();
-}
-
-function closeRulesModal({ restoreFocus = true } = {}) {
-  if (!state.rulesModalOpen) {
-    lastRulesModalTrigger = restoreFocus ? lastRulesModalTrigger : null;
-    return;
-  }
-
-  state.rulesModalOpen = false;
-  state.rulesModalGameId = null;
-  renderRulesModal();
-
-  if (!restoreFocus) {
-    lastRulesModalTrigger = null;
-    return;
-  }
-
-  queueMicrotask(() => {
-    if (
-      lastRulesModalTrigger instanceof HTMLElement &&
-      lastRulesModalTrigger.isConnected
-    ) {
-      lastRulesModalTrigger.focus();
-    }
-
-    lastRulesModalTrigger = null;
-  });
-}
-
 function openGameFromHubScreen(screen) {
   const controller = gameControllersByScreen.get(screen);
 
   if (controller) {
     controller.openSetup();
-    return;
   }
-
-}
-
-function startHubModalGame() {
-  const game = getHubGame(state.hubModalGameId);
-
-  if (!game) {
-    closeHubModal();
-    return;
-  }
-
-  closeHubModal();
-  openGameFromHubScreen(game.openScreen);
 }
 
 function getFullscreenElement() {
@@ -418,7 +92,7 @@ function setActiveScreen(screen) {
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
 
   if (screen !== "hub") {
-    stopHubCardVideos();
+    hubController.stopVideos();
   }
 
   if (
@@ -427,11 +101,11 @@ function setActiveScreen(screen) {
     ) &&
     state.rulesModalOpen
   ) {
-    closeRulesModal({ restoreFocus: false });
+    hubController.closeRulesModal({ restoreFocus: false });
   }
 
   if (screen !== "hub") {
-    closeHubModal();
+    hubController.closeHubModal();
   }
 
   Object.entries(elements.screens).forEach(([key, element]) => {
@@ -594,7 +268,7 @@ function renderTurnSecret(role) {
 function openHub() {
   state.currentGame = null;
   resetTurnPlayers();
-  closeHubModal();
+  hubController.closeHubModal();
   clearRoleTone();
   setTurnPhase("prep");
   gameControllers.forEach((controller) => controller.cleanup?.());
@@ -794,66 +468,20 @@ const gameControllersById = new Map(
 const gameControllersByScreen = new Map(
   gameControllers.map((controller) => [controller.setupScreen, controller]),
 );
+const hubController = createHubController({
+  elements,
+  games: hubGames,
+  openGame: openGameFromHubScreen,
+  rulesContent,
+  state,
+});
 
 gameControllers.forEach((controller) => {
   controller.bind();
   controller.initialize();
 });
 
-elements.hub.grid.addEventListener("click", (event) => {
-  const card = event.target.closest(".hub-card[data-game-id]");
-
-  if (!card) {
-    return;
-  }
-
-  const trigger = event.target.closest(".hub-card-action") ?? card;
-  openHubModal(card.dataset.gameId, trigger);
-});
-
-elements.hub.grid.addEventListener("keydown", (event) => {
-  const card = event.target.closest(".hub-card[data-game-id]");
-
-  if (!card || event.target !== card || (event.key !== "Enter" && event.key !== " ")) {
-    return;
-  }
-
-  event.preventDefault();
-  openHubModal(card.dataset.gameId, card);
-});
-
-hubHoverMediaQuery.addEventListener("change", (event) => {
-  if (!event.matches) {
-    stopHubCardVideos();
-  }
-});
-
-elements.hub.modal.addEventListener("click", (event) => {
-  if (event.target === elements.hub.modal) {
-    closeHubModal();
-  }
-});
-
-elements.hub.modalClose.addEventListener("click", closeHubModal);
-elements.hub.modalStart.addEventListener("click", startHubModalGame);
-
 elements.navHome.addEventListener("click", openHub);
-elements.rules.buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    openRulesModal(button.dataset.rulesGame, event.currentTarget);
-  });
-});
-elements.rules.modal.addEventListener("click", (event) => {
-  if (event.target === elements.rules.modal) {
-    closeRulesModal();
-  }
-});
-elements.rules.close.addEventListener("click", () => {
-  closeRulesModal();
-});
-elements.rules.confirm.addEventListener("click", () => {
-  closeRulesModal();
-});
 
 elements.turn.playerName.addEventListener("input", syncCurrentPlayerName);
 elements.turn.playerName.addEventListener("keydown", (event) => {
@@ -908,83 +536,13 @@ elements.end.showRoleReveal.addEventListener("click", () => {
 elements.end.playAgain.addEventListener("click", restartCurrentGame);
 elements.end.goHub.addEventListener("click", openHub);
 
-document.addEventListener("keydown", (event) => {
-  if (state.rulesModalOpen) {
-    if (event.key === "Escape") {
-      closeRulesModal();
-      return;
-    }
-
-    if (event.key !== "Tab") {
-      return;
-    }
-
-    const focusable = getRulesModalFocusableElements();
-
-    if (focusable.length === 0) {
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-
-    return;
-  }
-
-  if (!state.hubModalOpen) {
-    return;
-  }
-
-  if (event.key === "Escape") {
-    closeHubModal();
-    return;
-  }
-
-  if (event.key !== "Tab") {
-    return;
-  }
-
-  const focusable = getHubModalFocusableElements();
-
-  if (focusable.length === 0) {
-    return;
-  }
-
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
-
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-    return;
-  }
-
-  if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-});
-
-preloadHubImages();
 renderAppVersion();
-renderHubCards();
-renderHubModal();
-renderRulesModal();
+hubController.bind();
+hubController.initialize();
 setActiveScreen("hub");
 
 void catalogRuntimePromise.then((catalogRuntime) => {
   document.documentElement.dataset.catalogSource = catalogRuntime.source;
-  renderRulesModal();
+  hubController.refreshRules();
   gameControllers.forEach((controller) => controller.initialize());
 });
