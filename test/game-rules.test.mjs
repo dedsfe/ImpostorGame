@@ -21,8 +21,15 @@ import { createCityGame, normalizeCitySetup } from "../src/games/city.js";
 import {
   createImpostorGame,
   normalizeImpostorSetup,
+  pickImpostorWord,
 } from "../src/games/impostor.js";
+import {
+  normalizeMimicaDifficulty,
+  normalizeMimicaTime,
+  pickMimicaWord,
+} from "../src/games/mimica.js";
 import { createPoliceGame, normalizePoliceSetup } from "../src/games/police.js";
+import { drawWhoAmICharacter } from "../src/games/whoami.js";
 
 test("normalizes setup values with the game limits", () => {
   assert.equal(clampInteger("x", 1, 10, 4), 4);
@@ -117,4 +124,30 @@ test("normalizes every role setup before creating a round", () => {
   assert.equal(city.players, 5);
   assert.equal(city.citizens, 1);
   assert.ok(city.assassins >= 1 && city.detectives >= 0);
+});
+
+test("selects content without immediately repeating the current item", () => {
+  const wordPools = {
+    geral: {
+      medio: ["bola"],
+      dificil: ["avião", "navio"],
+    },
+  };
+
+  assert.equal(pickImpostorWord(wordPools, "missing", "missing"), "bola");
+  assert.equal(pickMimicaWord(["avião", "navio"], "avião"), "navio");
+
+  const draw = drawWhoAmICharacter({
+    pool: ["Neo", "Trinity"],
+    currentCharacter: "Neo",
+  });
+  assert.equal(draw.character, "Trinity");
+  assert.deepEqual(draw.remainingCharacters, []);
+});
+
+test("normalizes Mímica options", () => {
+  assert.equal(normalizeMimicaDifficulty("dificil"), "dificil");
+  assert.equal(normalizeMimicaDifficulty("unknown"), "medio");
+  assert.equal(normalizeMimicaTime("45"), 45);
+  assert.equal(normalizeMimicaTime("none"), null);
 });

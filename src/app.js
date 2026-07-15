@@ -13,17 +13,20 @@ import { createCityGame, normalizeCitySetup } from "./games/city.js";
 import {
   createImpostorGame,
   normalizeImpostorSetup,
+  pickImpostorWord,
 } from "./games/impostor.js";
-import { createPoliceGame, normalizePoliceSetup } from "./games/police.js";
 import {
-  buildShuffledDeck,
-  getMimicaEntryKey,
-  getWhoAmIEntryKey,
+  normalizeMimicaDifficulty,
+  normalizeMimicaTime,
+  pickMimicaWord,
+} from "./games/mimica.js";
+import { createPoliceGame, normalizePoliceSetup } from "./games/police.js";
+import { drawWhoAmICharacter } from "./games/whoami.js";
+import {
   normalizeMimicaEntry,
   normalizeWhoAmIEntry,
   normalizeWord,
   pluralize,
-  randomIndex,
 } from "./shared/utils.js";
 
 const catalogRuntime = await hydrateCatalogFromApi();
@@ -689,22 +692,10 @@ function syncImpostorDifficultyInput(nextValue) {
   return safeDifficulty;
 }
 
-function getWordFromCategory(category, difficulty) {
-  const categoryPool = wordPools[category] ?? wordPools.geral;
-  const words = categoryPool[difficulty] ?? wordPools.geral.medio;
-  return words[randomIndex(words.length)];
-}
-
 function getMimicaWord(category, difficulty) {
   const categoryPool = mimicaPools[category] ?? mimicaPools.geral;
   const words = categoryPool[difficulty] ?? mimicaPools.geral.medio;
-  const currentKey =
-    state.mimica.currentWord === "" ? "" : getMimicaEntryKey(state.mimica.currentWord);
-  const candidateWords =
-    words.length > 1
-      ? words.filter((word) => getMimicaEntryKey(word) !== currentKey)
-      : words;
-  const nextWord = candidateWords[randomIndex(candidateWords.length)];
+  const nextWord = pickMimicaWord(words, state.mimica.currentWord);
 
   state.mimica.currentWord = nextWord;
   return nextWord;
@@ -736,10 +727,7 @@ function syncMimicaCategoryInput(nextValue) {
 }
 
 function syncMimicaDifficultyInput(nextValue) {
-  const safeDifficulty =
-    nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
-      ? nextValue
-      : "medio";
+  const safeDifficulty = normalizeMimicaDifficulty(nextValue);
 
   if (state.mimica.difficulty !== safeDifficulty) {
     state.mimica.remainingWords = [];
@@ -754,10 +742,7 @@ function syncMimicaDifficultyInput(nextValue) {
 }
 
 function syncMimicaTimeInput(nextValue) {
-  const safeTime =
-    nextValue === "30" || nextValue === "45" || nextValue === "60"
-      ? Number(nextValue)
-      : null;
+  const safeTime = normalizeMimicaTime(nextValue);
 
   state.mimica.timePerRound = safeTime;
   elements.mimica.time.value = safeTime === null ? "none" : String(safeTime);
@@ -858,20 +843,15 @@ function syncWhoAmICategoryInput(nextValue) {
 
 function getWhoAmICharacter(category) {
   const pool = whoAmIPools[category] ?? whoAmIPools.geral;
+  const draw = drawWhoAmICharacter({
+    pool,
+    remainingCharacters: state.whoami.remainingCharacters,
+    currentCharacter: state.whoami.currentCharacter,
+  });
 
-  if (state.whoami.remainingCharacters.length === 0) {
-    state.whoami.remainingCharacters = buildShuffledDeck(
-      pool,
-      state.whoami.currentCharacter,
-      getWhoAmIEntryKey,
-    );
-  }
-
-  const nextCharacter =
-    state.whoami.remainingCharacters.pop() ?? pool[randomIndex(pool.length)];
-
-  state.whoami.currentCharacter = nextCharacter;
-  return nextCharacter;
+  state.whoami.remainingCharacters = draw.remainingCharacters;
+  state.whoami.currentCharacter = draw.character;
+  return draw.character;
 }
 
 function syncPoliceRoleInputs(preferredRole = "victim", nextValue = null) {
@@ -1222,7 +1202,7 @@ function startImpostorGame() {
   let secretWord = normalizeWord(elements.impostor.secretWord.value);
 
   if (!secretWord) {
-    secretWord = getWordFromCategory(category, difficulty);
+    secretWord = pickImpostorWord(wordPools, category, difficulty);
     elements.impostor.secretWord.value = secretWord;
     setImpostorWordVisibility(false);
   }
@@ -1358,7 +1338,11 @@ elements.impostor.wordDifficulty.addEventListener("change", (event) => {
 elements.impostor.randomWord.addEventListener("click", () => {
   const category = syncImpostorCategoryInput(elements.impostor.wordCategory.value);
   const difficulty = syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
-  elements.impostor.secretWord.value = getWordFromCategory(category, difficulty);
+  elements.impostor.secretWord.value = pickImpostorWord(
+    wordPools,
+    category,
+    difficulty,
+  );
   setImpostorWordVisibility(false);
   updateImpostorFeedback("");
 });

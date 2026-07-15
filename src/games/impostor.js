@@ -2,6 +2,7 @@ import {
   clampInteger,
   clampPlayers,
   getDifficultyLabel,
+  randomIndex,
   shuffleArray,
 } from "../shared/utils.js";
 
@@ -14,6 +15,12 @@ export function normalizeImpostorSetup({ totalPlayers, impostorCount }) {
     impostorCount: clampInteger(impostorCount, 1, maxImpostors, 1),
     maxImpostors,
   };
+}
+
+export function pickImpostorWord(pools, category, difficulty) {
+  const categoryPool = pools[category] ?? pools.geral;
+  const words = categoryPool[difficulty] ?? pools.geral.medio;
+  return words[randomIndex(words.length)];
 }
 
 export function createImpostorGame({
