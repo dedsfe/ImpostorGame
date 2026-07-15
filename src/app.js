@@ -10,11 +10,7 @@ import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
 import { createCityController } from "./games/city.js";
-import {
-  createImpostorGame,
-  normalizeImpostorSetup,
-  pickImpostorWord,
-} from "./games/impostor.js";
+import { createImpostorController } from "./games/impostor.js";
 import {
   normalizeMimicaDifficulty,
   normalizeMimicaTime,
@@ -367,11 +363,6 @@ function openGameFromHubScreen(screen) {
     return;
   }
 
-  if (screen === "impostorSetup") {
-    openImpostorSetup();
-    return;
-  }
-
   if (screen === "mimicaSetup") {
     openMimicaSetup();
     return;
@@ -580,21 +571,6 @@ function setRoleRevealVisible(isVisible) {
     : "Mostrar quem é quem";
 }
 
-function setImpostorWordVisibility(isVisible) {
-  elements.impostor.secretWord.type = isVisible ? "text" : "password";
-  elements.impostor.toggleVisibility.setAttribute("aria-pressed", String(isVisible));
-  elements.impostor.toggleVisibility.setAttribute(
-    "aria-label",
-    isVisible ? "Esconder palavra secreta" : "Mostrar palavra secreta",
-  );
-  elements.impostor.toggleVisibility.classList.toggle("is-visible", isVisible);
-  elements.impostor.toggleLabel.textContent = isVisible ? "Ocultar" : "Mostrar";
-}
-
-function updateImpostorFeedback(message = "") {
-  elements.impostor.feedback.textContent = message;
-}
-
 function updateWhoAmIFeedback(message = "") {
   elements.whoami.feedback.textContent = message;
 }
@@ -637,47 +613,6 @@ function renderTurnSecret(role) {
   elements.turn.roleTitle.textContent = role.title;
   elements.turn.roleDescription.textContent = role.description;
   elements.turn.wordCard.textContent = role.value;
-}
-
-function syncImpostorPlayerInput(nextValue) {
-  const setup = normalizeImpostorSetup({
-    totalPlayers: nextValue,
-    impostorCount: elements.impostor.impostorCount.value,
-  });
-
-  elements.impostor.playerCount.value = setup.totalPlayers;
-  elements.impostor.impostorCount.max = setup.maxImpostors;
-  elements.impostor.impostorCount.value = setup.impostorCount;
-  return setup.totalPlayers;
-}
-
-function syncImpostorCountInput(nextValue) {
-  const setup = normalizeImpostorSetup({
-    totalPlayers: elements.impostor.playerCount.value,
-    impostorCount: nextValue,
-  });
-
-  elements.impostor.playerCount.value = setup.totalPlayers;
-  elements.impostor.impostorCount.max = setup.maxImpostors;
-  elements.impostor.impostorCount.value = setup.impostorCount;
-  return setup.impostorCount;
-}
-
-function syncImpostorCategoryInput(nextValue) {
-  const safeCategory = Object.prototype.hasOwnProperty.call(wordPools, nextValue)
-    ? nextValue
-    : "geral";
-  elements.impostor.wordCategory.value = safeCategory;
-  return safeCategory;
-}
-
-function syncImpostorDifficultyInput(nextValue) {
-  const safeDifficulty =
-    nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
-      ? nextValue
-      : "dificil";
-  elements.impostor.wordDifficulty.value = safeDifficulty;
-  return safeDifficulty;
 }
 
 function getMimicaWord(category, difficulty) {
@@ -849,7 +784,6 @@ function openHub() {
   clearRoleTone();
   setTurnPhase("prep");
   clearMimicaTimer();
-  updateImpostorFeedback("");
   updateMimicaFeedback("");
   setActiveScreen("hub");
 }
@@ -866,16 +800,6 @@ function startRoleGame(game) {
   state.currentGame = game;
   resetTurnPlayers();
   renderPreparation();
-}
-
-function openImpostorSetup() {
-  state.currentGame = null;
-  resetTurnPlayers();
-  clearRoleTone();
-  setTurnPhase("prep");
-  setImpostorWordVisibility(false);
-  updateImpostorFeedback("");
-  setActiveScreen("impostorSetup");
 }
 
 function openMimicaSetup() {
@@ -1086,11 +1010,6 @@ function restartCurrentGame() {
     return;
   }
 
-  if (state.currentGame.type === "impostor") {
-    openImpostorSetup();
-    return;
-  }
-
   const roleController = roleControllersById.get(state.currentGame.type);
 
   if (roleController) {
@@ -1110,33 +1029,6 @@ function restartCurrentGame() {
   openHub();
 }
 
-function startImpostorGame() {
-  const totalPlayers = syncImpostorPlayerInput(elements.impostor.playerCount.value);
-  const impostorCount = syncImpostorCountInput(elements.impostor.impostorCount.value);
-  const requirePlayerNames = elements.impostor.requireNames.value !== "optional";
-  const category = syncImpostorCategoryInput(elements.impostor.wordCategory.value);
-  const difficulty = syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
-  let secretWord = normalizeWord(elements.impostor.secretWord.value);
-
-  if (!secretWord) {
-    secretWord = pickImpostorWord(wordPools, category, difficulty);
-    elements.impostor.secretWord.value = secretWord;
-    setImpostorWordVisibility(false);
-  }
-
-  updateImpostorFeedback("");
-  state.currentGame = createImpostorGame({
-    totalPlayers,
-    impostorCount,
-    requirePlayerNames,
-    secretWord,
-    category,
-    difficulty,
-  });
-  resetTurnPlayers();
-  renderPreparation();
-}
-
 function startMimicaGame() {
   syncMimicaCategoryInput(elements.mimica.category.value);
   syncMimicaDifficultyInput(elements.mimica.difficulty.value);
@@ -1152,6 +1044,13 @@ function startWhoAmIGame() {
 }
 
 const roleControllers = [
+  createImpostorController({
+    elements: elements.impostor,
+    openHub,
+    openRoleSetup,
+    pools: wordPools,
+    startRoleGame,
+  }),
   createPoliceController({
     elements: elements.police,
     openHub,
@@ -1214,62 +1113,6 @@ elements.hub.modal.addEventListener("click", (event) => {
 elements.hub.modalClose.addEventListener("click", closeHubModal);
 elements.hub.modalStart.addEventListener("click", startHubModalGame);
 
-elements.impostor.decreasePlayers.addEventListener("click", () => {
-  syncImpostorPlayerInput(Number(elements.impostor.playerCount.value) - 1);
-});
-
-elements.impostor.increasePlayers.addEventListener("click", () => {
-  syncImpostorPlayerInput(Number(elements.impostor.playerCount.value) + 1);
-});
-
-elements.impostor.playerCount.addEventListener("change", (event) => {
-  syncImpostorPlayerInput(event.target.value);
-});
-
-elements.impostor.decreaseImpostors.addEventListener("click", () => {
-  syncImpostorCountInput(Number(elements.impostor.impostorCount.value) - 1);
-});
-
-elements.impostor.increaseImpostors.addEventListener("click", () => {
-  syncImpostorCountInput(Number(elements.impostor.impostorCount.value) + 1);
-});
-
-elements.impostor.impostorCount.addEventListener("change", (event) => {
-  syncImpostorCountInput(event.target.value);
-});
-
-elements.impostor.wordCategory.addEventListener("change", (event) => {
-  syncImpostorCategoryInput(event.target.value);
-});
-
-elements.impostor.wordDifficulty.addEventListener("change", (event) => {
-  syncImpostorDifficultyInput(event.target.value);
-});
-
-elements.impostor.randomWord.addEventListener("click", () => {
-  const category = syncImpostorCategoryInput(elements.impostor.wordCategory.value);
-  const difficulty = syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
-  elements.impostor.secretWord.value = pickImpostorWord(
-    wordPools,
-    category,
-    difficulty,
-  );
-  setImpostorWordVisibility(false);
-  updateImpostorFeedback("");
-});
-
-elements.impostor.toggleVisibility.addEventListener("click", () => {
-  const isVisible =
-    elements.impostor.toggleVisibility.getAttribute("aria-pressed") === "true";
-  setImpostorWordVisibility(!isVisible);
-});
-
-elements.impostor.form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startImpostorGame();
-});
-
-elements.impostor.goHub.addEventListener("click", openHub);
 elements.navHome.addEventListener("click", openHub);
 elements.rules.buttons.forEach((button) => {
   button.addEventListener("click", (event) => {
@@ -1456,11 +1299,6 @@ renderAppVersion();
 renderHubCards();
 renderHubModal();
 renderRulesModal();
-syncImpostorPlayerInput(elements.impostor.playerCount.value);
-syncImpostorCountInput(elements.impostor.impostorCount.value);
-syncImpostorCategoryInput(elements.impostor.wordCategory.value);
-syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
-setImpostorWordVisibility(false);
 syncMimicaCategoryInput(elements.mimica.category.value);
 syncMimicaDifficultyInput(elements.mimica.difficulty.value);
 syncMimicaTimeInput(elements.mimica.time.value);
