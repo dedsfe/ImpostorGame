@@ -11,17 +11,10 @@ import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
 import { createCityController } from "./games/city.js";
 import { createImpostorController } from "./games/impostor.js";
-import {
-  normalizeMimicaDifficulty,
-  normalizeMimicaTime,
-  pickMimicaWord,
-} from "./games/mimica.js";
+import { createMimicaController } from "./games/mimica.js";
 import { createPoliceController } from "./games/police.js";
 import { createWhoAmIController } from "./games/whoami.js";
-import {
-  normalizeMimicaEntry,
-  normalizeWord,
-} from "./shared/utils.js";
+import { normalizeWord } from "./shared/utils.js";
 
 const catalogRuntime = await hydrateCatalogFromApi();
 document.documentElement.dataset.catalogSource = catalogRuntime.source;
@@ -362,11 +355,6 @@ function openGameFromHubScreen(screen) {
     return;
   }
 
-  if (screen === "mimicaSetup") {
-    openMimicaSetup();
-    return;
-  }
-
 }
 
 function startHubModalGame() {
@@ -567,10 +555,6 @@ function setRoleRevealVisible(isVisible) {
     : "Mostrar quem é quem";
 }
 
-function updateMimicaFeedback(message = "") {
-  elements.mimica.feedback.textContent = message;
-}
-
 function renderAppVersion() {
   elements.appVersion.textContent = APP_VERSION;
 }
@@ -607,148 +591,13 @@ function renderTurnSecret(role) {
   elements.turn.wordCard.textContent = role.value;
 }
 
-function getMimicaWord(category, difficulty) {
-  const categoryPool = mimicaPools[category] ?? mimicaPools.geral;
-  const words = categoryPool[difficulty] ?? mimicaPools.geral.medio;
-  const nextWord = pickMimicaWord(words, state.mimica.currentWord);
-
-  state.mimica.currentWord = nextWord;
-  return nextWord;
-}
-
-function updateMimicaPoolInfo() {
-  const categoryPool = mimicaPools[state.mimica.category] ?? mimicaPools.geral;
-  const words = categoryPool[state.mimica.difficulty] ?? mimicaPools.geral.medio;
-  const wordLabel = words.length === 1 ? "palavra" : "palavras";
-
-  elements.mimica.poolInfo.textContent = `${words.length.toLocaleString("pt-BR")} ${wordLabel} disponíveis nesta seleção.`;
-}
-
-function syncMimicaCategoryInput(nextValue) {
-  const safeCategory = Object.prototype.hasOwnProperty.call(mimicaPools, nextValue)
-    ? nextValue
-    : "geral";
-
-  if (state.mimica.category !== safeCategory) {
-    state.mimica.remainingWords = [];
-    state.mimica.currentWord = "";
-    state.mimica.deckKey = `${safeCategory}:${state.mimica.difficulty}`;
-  }
-
-  state.mimica.category = safeCategory;
-  elements.mimica.category.value = safeCategory;
-  updateMimicaPoolInfo();
-  return safeCategory;
-}
-
-function syncMimicaDifficultyInput(nextValue) {
-  const safeDifficulty = normalizeMimicaDifficulty(nextValue);
-
-  if (state.mimica.difficulty !== safeDifficulty) {
-    state.mimica.remainingWords = [];
-    state.mimica.currentWord = "";
-    state.mimica.deckKey = `${state.mimica.category}:${safeDifficulty}`;
-  }
-
-  state.mimica.difficulty = safeDifficulty;
-  elements.mimica.difficulty.value = safeDifficulty;
-  updateMimicaPoolInfo();
-  return safeDifficulty;
-}
-
-function syncMimicaTimeInput(nextValue) {
-  const safeTime = normalizeMimicaTime(nextValue);
-
-  state.mimica.timePerRound = safeTime;
-  elements.mimica.time.value = safeTime === null ? "none" : String(safeTime);
-  return safeTime;
-}
-
-function clearMimicaTimer() {
-  if (state.mimica.timerId !== null) {
-    clearInterval(state.mimica.timerId);
-    state.mimica.timerId = null;
-  }
-}
-
-function resetMimicaRoundState() {
-  clearMimicaTimer();
-  state.mimica.timeRemaining = state.mimica.timePerRound ?? 0;
-  state.mimica.currentDuration = state.mimica.timePerRound ?? 0;
-  state.mimica.timedOut = false;
-  state.mimica.solved = false;
-}
-
-function renderMimicaTimer() {
-  const hasTimer = state.mimica.timePerRound !== null;
-  const duration = state.mimica.currentDuration || 1;
-  const ratio = hasTimer ? Math.max(0, state.mimica.timeRemaining / duration) : 1;
-
-  elements.mimica.timerWrap.hidden = !hasTimer;
-  if (hasTimer) {
-    elements.mimica.timer.textContent = `${state.mimica.timeRemaining}s`;
-    elements.mimica.progressFill.style.width = `${Math.max(0, ratio * 100)}%`;
-  } else {
-    elements.mimica.progressFill.style.width = "100%";
-  }
-}
-
-function updateMimicaVisualState() {
-  elements.mimica.play.classList.remove("is-timed-out", "is-success");
-
-  if (state.mimica.solved) {
-    elements.mimica.play.classList.add("is-success");
-    elements.mimica.status.textContent = "Acertaram!";
-    return;
-  }
-
-  if (state.mimica.timedOut) {
-    elements.mimica.play.classList.add("is-timed-out");
-    elements.mimica.status.textContent = "Tempo esgotado!";
-    return;
-  }
-
-  elements.mimica.status.textContent =
-    state.mimica.timePerRound === null ? "Valendo!" : "Tempo correndo";
-}
-
-function startMimicaTimer() {
-  clearMimicaTimer();
-
-  if (state.mimica.timePerRound === null) {
-    renderMimicaTimer();
-    updateMimicaVisualState();
-    return;
-  }
-
-  state.mimica.timeRemaining = state.mimica.timePerRound;
-  state.mimica.currentDuration = state.mimica.timePerRound;
-  renderMimicaTimer();
-  updateMimicaVisualState();
-
-  state.mimica.timerId = setInterval(() => {
-    if (state.mimica.timeRemaining <= 1) {
-      state.mimica.timeRemaining = 0;
-      clearMimicaTimer();
-      state.mimica.timedOut = true;
-      renderMimicaTimer();
-      updateMimicaVisualState();
-      return;
-    }
-
-    state.mimica.timeRemaining -= 1;
-    renderMimicaTimer();
-  }, 1000);
-}
-
 function openHub() {
   state.currentGame = null;
   resetTurnPlayers();
   closeHubModal();
   clearRoleTone();
   setTurnPhase("prep");
-  clearMimicaTimer();
-  updateMimicaFeedback("");
+  gameControllers.forEach((controller) => controller.cleanup?.());
   setActiveScreen("hub");
 }
 
@@ -764,64 +613,6 @@ function startRoleGame(game) {
   state.currentGame = game;
   resetTurnPlayers();
   renderPreparation();
-}
-
-function openMimicaSetup() {
-  state.currentGame = {
-    type: "mimica",
-    name: "Mímica Rápida",
-  };
-  state.currentPlayer = 0;
-  clearMimicaTimer();
-  state.mimica.remainingWords = [];
-  state.mimica.currentWord = "";
-  state.mimica.deckKey = "";
-  syncMimicaCategoryInput(elements.mimica.category.value);
-  syncMimicaDifficultyInput(elements.mimica.difficulty.value);
-  syncMimicaTimeInput(elements.mimica.time.value);
-  state.mimica.prepMode = "start";
-  state.mimica.solved = false;
-  state.mimica.timedOut = false;
-  updateMimicaFeedback("");
-  setActiveScreen("mimicaSetup");
-}
-
-function renderMimicaPreparation() {
-  const isNextPlayer = state.mimica.prepMode === "next-player";
-
-  elements.mimica.prepTitle.textContent = isNextPlayer
-    ? "Passe o celular para o próximo mímico"
-    : "Passe o celular para quem vai fazer a mímica";
-  elements.mimica.prepDescription.textContent = isNextPlayer
-    ? "Toque em mostrar quando a próxima pessoa estiver pronta para ver a palavra."
-    : "Toque em mostrar apenas quando a pessoa estiver pronta para ver a palavra.";
-
-  clearMimicaTimer();
-  setActiveScreen("mimicaPrep");
-}
-
-function renderMimicaWord() {
-  const category = syncMimicaCategoryInput(elements.mimica.category.value);
-  const difficulty = syncMimicaDifficultyInput(elements.mimica.difficulty.value);
-  const nextWord = getMimicaWord(category, difficulty);
-  const wordData = normalizeMimicaEntry(nextWord);
-
-  resetMimicaRoundState();
-  elements.mimica.word.textContent = wordData.name;
-  elements.mimica.wordSource.textContent = wordData.source;
-  elements.mimica.wordSource.hidden = wordData.source === "";
-  renderMimicaTimer();
-  updateMimicaVisualState();
-  setActiveScreen("mimicaPlay");
-  startMimicaTimer();
-  enterMimicaFullscreen();
-}
-
-function markMimicaSuccess() {
-  state.mimica.solved = true;
-  state.mimica.timedOut = false;
-  clearMimicaTimer();
-  updateMimicaVisualState();
 }
 
 function renderPreparation() {
@@ -957,21 +748,7 @@ function restartCurrentGame() {
     return;
   }
 
-  if (state.currentGame.type === "mimica") {
-    openMimicaSetup();
-    return;
-  }
-
   openHub();
-}
-
-function startMimicaGame() {
-  syncMimicaCategoryInput(elements.mimica.category.value);
-  syncMimicaDifficultyInput(elements.mimica.difficulty.value);
-  syncMimicaTimeInput(elements.mimica.time.value);
-  state.mimica.prepMode = "start";
-  updateMimicaFeedback("");
-  renderMimicaPreparation();
 }
 
 const gameControllers = [
@@ -993,6 +770,14 @@ const gameControllers = [
     openHub,
     openRoleSetup,
     startRoleGame,
+  }),
+  createMimicaController({
+    elements: elements.mimica,
+    enterFullscreen: enterMimicaFullscreen,
+    openHub,
+    pools: mimicaPools,
+    showScreen: setActiveScreen,
+    state,
   }),
   createWhoAmIController({
     elements: elements.whoami,
@@ -1069,35 +854,6 @@ elements.rules.close.addEventListener("click", () => {
 elements.rules.confirm.addEventListener("click", () => {
   closeRulesModal();
 });
-
-elements.mimica.category.addEventListener("change", (event) => {
-  syncMimicaCategoryInput(event.target.value);
-});
-
-elements.mimica.difficulty.addEventListener("change", (event) => {
-  syncMimicaDifficultyInput(event.target.value);
-});
-
-elements.mimica.time.addEventListener("change", (event) => {
-  syncMimicaTimeInput(event.target.value);
-});
-
-elements.mimica.form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startMimicaGame();
-});
-
-elements.mimica.showWord.addEventListener("click", renderMimicaWord);
-elements.mimica.success.addEventListener("click", markMimicaSuccess);
-elements.mimica.nextWord.addEventListener("click", renderMimicaWord);
-elements.mimica.nextPlayer.addEventListener("click", () => {
-  state.mimica.prepMode = "next-player";
-  renderMimicaPreparation();
-});
-elements.mimica.close.addEventListener("click", openMimicaSetup);
-elements.mimica.goHub.addEventListener("click", openHub);
-elements.mimica.goHubPrep.addEventListener("click", openHub);
-elements.mimica.goSetupPrep.addEventListener("click", openMimicaSetup);
 
 elements.turn.playerName.addEventListener("input", syncCurrentPlayerName);
 elements.turn.playerName.addEventListener("keydown", (event) => {
@@ -1225,7 +981,4 @@ renderAppVersion();
 renderHubCards();
 renderHubModal();
 renderRulesModal();
-syncMimicaCategoryInput(elements.mimica.category.value);
-syncMimicaDifficultyInput(elements.mimica.difficulty.value);
-syncMimicaTimeInput(elements.mimica.time.value);
 setActiveScreen("hub");
