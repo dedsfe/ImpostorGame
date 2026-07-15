@@ -12,7 +12,7 @@
 //      (ex: "google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0")
 //   3. Deploy. O Google leva algumas horas pra começar a exibir.
 
-const ADSENSE_CLIENT = ""; // ex: "ca-pub-1234567890123456"
+const ADSENSE_CLIENT = "ca-pub-1447277482375079";
 
 const SCRIPT_SRC = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
 
