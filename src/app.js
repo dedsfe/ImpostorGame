@@ -16,11 +16,11 @@ import { createPoliceController } from "./games/police.js";
 import { createWhoAmIController } from "./games/whoami.js";
 import { normalizeWord } from "./shared/utils.js";
 
-const catalogRuntime = await hydrateCatalogFromApi();
-document.documentElement.dataset.catalogSource = catalogRuntime.source;
+document.documentElement.dataset.catalogSource = "local";
+const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v38";
+const APP_VERSION = "v39";
 
 const elements = getElements();
 const hubGamesById = new Map(hubGames.map((game) => [game.id, game]));
@@ -982,3 +982,9 @@ renderHubCards();
 renderHubModal();
 renderRulesModal();
 setActiveScreen("hub");
+
+void catalogRuntimePromise.then((catalogRuntime) => {
+  document.documentElement.dataset.catalogSource = catalogRuntime.source;
+  renderRulesModal();
+  gameControllers.forEach((controller) => controller.initialize());
+});
