@@ -5,16 +5,16 @@ export const rulesContent = {
       "Monte a rodada, revele os papéis com privacidade e depois deixem a conversa decidir quem está mentindo.",
     steps: [
       {
-        title: "Configure a rodada",
-        copy: "Escolha os jogadores, a categoria e a dificuldade da palavra.",
+        title: "Prepare o jogo",
+        copy: "Escolha jogadores e tema. O baralho evita repetições até completar o tema.",
       },
       {
-        title: "Passem o celular",
-        copy: "Cada pessoa vê só a própria tela antes de entregar para a próxima.",
+        title: "Vejam e passem",
+        copy: "Cada pessoa toca em Ver meu papel e depois em Ocultar e passar.",
       },
       {
-        title: "Discutam em grupo",
-        copy: "Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.",
+        title: "Joguem e encerrem",
+        copy: "Depois do Valendo!, conversem e encerrem a rodada para revelar o resultado.",
       },
     ],
   },

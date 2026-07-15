@@ -19,6 +19,10 @@
   --transition: 180ms ease;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1262,9 +1266,75 @@ h2 {
   align-content: start;
 }
 
+.impostor-deck-status {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(155, 179, 255, 0.14);
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.impostor-deck-progress {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.history-reset-button {
+  width: fit-content;
+  min-height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(203, 216, 255, 0.78);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  cursor: pointer;
+}
+
+.history-reset-button:hover {
+  color: #ffffff;
+}
+
+.history-reset-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 3px;
+  border-radius: 0.2rem;
+}
+
+.setup-more-options {
+  border: 1px solid rgba(155, 179, 255, 0.14);
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.setup-more-options summary {
+  padding: 0.9rem 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.setup-more-options-content {
+  display: grid;
+  gap: 0.95rem;
+  padding: 0 1rem 1rem;
+}
+
 .field-group {
   display: grid;
   gap: 0.45rem;
+}
+
+.field-group[hidden] {
+  display: none;
 }
 
 .field-label {

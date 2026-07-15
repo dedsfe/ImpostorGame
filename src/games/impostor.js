@@ -1,11 +1,33 @@
 import {
   clampInteger,
   clampPlayers,
-  getDifficultyLabel,
   normalizeWord,
-  randomIndex,
   shuffleArray,
 } from "../shared/utils.js";
+import {
+  createImpostorWordDeck,
+  mergeImpostorThemes,
+  resolveImpostorWord,
+} from "./impostor-deck.js";
+
+const THEME_LABELS = {
+  animais: "Animais",
+  comidas: "Comidas",
+  lugares: "Lugares",
+  misturado: "Misturado",
+  objetos: "Objetos",
+};
+
+export function getImpostorThemeLabel(theme) {
+  if (THEME_LABELS[theme]) {
+    return THEME_LABELS[theme];
+  }
+
+  const label = String(theme ?? "")
+    .replaceAll("-", " ")
+    .trim();
+  return label ? `${label[0].toUpperCase()}${label.slice(1)}` : "Misturado";
+}
 
 export function normalizeImpostorSetup({ totalPlayers, impostorCount }) {
   const safeTotalPlayers = clampPlayers(totalPlayers);
@@ -18,20 +40,17 @@ export function normalizeImpostorSetup({ totalPlayers, impostorCount }) {
   };
 }
 
-export function pickImpostorWord(pools, category, difficulty) {
-  const categoryPool = pools[category] ?? pools.geral;
-  const words = categoryPool[difficulty] ?? pools.geral.medio;
-  return words[randomIndex(words.length)];
-}
-
 export function createImpostorGame({
   totalPlayers,
   impostorCount,
   requirePlayerNames,
   secretWord,
+  theme,
   category,
-  difficulty,
+  wordSource = "deck",
 }) {
+  const selectedTheme = theme ?? category ?? "misturado";
+  const themeLabel = getImpostorThemeLabel(selectedTheme);
   const safeImpostorCount = Math.min(Math.max(1, impostorCount), totalPlayers - 1);
   const roles = shuffleArray(
     Array.from({ length: totalPlayers }, (_, playerIndex) => {
@@ -41,7 +60,7 @@ export function createImpostorGame({
           title: "Você é o impostor",
           description:
             "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
-          hint: `Dica de categoria: ${category.toUpperCase()}`,
+          hint: `Dica de tema: ${themeLabel}`,
           value: "IMPOSTOR",
           tone: "impostor",
         };
@@ -49,9 +68,8 @@ export function createImpostorGame({
 
       return {
         badge: "Palavra secreta",
-        title: "Você recebeu a palavra",
-        description:
-          "Guarde a palavra e use pistas discretas para identificar o impostor.",
+        title: "Sua palavra é",
+        description: "Guarde a palavra e pense em uma pista que não seja óbvia.",
         value: secretWord,
         tone: "word",
       };
@@ -59,31 +77,32 @@ export function createImpostorGame({
   );
 
   return {
-    type: "impostor",
-    name: "Impostor",
-    totalPlayers,
+    deferRoleReveal: true,
+    endDescription: `Conversem para descobrir quem ${
+      safeImpostorCount > 1 ? "são os impostores" : "é o impostor"
+    }.`,
+    endLabel: "Rodada em andamento",
+    endTitle: "Valendo!",
+    hero: {
+      copy: `Tema ${themeLabel}. Veja seu papel e passe o aparelho.`,
+      eyebrow: "Impostor",
+      title: "Distribuição de papéis",
+    },
     impostorCount: safeImpostorCount,
+    name: "Impostor",
     requirePlayerNames,
     roles,
     setupScreen: "impostorSetup",
-    endLabel: "Rodada pronta",
-    endTitle: "Todos já receberam seus papéis",
-    endDescription:
-      `Agora afastem o celular e comecem a conversa para descobrir quem ${
-        safeImpostorCount > 1 ? "são os impostores" : "é o impostor"
-      }.`,
+    simpleReveal: true,
     summary: [
       { label: "Jogadores", value: String(totalPlayers) },
       { label: "Impostores", value: String(safeImpostorCount) },
-      { label: "Dificuldade", value: getDifficultyLabel(difficulty) },
+      { label: "Tema", value: themeLabel },
     ],
-    hero: {
-      eyebrow: "Impostor",
-      title: "Distribuição de papéis",
-      copy: `Palavra definida em ${category} com dificuldade ${getDifficultyLabel(
-        difficulty,
-      ).toLowerCase()}.`,
-    },
+    theme: selectedTheme,
+    totalPlayers,
+    type: "impostor",
+    wordSource,
   };
 }
 
@@ -94,12 +113,14 @@ export function createImpostorController({
   pools,
   startRoleGame,
 }) {
+  const wordDeck = createImpostorWordDeck({ pools });
+
   function setWordVisibility(isVisible) {
     elements.secretWord.type = isVisible ? "text" : "password";
     elements.toggleVisibility.setAttribute("aria-pressed", String(isVisible));
     elements.toggleVisibility.setAttribute(
       "aria-label",
-      isVisible ? "Esconder palavra secreta" : "Mostrar palavra secreta",
+      isVisible ? "Esconder palavra personalizada" : "Mostrar palavra personalizada",
     );
     elements.toggleVisibility.classList.toggle("is-visible", isVisible);
     elements.toggleLabel.textContent = isVisible ? "Ocultar" : "Mostrar";
@@ -111,8 +132,8 @@ export function createImpostorController({
 
   function syncPlayers(nextValue) {
     const setup = normalizeImpostorSetup({
-      totalPlayers: nextValue,
       impostorCount: elements.impostorCount.value,
+      totalPlayers: nextValue,
     });
 
     elements.playerCount.value = setup.totalPlayers;
@@ -123,8 +144,8 @@ export function createImpostorController({
 
   function syncImpostors(nextValue) {
     const setup = normalizeImpostorSetup({
-      totalPlayers: elements.playerCount.value,
       impostorCount: nextValue,
+      totalPlayers: elements.playerCount.value,
     });
 
     elements.playerCount.value = setup.totalPlayers;
@@ -133,34 +154,55 @@ export function createImpostorController({
     return setup.impostorCount;
   }
 
-  function syncCategory(nextValue) {
-    const category = Object.prototype.hasOwnProperty.call(pools, nextValue)
-      ? nextValue
-      : "geral";
-    elements.wordCategory.value = category;
-    return category;
+  function syncTheme(nextValue) {
+    const themes = mergeImpostorThemes(pools);
+    const theme = Object.hasOwn(themes, nextValue) ? nextValue : "misturado";
+    elements.wordCategory.value = theme;
+    renderDeckProgress(theme);
+    return theme;
   }
 
-  function syncDifficulty(nextValue) {
-    const difficulty =
-      nextValue === "facil" || nextValue === "medio" || nextValue === "dificil"
-        ? nextValue
-        : "dificil";
-    elements.wordDifficulty.value = difficulty;
-    return difficulty;
+  function refreshThemes() {
+    const currentTheme = elements.wordCategory.value || "misturado";
+    const options = Object.entries(mergeImpostorThemes(pools))
+      .filter(([, words]) => words.length > 0)
+      .map(([theme]) => {
+        const option = document.createElement("option");
+        option.value = theme;
+        option.textContent = getImpostorThemeLabel(theme);
+        return option;
+      });
+
+    elements.wordCategory.replaceChildren(...options);
+    return syncTheme(currentTheme);
   }
 
-  function chooseRandomWord() {
-    const category = syncCategory(elements.wordCategory.value);
-    const difficulty = syncDifficulty(elements.wordDifficulty.value);
-    elements.secretWord.value = pickImpostorWord(pools, category, difficulty);
+  function syncWordMode(nextValue) {
+    const mode = nextValue === "custom" ? "custom" : "deck";
+    elements.wordMode.value = mode;
+    elements.customWordGroup.hidden = mode !== "custom";
     setWordVisibility(false);
-    updateFeedback("");
+    return mode;
+  }
+
+  function renderDeckProgress(theme = elements.wordCategory.value) {
+    const progress = wordDeck.getProgress(theme);
+    elements.deckProgress.textContent = `${getImpostorThemeLabel(
+      progress.theme,
+    )} — ${progress.used} de ${progress.total} palavras vistas`;
+  }
+
+  function resetHistory() {
+    const theme = syncTheme(elements.wordCategory.value);
+    wordDeck.reset(theme);
+    renderDeckProgress(theme);
+    updateFeedback(`Histórico de ${getImpostorThemeLabel(theme)} reiniciado.`);
   }
 
   function openSetup() {
     openRoleSetup("impostorSetup");
-    setWordVisibility(false);
+    syncWordMode(elements.wordMode.value);
+    renderDeckProgress();
     updateFeedback("");
   }
 
@@ -168,27 +210,33 @@ export function createImpostorController({
     const totalPlayers = syncPlayers(elements.playerCount.value);
     const impostorCount = syncImpostors(elements.impostorCount.value);
     const requirePlayerNames = elements.requireNames.value !== "optional";
-    const category = syncCategory(elements.wordCategory.value);
-    const difficulty = syncDifficulty(elements.wordDifficulty.value);
-    let secretWord = normalizeWord(elements.secretWord.value);
+    const theme = syncTheme(elements.wordCategory.value);
+    const wordMode = syncWordMode(elements.wordMode.value);
+    const customWord =
+      wordMode === "custom" ? normalizeWord(elements.secretWord.value) : "";
 
-    if (!secretWord) {
-      secretWord = pickImpostorWord(pools, category, difficulty);
-      elements.secretWord.value = secretWord;
-      setWordVisibility(false);
+    if (wordMode === "custom" && !customWord) {
+      elements.moreOptions.open = true;
+      elements.customWordGroup.hidden = false;
+      updateFeedback("Digite a palavra personalizada para começar.");
+      elements.secretWord.focus();
+      return false;
     }
 
+    const selection = resolveImpostorWord({ customWord, deck: wordDeck, theme });
+    renderDeckProgress(theme);
     updateFeedback("");
     startRoleGame(
       createImpostorGame({
-        totalPlayers,
         impostorCount,
         requirePlayerNames,
-        secretWord,
-        category,
-        difficulty,
+        secretWord: selection.word,
+        theme,
+        totalPlayers,
+        wordSource: selection.source,
       }),
     );
+    return true;
   }
 
   function bind() {
@@ -211,12 +259,14 @@ export function createImpostorController({
       syncImpostors(event.target.value);
     });
     elements.wordCategory.addEventListener("change", (event) => {
-      syncCategory(event.target.value);
+      syncTheme(event.target.value);
+      updateFeedback("");
     });
-    elements.wordDifficulty.addEventListener("change", (event) => {
-      syncDifficulty(event.target.value);
+    elements.wordMode.addEventListener("change", (event) => {
+      syncWordMode(event.target.value);
+      updateFeedback("");
     });
-    elements.randomWord.addEventListener("click", chooseRandomWord);
+    elements.resetHistory.addEventListener("click", resetHistory);
     elements.toggleVisibility.addEventListener("click", () => {
       const isVisible =
         elements.toggleVisibility.getAttribute("aria-pressed") === "true";
@@ -232,16 +282,17 @@ export function createImpostorController({
   function initialize() {
     syncPlayers(elements.playerCount.value);
     syncImpostors(elements.impostorCount.value);
-    syncCategory(elements.wordCategory.value);
-    syncDifficulty(elements.wordDifficulty.value);
+    refreshThemes();
+    syncWordMode(elements.wordMode.value);
     setWordVisibility(false);
   }
 
   return {
-    id: "impostor",
-    setupScreen: "impostorSetup",
     bind,
+    id: "impostor",
     initialize,
     openSetup,
+    playAgain: start,
+    setupScreen: "impostorSetup",
   };
 }

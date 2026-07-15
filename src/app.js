@@ -6,22 +6,22 @@ import {
   wordPools,
 } from "./data/catalogs.js";
 import { rulesContent } from "./data/tutorials.js";
-import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
+import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js";
-import { getElements } from "./views/elements.js";
+import { getElements } from "./views/elements.js?v=41";
 import { createCityController } from "./games/city.js";
-import { createImpostorController } from "./games/impostor.js";
+import { createImpostorController } from "./games/impostor.js?v=41";
 import { createMimicaController } from "./games/mimica.js";
 import { createPoliceController } from "./games/police.js";
 import { createWhoAmIController } from "./games/whoami.js";
 import { createHubController } from "./hub.js";
-import { createRoleFlow } from "./role-flow.js";
+import { createRoleFlow } from "./role-flow.js?v=41";
 
 document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v40";
+const APP_VERSION = "v41";
 
 const elements = getElements();
 
@@ -152,13 +152,17 @@ function showHub() {
   setActiveScreen("hub");
 }
 
-function openGameSetup(gameId) {
+function openGameSetup(gameId, { playAgain = false } = {}) {
   const controller = gameControllersById.get(gameId);
   if (!controller) {
     return false;
   }
 
-  controller.openSetup();
+  if (playAgain && typeof controller.playAgain === "function") {
+    controller.playAgain();
+  } else {
+    controller.openSetup();
+  }
   return true;
 }
 

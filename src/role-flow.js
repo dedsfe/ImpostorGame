@@ -163,6 +163,7 @@ export function createRoleFlow({
   function renderPreparation() {
     const playerNumber = state.currentPlayer + 1;
     const requireNames = requiresPlayerNames();
+    const simpleReveal = state.currentGame.simpleReveal === true;
 
     setHero({
       eyebrow: state.currentGame.name,
@@ -178,6 +179,8 @@ export function createRoleFlow({
     turn.prepDescription.textContent = requireNames
       ? "Digite o nome antes de revelar. Só a pessoa com esse nome deve tocar para ver o papel."
       : "Passe o celular com a tela coberta e toque em mostrar apenas quando a pessoa estiver pronta.";
+    turn.revealRole.textContent = simpleReveal ? "Ver meu papel" : "Mostrar papel";
+    turn.toggleVisibility.hidden = simpleReveal;
     turn.playerName.closest(".turn-name-field").hidden = !requireNames;
     turn.playerName.value = currentPlayerName();
     syncPlayerName();
@@ -193,17 +196,23 @@ export function createRoleFlow({
   function renderReveal() {
     const playerNumber = state.currentPlayer + 1;
     const role = state.currentGame.roles[state.currentPlayer];
+    const simpleReveal = state.currentGame.simpleReveal === true;
     const isLastPlayer =
       state.currentPlayer === state.currentGame.totalPlayers - 1;
 
     setHero(state.currentGame.hero);
-    state.turnRevealVisible = false;
+    state.turnRevealVisible = simpleReveal;
     turn.panel.dataset.game = state.currentGame.type;
     turn.gameLabel.textContent = state.currentGame.name;
     turn.progress.textContent = `${currentPlayerLabel()} (${playerNumber} de ${state.currentGame.totalPlayers})`;
-    turn.nextPlayer.textContent = isLastPlayer
-      ? "Finalizar distribuição"
-      : "Próximo jogador";
+    turn.toggleVisibility.hidden = simpleReveal;
+    turn.nextPlayer.textContent = simpleReveal
+      ? isLastPlayer
+        ? "Ocultar e começar"
+        : "Ocultar e passar"
+      : isLastPlayer
+        ? "Finalizar distribuição"
+        : "Próximo jogador";
 
     applyTone(role.tone);
     renderSecret(role);
@@ -212,11 +221,22 @@ export function createRoleFlow({
   }
 
   function renderEndScreen() {
-    setHero({
-      eyebrow: state.currentGame.name,
-      title: "Rodada pronta",
-      copy: "Todos os papéis foram entregues. Agora o jogo começa fora da tela.",
-    });
+    const deferRoleReveal = state.currentGame.deferRoleReveal === true;
+
+    state.currentGame.roundEnded = false;
+    setHero(
+      deferRoleReveal
+        ? {
+            eyebrow: state.currentGame.name,
+            title: "Valendo!",
+            copy: "O celular pode sair da roda enquanto vocês jogam.",
+          }
+        : {
+            eyebrow: state.currentGame.name,
+            title: "Rodada pronta",
+            copy: "Todos os papéis foram entregues. Agora o jogo começa fora da tela.",
+          },
+    );
 
     end.panel.dataset.game = state.currentGame.type;
     end.label.textContent = state.currentGame.endLabel;
@@ -242,7 +262,9 @@ export function createRoleFlow({
         return item;
       }),
     );
-    end.playAgain.textContent = `Nova partida de ${state.currentGame.name}`;
+    end.playAgain.textContent = deferRoleReveal
+      ? "Jogar novamente"
+      : `Nova partida de ${state.currentGame.name}`;
     end.summaryGrid.replaceChildren(
       ...state.currentGame.summary.map((summary) => {
         const card = document.createElement("article");
@@ -259,11 +281,46 @@ export function createRoleFlow({
     );
     renderRoleList();
     setRoleListVisible(false);
+    end.showRoleReveal.hidden = false;
+    end.showRoleReveal.textContent = deferRoleReveal
+      ? "Encerrar rodada"
+      : "Mostrar quem é quem";
+    end.playAgain.hidden = deferRoleReveal;
     showScreen("end");
+  }
+
+  function renderResult() {
+    if (!state.currentGame?.deferRoleReveal) {
+      return;
+    }
+
+    state.currentGame.roundEnded = true;
+    setHero({
+      eyebrow: state.currentGame.name,
+      title: "Resultado",
+      copy: "A rodada acabou. Agora vocês podem conferir todos os papéis.",
+    });
+    end.label.textContent = "Resultado";
+    end.title.textContent = "Quem era quem?";
+    end.description.textContent = "Confiram os papéis e decidam se o impostor escapou.";
+    setRoleListVisible(true);
+    end.showRoleReveal.hidden = true;
+    end.playAgain.hidden = false;
   }
 
   function restartGame() {
     if (state.currentGame && openGameSetup(state.currentGame.type)) {
+      return;
+    }
+
+    openHub();
+  }
+
+  function playAgain() {
+    if (
+      state.currentGame &&
+      openGameSetup(state.currentGame.type, { playAgain: true })
+    ) {
       return;
     }
 
@@ -307,9 +364,13 @@ export function createRoleFlow({
     turn.restart.addEventListener("click", restartGame);
     turn.goHub.addEventListener("click", openHub);
     end.showRoleReveal.addEventListener("click", () => {
+      if (state.currentGame?.deferRoleReveal && !state.currentGame.roundEnded) {
+        renderResult();
+        return;
+      }
       setRoleListVisible(end.roleRevealPanel.hidden);
     });
-    end.playAgain.addEventListener("click", restartGame);
+    end.playAgain.addEventListener("click", playAgain);
     end.goHub.addEventListener("click", openHub);
   }
 

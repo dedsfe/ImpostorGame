@@ -7,7 +7,7 @@
 begin;
 
 insert into public.games (id, slug, name, short_description, setup_screen, card_image_path, modal_image_path, min_players, max_players, supports_categories, supports_difficulties, supports_timer, is_active, created_at, updated_at) values
-  (1, 'impostor', 'Impostor', 'Um jogador não recebe a palavra e precisa blefar durante a conversa.', 'impostorSetup', './assets/impostor.png', './assets/HorizontalImgs/Impostor.png', 3, 20, true, true, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (1, 'impostor', 'Impostor', 'Um jogador não recebe a palavra e precisa blefar durante a conversa.', 'impostorSetup', './assets/impostor.png', './assets/HorizontalImgs/Impostor.png', 3, 20, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 'police', 'Polícia e Ladrão', 'O app distribui aleatoriamente quem é polícia, ladrão e vítima na rodada.', 'policeSetup', './assets/policiaeladrao.png', './assets/HorizontalImgs/policiaeladrao.png', 3, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 'city', 'Cidade Dorme', 'A cidade dorme, o assassino ataca, o detetive investiga e todos tentam descobrir quem está mentindo.', 'citySetup', './assets/cidadedorme.png', './assets/HorizontalImgs/CidadeDorme.png', 5, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 'whoami', 'Quem sou eu?', 'Escolha a categoria, coloque o celular na testa e revele um personagem em tela branca.', 'whoamiSetup', './assets/quemsoueu.png', './assets/HorizontalImgs/Quem sou Eu.png', 2, null, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -42,9 +42,9 @@ on conflict (id) do update set
   updated_at = excluded.updated_at;
 
 insert into public.tutorial_steps (id, tutorial_id, step_order, title, copy, created_at, updated_at) values
-  (1, 1, 1, 'Configure a rodada', 'Escolha os jogadores, a categoria e a dificuldade da palavra.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2, 1, 2, 'Passem o celular', 'Cada pessoa vê só a própria tela antes de entregar para a próxima.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3, 1, 3, 'Discutam em grupo', 'Todos comentam a palavra sem entregá-la. O impostor tenta se misturar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (1, 1, 1, 'Prepare o jogo', 'Escolha jogadores e tema. O baralho evita repetições até completar o tema.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (2, 1, 2, 'Vejam e passem', 'Cada pessoa toca em Ver meu papel e depois em Ocultar e passar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (3, 1, 3, 'Joguem e encerrem', 'Depois do Valendo!, conversem e encerrem a rodada para revelar o resultado.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 2, 1, 'Monte a composição', 'Escolha quantos serão policiais, ladrões e vítimas.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 2, 2, 'Revelem em privacidade', 'Cada jogador vê só o próprio papel antes de passar o celular.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (6, 2, 3, 'Comecem a rodada', 'Depois da distribuição, o grupo conduz a dinâmica fora do app.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
@@ -67,7 +67,7 @@ on conflict (id) do update set
 
 insert into public.role_templates (id, game_id, slug, name, badge, title, description, tone, sort_order, is_active, created_at, updated_at) values
   (1, 1, 'impostor', 'Impostor', 'Impostor', 'Você é o impostor', 'Escute a conversa, tente entender a palavra e não entregue que você não a conhece.', 'impostor', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2, 1, 'word-holder', 'Palavra secreta', 'Palavra secreta', 'Você recebeu a palavra', 'Guarde a palavra e use pistas discretas para identificar o impostor.', 'word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (2, 1, 'word-holder', 'Palavra secreta', 'Palavra secreta', 'Sua palavra é', 'Guarde a palavra e pense em uma pista que não seja óbvia.', 'word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 2, 'police', 'Polícia', 'Polícia', 'Você é a polícia', 'Observe a rodada com cuidado e tente identificar quem está agindo como ladrão.', 'police', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 2, 'thief', 'Ladrão', 'Ladrão', 'Você é o ladrão', 'Tente disfarçar seu papel e escapar da atenção dos policiais durante a rodada.', 'thief', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 2, 'victim', 'Vítima', 'Vítima', 'Você é a vítima', 'Observe os outros jogadores e tente perceber quem pode estar do seu lado ou contra você.', 'victim', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),

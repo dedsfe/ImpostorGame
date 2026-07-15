@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=40" />
+    <link rel="stylesheet" href="./styles.css?v=41" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -485,129 +485,140 @@
               </div>
             </label>
 
-            <label class="field-group" for="impostor-count">
-              <span class="field-label">Número de impostores</span>
-              <div class="stepper">
-                <button
-                  id="impostor-decrease-count"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Diminuir impostores"
-                >
-                  -
-                </button>
-                <input
-                  id="impostor-count"
-                  class="stepper-input"
-                  type="number"
-                  inputmode="numeric"
-                  min="1"
-                  max="19"
-                  value="1"
-                />
-                <button
-                  id="impostor-increase-count"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Aumentar impostores"
-                >
-                  +
-                </button>
-              </div>
-              <p class="field-hint">
-                Sempre precisa sobrar pelo menos uma pessoa com a palavra.
-              </p>
-            </label>
-
-            <label class="field-group" for="impostor-require-names">
-              <span class="field-label">Identificar jogadores</span>
-              <select id="impostor-require-names" class="select-input">
-                <option value="required" selected>Exigir nome antes de revelar</option>
-                <option value="optional">Não pedir nome</option>
+            <label class="field-group" for="impostor-word-category">
+              <span class="field-label">Tema</span>
+              <select id="impostor-word-category" class="select-input">
+                <option value="misturado" selected>Misturado</option>
               </select>
             </label>
 
-            <label class="field-group" for="impostor-secret-word">
-              <span class="field-label">Categoria e dificuldade</span>
-              <div class="setup-select-grid">
-                <select id="impostor-word-category" class="select-input">
-                  <option value="geral">Categoria: Geral</option>
-                  <option value="animais">Categoria: Animais</option>
-                  <option value="comidas">Categoria: Comidas</option>
-                  <option value="objetos">Categoria: Objetos</option>
-                  <option value="lugares">Categoria: Lugares</option>
-                </select>
-                <select id="impostor-word-difficulty" class="select-input">
-                  <option value="facil">Dificuldade: Fácil</option>
-                  <option value="medio" selected>Dificuldade: Média</option>
-                  <option value="dificil">Dificuldade: Difícil</option>
-                </select>
-              </div>
-            </label>
-
-            <label class="field-group" for="impostor-secret-word">
-              <div class="field-row">
-                <span class="field-label">Palavra secreta</span>
-                <span class="field-meta">Opcional</span>
-              </div>
-              <div class="word-input-row word-input-row--impostor">
-                <input
-                  id="impostor-secret-word"
-                  class="text-input"
-                  type="password"
-                  maxlength="40"
-                  placeholder="Ex.: astronauta"
-                  autocomplete="off"
-                />
-                <button
-                  id="impostor-toggle-word-visibility"
-                  class="icon-button"
-                  type="button"
-                  aria-label="Mostrar palavra secreta"
-                  aria-pressed="false"
-                >
-                  <svg
-                    class="icon-eye"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="3"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                    />
-                  </svg>
-                  <span id="impostor-toggle-word-label">Mostrar</span>
-                </button>
-              </div>
-              <p class="field-hint impostor-field-hint">
-                Deixe em branco para o app sortear uma palavra por você.
+            <div class="impostor-deck-status" aria-live="polite">
+              <p id="impostor-deck-progress" class="impostor-deck-progress">
+                Misturado — preparando palavras
               </p>
+              <p class="field-hint">Sem repetições até completar o tema.</p>
               <button
-                id="impostor-random-word"
-                class="secondary-button secondary-button--quiet secondary-button--full"
+                id="impostor-reset-history"
+                class="history-reset-button"
                 type="button"
               >
-                Sortear palavra
+                Reiniciar histórico
               </button>
-            </label>
+            </div>
+
+            <details id="impostor-more-options" class="setup-more-options">
+              <summary>Mais opções</summary>
+              <div class="setup-more-options-content">
+                <label class="field-group" for="impostor-count">
+                  <span class="field-label">Número de impostores</span>
+                  <div class="stepper">
+                    <button
+                      id="impostor-decrease-count"
+                      class="stepper-button"
+                      type="button"
+                      aria-label="Diminuir impostores"
+                    >
+                      -
+                    </button>
+                    <input
+                      id="impostor-count"
+                      class="stepper-input"
+                      type="number"
+                      inputmode="numeric"
+                      min="1"
+                      max="19"
+                      value="1"
+                    />
+                    <button
+                      id="impostor-increase-count"
+                      class="stepper-button"
+                      type="button"
+                      aria-label="Aumentar impostores"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p class="field-hint">
+                    Sempre precisa sobrar alguém com a palavra.
+                  </p>
+                </label>
+
+                <label class="field-group" for="impostor-require-names">
+                  <span class="field-label">Identificar jogadores</span>
+                  <select id="impostor-require-names" class="select-input">
+                    <option value="required" selected>Exigir nome</option>
+                    <option value="optional">Não pedir nome</option>
+                  </select>
+                </label>
+
+                <label class="field-group" for="impostor-word-mode">
+                  <span class="field-label">Modo da palavra</span>
+                  <select id="impostor-word-mode" class="select-input">
+                    <option value="deck" selected>Sortear sem repetir</option>
+                    <option value="custom">Usar palavra personalizada</option>
+                  </select>
+                </label>
+
+                <label
+                  id="impostor-custom-word-group"
+                  class="field-group"
+                  for="impostor-secret-word"
+                  hidden
+                >
+                  <span class="field-label">Palavra personalizada</span>
+                  <div class="word-input-row word-input-row--impostor">
+                    <input
+                      id="impostor-secret-word"
+                      class="text-input"
+                      type="password"
+                      maxlength="40"
+                      placeholder="Ex.: astronauta"
+                      autocomplete="off"
+                    />
+                    <button
+                      id="impostor-toggle-word-visibility"
+                      class="icon-button"
+                      type="button"
+                      aria-label="Mostrar palavra personalizada"
+                      aria-pressed="false"
+                    >
+                      <svg
+                        class="icon-eye"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                        />
+                      </svg>
+                      <span id="impostor-toggle-word-label">Mostrar</span>
+                    </button>
+                  </div>
+                  <p class="field-hint">
+                    Este modo não altera o histórico do baralho.
+                  </p>
+                </label>
+              </div>
+            </details>
 
             <p id="impostor-setup-feedback" class="feedback" aria-live="polite"></p>
 
             <div class="action-row action-row--single">
               <button id="start-impostor-game" class="primary-button" type="submit">
-                Iniciar rodada
+                Começar
               </button>
               <button id="go-hub-from-impostor" class="ghost-button" type="button" hidden>
                 Noite de jogos
@@ -1268,6 +1279,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=40"></script>
+    <script type="module" src="./script.js?v=41"></script>
   </body>
 </html>

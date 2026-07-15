@@ -28,7 +28,7 @@ const gameConfig = {
     minPlayers: 3,
     maxPlayers: 20,
     supportsCategories: true,
-    supportsDifficulties: true,
+    supportsDifficulties: false,
     supportsTimer: false,
   },
   police: {
@@ -76,9 +76,8 @@ const roleTemplates = {
       slug: "word-holder",
       name: "Palavra secreta",
       badge: "Palavra secreta",
-      title: "Você recebeu a palavra",
-      description:
-        "Guarde a palavra e use pistas discretas para identificar o impostor.",
+      title: "Sua palavra é",
+      description: "Guarde a palavra e pense em uma pista que não seja óbvia.",
       tone: "word",
     },
   ],

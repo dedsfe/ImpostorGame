@@ -3206,7 +3206,7 @@ export const heroContent = {
     eyebrow: "Impostor",
     title: "Monte a rodada",
     copy:
-      "Escolha categoria, dificuldade e distribua uma palavra secreta enquanto um jogador vira o impostor.",
+      "Escolha jogadores e tema. As palavras não se repetem até o baralho completar o ciclo.",
   },
   policeSetup: {
     eyebrow: "Polícia e Ladrão",

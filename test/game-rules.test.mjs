@@ -21,7 +21,6 @@ import { createCityGame, normalizeCitySetup } from "../src/games/city.js";
 import {
   createImpostorGame,
   normalizeImpostorSetup,
-  pickImpostorWord,
 } from "../src/games/impostor.js";
 import {
   normalizeMimicaDifficulty,
@@ -127,14 +126,6 @@ test("normalizes every role setup before creating a round", () => {
 });
 
 test("selects content without immediately repeating the current item", () => {
-  const wordPools = {
-    geral: {
-      medio: ["bola"],
-      dificil: ["avião", "navio"],
-    },
-  };
-
-  assert.equal(pickImpostorWord(wordPools, "missing", "missing"), "bola");
   assert.equal(pickMimicaWord(["avião", "navio"], "avião"), "navio");
 
   const draw = drawWhoAmICharacter({
