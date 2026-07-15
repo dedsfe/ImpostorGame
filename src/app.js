@@ -7,7 +7,7 @@ import {
 } from "./data/catalogs.js";
 import { rulesContent } from "./data/tutorials.js";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
-import { createInitialState } from "./viewmodels/app-state.js";
+import { createInitialState } from "./state.js";
 import { getElements } from "./views/elements.js";
 import { createCityController } from "./games/city.js";
 import { createImpostorController } from "./games/impostor.js";
