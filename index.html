@@ -7,7 +7,25 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=43" />
+    <!-- PostHog analytics (autocapture + gravação de sessão). Desliga sozinho em localhost. -->
+    <script>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Ni qi init Xi rn Rr tn sn Ki capture calculateEventProperties dn register register_once register_for_session unregister unregister_for_session fn getFeatureFlag getFeatureFlagPayload getFeatureFlagResult getAllFeatureFlags isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync pn identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset shutdown setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty cn un createPersonProfile setInternalOrTestUser vn Qi yn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing an debug Or Rt getPageViewId captureTraceFeedback captureTraceMetric Wi".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      (function () {
+        var host = location.hostname;
+        var isLocal =
+          host === "localhost" ||
+          host === "127.0.0.1" ||
+          host === "" ||
+          host.endsWith(".local");
+        if (isLocal) return; // não polui os dados de produção com testes locais
+        posthog.init("phc_wZK8KZZ38oR9gJSfed8J4BpExKzHTAQYGgi7BJ53wHTV", {
+          api_host: "https://us.i.posthog.com",
+          defaults: "2026-05-30",
+          person_profiles: "identified_only",
+        });
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css?v=48" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -42,8 +60,7 @@
         -webkit-appearance: none !important;
         transition:
           background-color 180ms ease,
-          border-color 180ms ease,
-          transform 180ms ease !important;
+          border-color 180ms ease !important;
       }
 
       .app-nav-title:hover {
@@ -368,6 +385,78 @@
         <div id="hub-grid" class="hub-grid" aria-label="Jogos disponíveis"></div>
       </section>
 
+      <section
+        id="party-setup-screen"
+        class="screen"
+        aria-labelledby="party-setup-title"
+      >
+        <div class="party-stage">
+          <div class="panel party-panel">
+            <p class="panel-label">Grupo da sessão</p>
+            <h2 id="party-setup-title" tabindex="-1">Quem vai jogar?</h2>
+            <p class="support-copy">
+              Adicione as pessoas que estão nesta rodada. O grupo será usado nos
+              outros jogos desta noite.
+            </p>
+
+            <div id="party-name-mode">
+              <form id="party-name-form" class="party-name-form" novalidate>
+                <div class="field-group">
+                  <label class="field-label" for="party-player-name">Nome do jogador</label>
+                  <div class="party-name-entry">
+                    <input
+                      id="party-player-name"
+                      class="text-input"
+                      type="text"
+                      maxlength="30"
+                      autocomplete="off"
+                      aria-describedby="party-feedback"
+                    />
+                    <button id="party-add-player" class="secondary-button" type="submit">
+                      Adicionar
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+              <div id="party-player-list" class="party-player-list" role="list"></div>
+              <p id="party-empty" class="party-empty">Nenhuma pessoa adicionada ainda.</p>
+              <p id="party-feedback" class="feedback" aria-live="polite"></p>
+
+              <button id="party-continue" class="primary-button" type="button" disabled>
+                Continuar com 0 jogadores
+              </button>
+              <button id="party-use-numbers" class="party-mode-action" type="button">
+                Usar apenas números
+              </button>
+            </div>
+
+            <form id="party-number-mode" class="party-number-mode" hidden>
+              <label class="field-group" for="party-number-count">
+                <span class="field-label">Quantidade de jogadores</span>
+                <input
+                  id="party-number-count"
+                  class="text-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="20"
+                  value="3"
+                />
+              </label>
+              <button class="primary-button" type="submit">Criar grupo numerado</button>
+              <button id="party-use-names" class="party-mode-action" type="button">
+                Usar nomes
+              </button>
+            </form>
+
+            <button id="party-cancel" class="ghost-button party-cancel" type="button">
+              Voltar aos jogos
+            </button>
+          </div>
+        </div>
+      </section>
+
       <div id="hub-modal" class="hub-modal" hidden>
         <div
           id="hub-modal-dialog"
@@ -454,36 +543,13 @@
             id="impostor-setup-form"
             class="setup-form setup-card setup-card--spotlight setup-card--impostor"
           >
-            <label class="field-group" for="impostor-player-count">
-              <span class="field-label">Número de jogadores</span>
-              <div class="stepper">
-                <button
-                  id="impostor-decrease-players"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Diminuir jogadores"
-                >
-                  -
-                </button>
-                <input
-                  id="impostor-player-count"
-                  class="stepper-input"
-                  type="number"
-                  inputmode="numeric"
-                  min="3"
-                  max="20"
-                  value="4"
-                />
-                <button
-                  id="impostor-increase-players"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Aumentar jogadores"
-                >
-                  +
-                </button>
-              </div>
-            </label>
+            <section class="party-summary" data-party-summary data-party-screen="impostorSetup">
+              <p class="party-summary-count" data-party-count>0 jogadores</p>
+              <p class="party-summary-names" data-party-names></p>
+              <button class="party-summary-edit" data-party-edit type="button">
+                Editar grupo
+              </button>
+            </section>
 
             <label class="field-group" for="impostor-word-category">
               <span class="field-label">Tema</span>
@@ -497,13 +563,6 @@
                 Misturado — preparando palavras
               </p>
               <p class="field-hint">Sem repetições até completar o tema.</p>
-              <button
-                id="impostor-reset-history"
-                class="history-reset-button"
-                type="button"
-              >
-                Reiniciar histórico
-              </button>
             </div>
 
             <details id="impostor-more-options" class="setup-more-options">
@@ -541,14 +600,6 @@
                   <p class="field-hint">
                     Sempre precisa sobrar alguém com a palavra.
                   </p>
-                </label>
-
-                <label class="field-group" for="impostor-require-names">
-                  <span class="field-label">Identificar jogadores</span>
-                  <select id="impostor-require-names" class="select-input">
-                    <option value="optional" selected>Não pedir nome</option>
-                    <option value="required">Pedir nomes</option>
-                  </select>
                 </label>
 
                 <label class="field-group" for="impostor-word-mode">
@@ -611,6 +662,14 @@
                     Este modo não altera o histórico do baralho.
                   </p>
                 </label>
+
+                <button
+                  id="impostor-reset-history"
+                  class="history-reset-button"
+                  type="button"
+                >
+                  Reiniciar histórico
+                </button>
               </div>
             </details>
 
@@ -657,6 +716,14 @@
             id="police-setup-form"
             class="setup-form setup-card setup-card--spotlight"
           >
+            <section class="party-summary" data-party-summary data-party-screen="policeSetup">
+              <p class="party-summary-count" data-party-count>0 jogadores</p>
+              <p class="party-summary-names" data-party-names></p>
+              <button class="party-summary-edit" data-party-edit type="button">
+                Editar grupo
+              </button>
+            </section>
+
             <label class="field-group" for="police-count">
               <span class="field-label">Quantidade de policiais</span>
               <div class="stepper">
@@ -719,39 +786,8 @@
               </div>
             </label>
 
-            <label class="field-group" for="victim-count">
-              <span class="field-label">Quantidade de vítimas</span>
-              <div class="stepper">
-                <button
-                  id="victim-decrease-count"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Diminuir vítimas"
-                >
-                  -
-                </button>
-                <input
-                  id="victim-count"
-                  class="stepper-input"
-                  type="number"
-                  inputmode="numeric"
-                  min="1"
-                  max="20"
-                  value="1"
-                />
-                <button
-                  id="victim-increase-count"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Aumentar vítimas"
-                >
-                  +
-                </button>
-              </div>
-            </label>
-
             <p id="police-role-summary" class="field-hint">
-              Total: 4 jogadores. Serão 1 policial, 2 ladrões e 1 vítima.
+              Serão 1 policial, 1 ladrão e as demais pessoas serão vítimas.
             </p>
             <p id="police-setup-feedback" class="feedback" aria-live="polite"></p>
 
@@ -796,36 +832,13 @@
             id="city-setup-form"
             class="setup-form setup-card setup-card--spotlight"
           >
-            <label class="field-group" for="city-player-count">
-              <span class="field-label">Número de jogadores</span>
-              <div class="stepper">
-                <button
-                  id="city-decrease-players"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Diminuir jogadores"
-                >
-                  -
-                </button>
-                <input
-                  id="city-player-count"
-                  class="stepper-input"
-                  type="number"
-                  inputmode="numeric"
-                  min="5"
-                  max="20"
-                  value="8"
-                />
-                <button
-                  id="city-increase-players"
-                  class="stepper-button"
-                  type="button"
-                  aria-label="Aumentar jogadores"
-                >
-                  +
-                </button>
-              </div>
-            </label>
+            <section class="party-summary" data-party-summary data-party-screen="citySetup">
+              <p class="party-summary-count" data-party-count>0 jogadores</p>
+              <p class="party-summary-names" data-party-names></p>
+              <button class="party-summary-edit" data-party-edit type="button">
+                Editar grupo
+              </button>
+            </section>
 
             <label class="field-group" for="city-assassin-count">
               <span class="field-label">Quantidade de assassinos</span>
@@ -935,6 +948,14 @@
             id="whoami-setup-form"
             class="setup-form setup-card setup-card--spotlight"
           >
+            <section class="party-summary" data-party-summary data-party-screen="whoamiSetup">
+              <p class="party-summary-count" data-party-count>0 jogadores</p>
+              <p class="party-summary-names" data-party-names></p>
+              <button class="party-summary-edit" data-party-edit type="button">
+                Editar grupo
+              </button>
+            </section>
+
             <label class="field-group" for="whoami-category">
               <span class="field-label">Categoria</span>
               <select id="whoami-category" class="select-input">
@@ -994,6 +1015,14 @@
             id="mimica-setup-form"
             class="setup-form setup-card setup-card--spotlight"
           >
+            <section class="party-summary" data-party-summary data-party-screen="mimicaSetup">
+              <p class="party-summary-count" data-party-count>0 jogadores</p>
+              <p class="party-summary-names" data-party-names></p>
+              <button class="party-summary-edit" data-party-edit type="button">
+                Editar grupo
+              </button>
+            </section>
+
             <label class="field-group" for="mimica-category">
               <span class="field-label">Categoria</span>
               <select id="mimica-category" class="select-input">
@@ -1168,8 +1197,8 @@
                 <button id="go-hub-turn" class="ghost-button" type="button">
                   Noite de jogos
                 </button>
-                <button id="restart-turn" class="ghost-button" type="button">
-                  Reiniciar
+                <button id="edit-party-turn" class="ghost-button" type="button">
+                  Editar grupo
                 </button>
               </div>
             </div>
@@ -1181,18 +1210,6 @@
                 Passe o celular para o próximo jogador e toque em mostrar apenas
                 quando ele estiver pronto.
               </p>
-              <label class="field-group turn-name-field" for="turn-player-name">
-                <span class="field-label">Nome do jogador</span>
-                <input
-                  id="turn-player-name"
-                  class="text-input"
-                  type="text"
-                  autocomplete="off"
-                  maxlength="24"
-                  placeholder="Digite o nome para liberar"
-                  required
-                />
-              </label>
               <button id="reveal-role" class="primary-button" type="button">
                 Mostrar papel
               </button>
@@ -1270,6 +1287,9 @@
               <button id="change-settings" class="ghost-button" type="button" hidden>
                 Trocar configurações
               </button>
+              <button id="edit-party-end" class="ghost-button" type="button">
+                Editar grupo
+              </button>
               <button id="go-hub-end" class="ghost-button" type="button">
                 Noite de jogos
               </button>
@@ -1306,11 +1326,42 @@
         </div>
       </dialog>
 
+      <dialog
+        id="party-edit-dialog"
+        class="result-confirm-dialog"
+        aria-labelledby="party-edit-title"
+        aria-describedby="party-edit-copy"
+      >
+        <div class="result-confirm-content">
+          <h2 id="party-edit-title">Editar o grupo?</h2>
+          <p id="party-edit-copy">
+            Os papéis desta rodada serão descartados. Depois de editar, você
+            poderá começar outra rodada com o novo grupo.
+          </p>
+          <div class="result-confirm-actions">
+            <button
+              id="cancel-party-edit"
+              class="result-confirm-action result-confirm-action--quiet"
+              type="button"
+            >
+              Continuar jogando
+            </button>
+            <button
+              id="confirm-party-edit"
+              class="result-confirm-action result-confirm-action--reveal"
+              type="button"
+            >
+              Descartar e editar
+            </button>
+          </div>
+        </div>
+      </dialog>
+
       <footer class="app-version" aria-label="Versão do aplicativo">
         <span id="app-version">v0</span>
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=43"></script>
+    <script type="module" src="./script.js?v=47"></script>
   </body>
 </html>

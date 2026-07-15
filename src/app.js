@@ -7,23 +7,46 @@ import {
 } from "./data/catalogs.js?v=43";
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
-import { createInitialState } from "./state.js?v=43";
-import { getElements } from "./views/elements.js?v=43";
-import { createCityController } from "./games/city.js";
-import { createImpostorController } from "./games/impostor.js?v=43";
-import { createMimicaController } from "./games/mimica.js";
-import { createPoliceController } from "./games/police.js";
-import { createWhoAmIController } from "./games/whoami.js";
+import { createInitialState } from "./state.js?v=45";
+import { getElements } from "./views/elements.js?v=47";
+import { createCityController } from "./games/city.js?v=45";
+import { createImpostorController } from "./games/impostor.js?v=47";
+import { createMimicaController } from "./games/mimica.js?v=45";
+import { createPoliceController } from "./games/police.js?v=45";
+import { createWhoAmIController } from "./games/whoami.js?v=45";
 import { createHubController } from "./hub.js";
-import { createRoleFlow } from "./role-flow.js?v=43";
+import {
+  createGameEntryCoordinator,
+  createPartyFlow,
+  formatPartyNames,
+  shouldConfirmPartyEdit,
+} from "./party-flow.js?v=47";
+import { createRoleFlow } from "./role-flow.js?v=47";
+import { animateElement } from "./motion.js";
+import { track } from "./analytics.js?v=1";
 
 document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v43";
+const APP_VERSION = "v47";
 
 const elements = getElements();
+let gameEntryCoordinator = null;
+
+function renderPartySummaries() {
+  const party = state.partySession.getParty();
+  const players = party?.players ?? [];
+  const countLabel = `${players.length} ${
+    players.length === 1 ? "jogador" : "jogadores"
+  }`;
+  const names = formatPartyNames(players);
+
+  elements.party.summaries.forEach((summary) => {
+    summary.querySelector("[data-party-count]").textContent = countLabel;
+    summary.querySelector("[data-party-names]").textContent = names;
+  });
+}
 
 function setHero(content) {
   elements.heroEyebrow.textContent = content.eyebrow;
@@ -35,8 +58,23 @@ function openGameFromHubScreen(screen) {
   const controller = gameControllersByScreen.get(screen);
 
   if (controller) {
-    controller.openSetup();
+    gameEntryCoordinator.selectGame({
+      minimumPlayers: controller.minimumPlayers,
+      screen,
+    });
   }
+}
+
+function openGameDirect(screen) {
+  const controller = gameControllersByScreen.get(screen);
+
+  if (!controller) {
+    return false;
+  }
+
+  renderPartySummaries();
+  controller.openSetup();
+  return true;
 }
 
 function getFullscreenElement() {
@@ -83,6 +121,7 @@ async function exitFullscreenIfNeeded() {
 }
 
 function setActiveScreen(screen) {
+  const previousScreen = state.currentScreen;
   state.currentScreen = screen;
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
@@ -107,6 +146,21 @@ function setActiveScreen(screen) {
   Object.entries(elements.screens).forEach(([key, element]) => {
     element.classList.toggle("is-active", key === screen);
   });
+
+  if (previousScreen !== screen) {
+    track("screen_viewed", {
+      screen,
+      players: state.partySession.getPlayerCount(),
+    });
+    void animateElement(
+      elements.screens[screen],
+      [
+        { transform: "translateY(7px)" },
+        { transform: "translateY(0)" },
+      ],
+      { duration: 180 },
+    );
+  }
 
   if (screen !== "whoamiReveal" && screen !== "mimicaPlay") {
     exitFullscreenIfNeeded();
@@ -158,6 +212,15 @@ function openGameSetup(gameId, { playAgain = false } = {}) {
     return false;
   }
 
+  if (state.partySession.getPlayerCount() < controller.minimumPlayers) {
+    gameEntryCoordinator.selectGame({
+      minimumPlayers: controller.minimumPlayers,
+      screen: controller.setupScreen,
+    });
+    return true;
+  }
+
+  renderPartySummaries();
   if (playAgain && typeof controller.playAgain === "function") {
     controller.playAgain();
   } else {
@@ -180,6 +243,7 @@ const gameControllers = [
     elements: elements.impostor,
     openHub: roleFlow.openHub,
     openRoleSetup: roleFlow.openSetup,
+    partySession: state.partySession,
     pools: wordPools,
     startRoleGame: roleFlow.startGame,
   }),
@@ -187,18 +251,21 @@ const gameControllers = [
     elements: elements.police,
     openHub: roleFlow.openHub,
     openRoleSetup: roleFlow.openSetup,
+    partySession: state.partySession,
     startRoleGame: roleFlow.startGame,
   }),
   createCityController({
     elements: elements.city,
     openHub: roleFlow.openHub,
     openRoleSetup: roleFlow.openSetup,
+    partySession: state.partySession,
     startRoleGame: roleFlow.startGame,
   }),
   createMimicaController({
     elements: elements.mimica,
     enterFullscreen: enterMimicaFullscreen,
     openHub: roleFlow.openHub,
+    partySession: state.partySession,
     pools: mimicaPools,
     showScreen: setActiveScreen,
     state,
@@ -218,6 +285,29 @@ const gameControllersById = new Map(
 const gameControllersByScreen = new Map(
   gameControllers.map((controller) => [controller.setupScreen, controller]),
 );
+const partyFlow = createPartyFlow({
+  elements: elements.party,
+  onCancel: () => {
+    const cancelledGame = gameEntryCoordinator.cancel();
+
+    if (cancelledGame?.editing) {
+      openGameDirect(cancelledGame.screen);
+      return;
+    }
+
+    showHub();
+  },
+  onChange: renderPartySummaries,
+  onContinue: () => gameEntryCoordinator.resumeGame(),
+  partySession: state.partySession,
+  setHero,
+  showScreen: setActiveScreen,
+});
+gameEntryCoordinator = createGameEntryCoordinator({
+  getPlayerCount: () => state.partySession.getPlayerCount(),
+  openGame: openGameDirect,
+  openParty: partyFlow.open,
+});
 const hubController = createHubController({
   elements,
   games: hubGames,
@@ -231,16 +321,75 @@ gameControllers.forEach((controller) => {
   controller.initialize();
 });
 
+elements.party.editButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const screen = button.closest("[data-party-screen]")?.dataset.partyScreen;
+    const controller = gameControllersByScreen.get(screen);
+
+    if (controller) {
+      gameEntryCoordinator.editGame({
+        minimumPlayers: controller.minimumPlayers,
+        screen,
+      });
+    }
+  });
+});
+
+function editPartyDuringRound() {
+  if (!state.currentGame || !shouldConfirmPartyEdit(state.currentScreen)) {
+    return;
+  }
+
+  elements.party.editDialog.showModal();
+  void animateElement(
+    elements.party.editDialog.querySelector(".result-confirm-content"),
+    [
+      { transform: "translateY(6px)" },
+      { transform: "translateY(0)" },
+    ],
+    { duration: 170 },
+  );
+}
+
+function discardRoundAndEditParty() {
+  elements.party.editDialog.close();
+
+  const screen = state.currentGame.setupScreen;
+  const controller = gameControllersByScreen.get(screen);
+
+  if (!controller) {
+    return;
+  }
+
+  roleFlow.openSetup(screen);
+  gameEntryCoordinator.editGame({
+    minimumPlayers: controller.minimumPlayers,
+    screen,
+  });
+}
+
+elements.party.editDuringTurn.addEventListener("click", editPartyDuringRound);
+elements.party.editDuringEnd.addEventListener("click", editPartyDuringRound);
+elements.party.cancelEdit.addEventListener("click", () => {
+  elements.party.editDialog.close();
+});
+elements.party.confirmEdit.addEventListener("click", discardRoundAndEditParty);
+
 elements.navHome.addEventListener("click", roleFlow.openHub);
+partyFlow.bind();
 roleFlow.bind();
 
 renderAppVersion();
+renderPartySummaries();
 hubController.bind();
 hubController.initialize();
 setActiveScreen("hub");
+
+track("app_loaded", { version: APP_VERSION });
 
 void catalogRuntimePromise.then((catalogRuntime) => {
   document.documentElement.dataset.catalogSource = catalogRuntime.source;
   hubController.refreshRules();
   gameControllers.forEach((controller) => controller.initialize());
+  track("catalog_ready", { source: catalogRuntime.source });
 });
