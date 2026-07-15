@@ -9,7 +9,7 @@ import { rulesContent } from "./data/tutorials.js";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js";
 import { createInitialState } from "./viewmodels/app-state.js";
 import { getElements } from "./views/elements.js";
-import { createCityGame, normalizeCitySetup } from "./games/city.js";
+import { createCityController } from "./games/city.js";
 import {
   createImpostorGame,
   normalizeImpostorSetup,
@@ -20,13 +20,12 @@ import {
   normalizeMimicaTime,
   pickMimicaWord,
 } from "./games/mimica.js";
-import { createPoliceGame, normalizePoliceSetup } from "./games/police.js";
+import { createPoliceController } from "./games/police.js";
 import { drawWhoAmICharacter } from "./games/whoami.js";
 import {
   normalizeMimicaEntry,
   normalizeWhoAmIEntry,
   normalizeWord,
-  pluralize,
 } from "./shared/utils.js";
 
 const catalogRuntime = await hydrateCatalogFromApi();
@@ -361,18 +360,15 @@ function closeRulesModal({ restoreFocus = true } = {}) {
 }
 
 function openGameFromHubScreen(screen) {
+  const roleController = roleControllersByScreen.get(screen);
+
+  if (roleController) {
+    roleController.openSetup();
+    return;
+  }
+
   if (screen === "impostorSetup") {
     openImpostorSetup();
-    return;
-  }
-
-  if (screen === "policeSetup") {
-    openPoliceSetup();
-    return;
-  }
-
-  if (screen === "citySetup") {
-    openCitySetup();
     return;
   }
 
@@ -597,14 +593,6 @@ function setImpostorWordVisibility(isVisible) {
 
 function updateImpostorFeedback(message = "") {
   elements.impostor.feedback.textContent = message;
-}
-
-function updatePoliceFeedback(message = "") {
-  elements.police.feedback.textContent = message;
-}
-
-function updateCityFeedback(message = "") {
-  elements.city.feedback.textContent = message;
 }
 
 function updateWhoAmIFeedback(message = "") {
@@ -854,70 +842,6 @@ function getWhoAmICharacter(category) {
   return draw.character;
 }
 
-function syncPoliceRoleInputs(preferredRole = "victim", nextValue = null) {
-  const counts = normalizePoliceSetup(
-    {
-      police: elements.police.policeCount.value,
-      thief: elements.police.thiefCount.value,
-      victim: elements.police.victimCount.value,
-    },
-    { preferredRole, nextValue },
-  );
-
-  elements.police.policeCount.value = counts.police;
-  elements.police.thiefCount.value = counts.thief;
-  elements.police.victimCount.value = counts.victim;
-  elements.police.roleSummary.textContent = `Total: ${counts.totalPlayers} ${pluralize(
-    counts.totalPlayers,
-    "jogador",
-    "jogadores",
-  )}. Serão ${counts.police} ${pluralize(
-    counts.police,
-    "policial",
-    "policiais",
-  )}, ${counts.thief} ${pluralize(
-    counts.thief,
-    "ladrão",
-    "ladrões",
-  )} e ${counts.victim} ${pluralize(counts.victim, "vítima", "vítimas")}.`;
-
-  return counts;
-}
-
-function syncCityRoleInputs(preferredField = "players", nextValue = null) {
-  const counts = normalizeCitySetup(
-    {
-      players: elements.city.playerCount.value,
-      assassins: elements.city.assassinCount.value,
-      detectives: elements.city.detectiveCount.value,
-    },
-    { preferredField, nextValue },
-  );
-
-  elements.city.playerCount.value = counts.players;
-  elements.city.assassinCount.value = counts.assassins;
-  elements.city.detectiveCount.value = counts.detectives;
-  elements.city.roleSummary.textContent = `Total: ${counts.players} ${pluralize(
-    counts.players,
-    "jogador",
-    "jogadores",
-  )}. Serão ${counts.assassins} ${pluralize(
-    counts.assassins,
-    "assassino",
-    "assassinos",
-  )}, ${counts.detectives} ${pluralize(
-    counts.detectives,
-    "detetive",
-    "detetives",
-  )} e ${counts.citizens} ${pluralize(
-    counts.citizens,
-    "cidadão",
-    "cidadãos",
-  )}.`;
-
-  return counts;
-}
-
 function openHub() {
   state.currentGame = null;
   resetTurnPlayers();
@@ -926,10 +850,22 @@ function openHub() {
   setTurnPhase("prep");
   clearMimicaTimer();
   updateImpostorFeedback("");
-  updatePoliceFeedback("");
-  updateCityFeedback("");
   updateMimicaFeedback("");
   setActiveScreen("hub");
+}
+
+function openRoleSetup(screen) {
+  state.currentGame = null;
+  resetTurnPlayers();
+  clearRoleTone();
+  setTurnPhase("prep");
+  setActiveScreen(screen);
+}
+
+function startRoleGame(game) {
+  state.currentGame = game;
+  resetTurnPlayers();
+  renderPreparation();
 }
 
 function openImpostorSetup() {
@@ -940,26 +876,6 @@ function openImpostorSetup() {
   setImpostorWordVisibility(false);
   updateImpostorFeedback("");
   setActiveScreen("impostorSetup");
-}
-
-function openPoliceSetup() {
-  state.currentGame = null;
-  resetTurnPlayers();
-  clearRoleTone();
-  setTurnPhase("prep");
-  updatePoliceFeedback("");
-  syncPoliceRoleInputs();
-  setActiveScreen("policeSetup");
-}
-
-function openCitySetup() {
-  state.currentGame = null;
-  resetTurnPlayers();
-  clearRoleTone();
-  setTurnPhase("prep");
-  updateCityFeedback("");
-  syncCityRoleInputs();
-  setActiveScreen("citySetup");
 }
 
 function openMimicaSetup() {
@@ -1175,8 +1091,10 @@ function restartCurrentGame() {
     return;
   }
 
-  if (state.currentGame.type === "city") {
-    openCitySetup();
+  const roleController = roleControllersById.get(state.currentGame.type);
+
+  if (roleController) {
+    roleController.openSetup();
     return;
   }
 
@@ -1189,8 +1107,7 @@ function restartCurrentGame() {
     openWhoAmISetup();
     return;
   }
-
-  openPoliceSetup();
+  openHub();
 }
 
 function startImpostorGame() {
@@ -1220,38 +1137,6 @@ function startImpostorGame() {
   renderPreparation();
 }
 
-function startPoliceGame() {
-  const counts = syncPoliceRoleInputs();
-
-  updatePoliceFeedback("");
-  state.currentGame = createPoliceGame({
-    totalPlayers: counts.totalPlayers,
-    policeCount: counts.police,
-    thiefCount: counts.thief,
-    victimCount: counts.victim,
-  });
-  resetTurnPlayers();
-  renderPreparation();
-}
-
-function startCityGame() {
-  const counts = syncCityRoleInputs();
-
-  if (counts.citizens < 1) {
-    updateCityFeedback("A rodada precisa ter pelo menos 1 cidadão.");
-    return;
-  }
-
-  updateCityFeedback("");
-  state.currentGame = createCityGame({
-    totalPlayers: counts.players,
-    assassinCount: counts.assassins,
-    detectiveCount: counts.detectives,
-  });
-  resetTurnPlayers();
-  renderPreparation();
-}
-
 function startMimicaGame() {
   syncMimicaCategoryInput(elements.mimica.category.value);
   syncMimicaDifficultyInput(elements.mimica.difficulty.value);
@@ -1265,6 +1150,32 @@ function startWhoAmIGame() {
   syncWhoAmICategoryInput(elements.whoami.category.value);
   renderWhoAmICharacter();
 }
+
+const roleControllers = [
+  createPoliceController({
+    elements: elements.police,
+    openHub,
+    openRoleSetup,
+    startRoleGame,
+  }),
+  createCityController({
+    elements: elements.city,
+    openHub,
+    openRoleSetup,
+    startRoleGame,
+  }),
+];
+const roleControllersById = new Map(
+  roleControllers.map((controller) => [controller.id, controller]),
+);
+const roleControllersByScreen = new Map(
+  roleControllers.map((controller) => [controller.setupScreen, controller]),
+);
+
+roleControllers.forEach((controller) => {
+  controller.bind();
+  controller.initialize();
+});
 
 elements.hub.grid.addEventListener("click", (event) => {
   const card = event.target.closest(".hub-card[data-game-id]");
@@ -1376,92 +1287,6 @@ elements.rules.close.addEventListener("click", () => {
 elements.rules.confirm.addEventListener("click", () => {
   closeRulesModal();
 });
-
-elements.police.decreaseCount.addEventListener("click", () => {
-  syncPoliceRoleInputs("police", Number(elements.police.policeCount.value) - 1);
-});
-
-elements.police.increaseCount.addEventListener("click", () => {
-  syncPoliceRoleInputs("police", Number(elements.police.policeCount.value) + 1);
-});
-
-elements.police.policeCount.addEventListener("change", (event) => {
-  syncPoliceRoleInputs("police", event.target.value);
-});
-
-elements.police.decreaseThieves.addEventListener("click", () => {
-  syncPoliceRoleInputs("thief", Number(elements.police.thiefCount.value) - 1);
-});
-
-elements.police.increaseThieves.addEventListener("click", () => {
-  syncPoliceRoleInputs("thief", Number(elements.police.thiefCount.value) + 1);
-});
-
-elements.police.thiefCount.addEventListener("change", (event) => {
-  syncPoliceRoleInputs("thief", event.target.value);
-});
-
-elements.police.decreaseVictims.addEventListener("click", () => {
-  syncPoliceRoleInputs("victim", Number(elements.police.victimCount.value) - 1);
-});
-
-elements.police.increaseVictims.addEventListener("click", () => {
-  syncPoliceRoleInputs("victim", Number(elements.police.victimCount.value) + 1);
-});
-
-elements.police.victimCount.addEventListener("change", (event) => {
-  syncPoliceRoleInputs("victim", event.target.value);
-});
-
-elements.police.form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startPoliceGame();
-});
-
-elements.police.goHub.addEventListener("click", openHub);
-
-elements.city.decreasePlayers.addEventListener("click", () => {
-  syncCityRoleInputs("players", Number(elements.city.playerCount.value) - 1);
-});
-
-elements.city.increasePlayers.addEventListener("click", () => {
-  syncCityRoleInputs("players", Number(elements.city.playerCount.value) + 1);
-});
-
-elements.city.playerCount.addEventListener("change", (event) => {
-  syncCityRoleInputs("players", event.target.value);
-});
-
-elements.city.decreaseAssassins.addEventListener("click", () => {
-  syncCityRoleInputs("assassins", Number(elements.city.assassinCount.value) - 1);
-});
-
-elements.city.increaseAssassins.addEventListener("click", () => {
-  syncCityRoleInputs("assassins", Number(elements.city.assassinCount.value) + 1);
-});
-
-elements.city.assassinCount.addEventListener("change", (event) => {
-  syncCityRoleInputs("assassins", event.target.value);
-});
-
-elements.city.decreaseDetectives.addEventListener("click", () => {
-  syncCityRoleInputs("detectives", Number(elements.city.detectiveCount.value) - 1);
-});
-
-elements.city.increaseDetectives.addEventListener("click", () => {
-  syncCityRoleInputs("detectives", Number(elements.city.detectiveCount.value) + 1);
-});
-
-elements.city.detectiveCount.addEventListener("change", (event) => {
-  syncCityRoleInputs("detectives", event.target.value);
-});
-
-elements.city.form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startCityGame();
-});
-
-elements.city.goHub.addEventListener("click", openHub);
 
 elements.mimica.category.addEventListener("change", (event) => {
   syncMimicaCategoryInput(event.target.value);
@@ -1636,8 +1461,6 @@ syncImpostorCountInput(elements.impostor.impostorCount.value);
 syncImpostorCategoryInput(elements.impostor.wordCategory.value);
 syncImpostorDifficultyInput(elements.impostor.wordDifficulty.value);
 setImpostorWordVisibility(false);
-syncPoliceRoleInputs();
-syncCityRoleInputs();
 syncMimicaCategoryInput(elements.mimica.category.value);
 syncMimicaDifficultyInput(elements.mimica.difficulty.value);
 syncMimicaTimeInput(elements.mimica.time.value);

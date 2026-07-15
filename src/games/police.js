@@ -98,3 +98,101 @@ export function createPoliceGame({ totalPlayers, policeCount, thiefCount, victim
     },
   };
 }
+
+export function createPoliceController({ elements, openHub, openRoleSetup, startRoleGame }) {
+  function updateFeedback(message = "") {
+    elements.feedback.textContent = message;
+  }
+
+  function syncSetup(preferredRole = "victim", nextValue = null) {
+    const counts = normalizePoliceSetup(
+      {
+        police: elements.policeCount.value,
+        thief: elements.thiefCount.value,
+        victim: elements.victimCount.value,
+      },
+      { preferredRole, nextValue },
+    );
+
+    elements.policeCount.value = counts.police;
+    elements.thiefCount.value = counts.thief;
+    elements.victimCount.value = counts.victim;
+    elements.roleSummary.textContent = `Total: ${counts.totalPlayers} ${pluralize(
+      counts.totalPlayers,
+      "jogador",
+      "jogadores",
+    )}. Serão ${counts.police} ${pluralize(
+      counts.police,
+      "policial",
+      "policiais",
+    )}, ${counts.thief} ${pluralize(
+      counts.thief,
+      "ladrão",
+      "ladrões",
+    )} e ${counts.victim} ${pluralize(counts.victim, "vítima", "vítimas")}.`;
+
+    return counts;
+  }
+
+  function openSetup() {
+    openRoleSetup("policeSetup");
+    updateFeedback("");
+    syncSetup();
+  }
+
+  function start() {
+    const counts = syncSetup();
+    updateFeedback("");
+    startRoleGame(
+      createPoliceGame({
+        totalPlayers: counts.totalPlayers,
+        policeCount: counts.police,
+        thiefCount: counts.thief,
+        victimCount: counts.victim,
+      }),
+    );
+  }
+
+  function bind() {
+    elements.decreaseCount.addEventListener("click", () => {
+      syncSetup("police", Number(elements.policeCount.value) - 1);
+    });
+    elements.increaseCount.addEventListener("click", () => {
+      syncSetup("police", Number(elements.policeCount.value) + 1);
+    });
+    elements.policeCount.addEventListener("change", (event) => {
+      syncSetup("police", event.target.value);
+    });
+    elements.decreaseThieves.addEventListener("click", () => {
+      syncSetup("thief", Number(elements.thiefCount.value) - 1);
+    });
+    elements.increaseThieves.addEventListener("click", () => {
+      syncSetup("thief", Number(elements.thiefCount.value) + 1);
+    });
+    elements.thiefCount.addEventListener("change", (event) => {
+      syncSetup("thief", event.target.value);
+    });
+    elements.decreaseVictims.addEventListener("click", () => {
+      syncSetup("victim", Number(elements.victimCount.value) - 1);
+    });
+    elements.increaseVictims.addEventListener("click", () => {
+      syncSetup("victim", Number(elements.victimCount.value) + 1);
+    });
+    elements.victimCount.addEventListener("change", (event) => {
+      syncSetup("victim", event.target.value);
+    });
+    elements.form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      start();
+    });
+    elements.goHub.addEventListener("click", openHub);
+  }
+
+  return {
+    id: "police",
+    setupScreen: "policeSetup",
+    bind,
+    initialize: syncSetup,
+    openSetup,
+  };
+}

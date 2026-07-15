@@ -124,3 +124,104 @@ export function createCityGame({ totalPlayers, assassinCount, detectiveCount }) 
     },
   };
 }
+
+export function createCityController({ elements, openHub, openRoleSetup, startRoleGame }) {
+  function updateFeedback(message = "") {
+    elements.feedback.textContent = message;
+  }
+
+  function syncSetup(preferredField = "players", nextValue = null) {
+    const counts = normalizeCitySetup(
+      {
+        players: elements.playerCount.value,
+        assassins: elements.assassinCount.value,
+        detectives: elements.detectiveCount.value,
+      },
+      { preferredField, nextValue },
+    );
+
+    elements.playerCount.value = counts.players;
+    elements.assassinCount.value = counts.assassins;
+    elements.detectiveCount.value = counts.detectives;
+    elements.roleSummary.textContent = `Total: ${counts.players} ${pluralize(
+      counts.players,
+      "jogador",
+      "jogadores",
+    )}. Serão ${counts.assassins} ${pluralize(
+      counts.assassins,
+      "assassino",
+      "assassinos",
+    )}, ${counts.detectives} ${pluralize(
+      counts.detectives,
+      "detetive",
+      "detetives",
+    )} e ${counts.citizens} ${pluralize(
+      counts.citizens,
+      "cidadão",
+      "cidadãos",
+    )}.`;
+
+    return counts;
+  }
+
+  function openSetup() {
+    openRoleSetup("citySetup");
+    updateFeedback("");
+    syncSetup();
+  }
+
+  function start() {
+    const counts = syncSetup();
+    updateFeedback("");
+    startRoleGame(
+      createCityGame({
+        totalPlayers: counts.players,
+        assassinCount: counts.assassins,
+        detectiveCount: counts.detectives,
+      }),
+    );
+  }
+
+  function bind() {
+    elements.decreasePlayers.addEventListener("click", () => {
+      syncSetup("players", Number(elements.playerCount.value) - 1);
+    });
+    elements.increasePlayers.addEventListener("click", () => {
+      syncSetup("players", Number(elements.playerCount.value) + 1);
+    });
+    elements.playerCount.addEventListener("change", (event) => {
+      syncSetup("players", event.target.value);
+    });
+    elements.decreaseAssassins.addEventListener("click", () => {
+      syncSetup("assassins", Number(elements.assassinCount.value) - 1);
+    });
+    elements.increaseAssassins.addEventListener("click", () => {
+      syncSetup("assassins", Number(elements.assassinCount.value) + 1);
+    });
+    elements.assassinCount.addEventListener("change", (event) => {
+      syncSetup("assassins", event.target.value);
+    });
+    elements.decreaseDetectives.addEventListener("click", () => {
+      syncSetup("detectives", Number(elements.detectiveCount.value) - 1);
+    });
+    elements.increaseDetectives.addEventListener("click", () => {
+      syncSetup("detectives", Number(elements.detectiveCount.value) + 1);
+    });
+    elements.detectiveCount.addEventListener("change", (event) => {
+      syncSetup("detectives", event.target.value);
+    });
+    elements.form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      start();
+    });
+    elements.goHub.addEventListener("click", openHub);
+  }
+
+  return {
+    id: "city",
+    setupScreen: "citySetup",
+    bind,
+    initialize: syncSetup,
+    openSetup,
+  };
+}
