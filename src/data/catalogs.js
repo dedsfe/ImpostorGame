@@ -3122,7 +3122,8 @@ export const hubGames = [
     id: "impostor",
     label: "Palavra secreta",
     title: "Impostor",
-    description: "Um jogador não recebe a palavra e precisa blefar durante a conversa.",
+    description:
+      "O impostor conhece apenas o tema e precisa blefar enquanto o grupo dá pistas.",
     cardImage: "./assets/impostor.png",
     modalImage: "./assets/HorizontalImgs/Impostor.png",
     openScreen: "impostorSetup",

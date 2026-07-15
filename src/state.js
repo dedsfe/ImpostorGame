@@ -8,6 +8,7 @@ export function createInitialState() {
     hubModalGameId: null,
     rulesModalOpen: false,
     rulesModalGameId: null,
+    turnRoleViewed: false,
     turnRevealVisible: false,
     whoami: {
       category: "geral",

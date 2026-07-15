@@ -9,6 +9,10 @@ import {
   mergeImpostorThemes,
   resolveImpostorWord,
 } from "./impostor-deck.js";
+import {
+  buildImpostorRoundInstructions,
+  isNameIdentificationEnabled,
+} from "./impostor-ux.js";
 
 const THEME_LABELS = {
   animais: "Animais",
@@ -59,8 +63,8 @@ export function createImpostorGame({
           badge: "Impostor",
           title: "Você é o impostor",
           description:
-            "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
-          hint: `Dica de tema: ${themeLabel}`,
+            "Escute as pistas, tente descobrir a palavra secreta e não entregue que você não a conhece.",
+          hint: `Tema: ${themeLabel}`,
           value: "IMPOSTOR",
           tone: "impostor",
         };
@@ -68,8 +72,8 @@ export function createImpostorGame({
 
       return {
         badge: "Palavra secreta",
-        title: "Sua palavra é",
-        description: "Guarde a palavra e pense em uma pista que não seja óbvia.",
+        title: "Sua palavra secreta é",
+        description: "Guarde a palavra secreta e pense em uma pista que não seja óbvia.",
         value: secretWord,
         tone: "word",
       };
@@ -89,6 +93,7 @@ export function createImpostorGame({
       title: "Distribuição de papéis",
     },
     impostorCount: safeImpostorCount,
+    instructions: buildImpostorRoundInstructions(safeImpostorCount),
     name: "Impostor",
     requirePlayerNames,
     roles,
@@ -99,6 +104,7 @@ export function createImpostorGame({
       { label: "Impostores", value: String(safeImpostorCount) },
       { label: "Tema", value: themeLabel },
     ],
+    secretWord,
     theme: selectedTheme,
     totalPlayers,
     type: "impostor",
@@ -120,7 +126,9 @@ export function createImpostorController({
     elements.toggleVisibility.setAttribute("aria-pressed", String(isVisible));
     elements.toggleVisibility.setAttribute(
       "aria-label",
-      isVisible ? "Esconder palavra personalizada" : "Mostrar palavra personalizada",
+      isVisible
+        ? "Esconder palavra secreta personalizada"
+        : "Mostrar palavra secreta personalizada",
     );
     elements.toggleVisibility.classList.toggle("is-visible", isVisible);
     elements.toggleLabel.textContent = isVisible ? "Ocultar" : "Mostrar";
@@ -209,7 +217,9 @@ export function createImpostorController({
   function start() {
     const totalPlayers = syncPlayers(elements.playerCount.value);
     const impostorCount = syncImpostors(elements.impostorCount.value);
-    const requirePlayerNames = elements.requireNames.value !== "optional";
+    const requirePlayerNames = isNameIdentificationEnabled(
+      elements.requireNames.value,
+    );
     const theme = syncTheme(elements.wordCategory.value);
     const wordMode = syncWordMode(elements.wordMode.value);
     const customWord =
@@ -218,7 +228,7 @@ export function createImpostorController({
     if (wordMode === "custom" && !customWord) {
       elements.moreOptions.open = true;
       elements.customWordGroup.hidden = false;
-      updateFeedback("Digite a palavra personalizada para começar.");
+      updateFeedback("Digite a palavra secreta personalizada para começar.");
       elements.secretWord.focus();
       return false;
     }

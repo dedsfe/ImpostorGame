@@ -1,20 +1,34 @@
 export const rulesContent = {
   impostor: {
-    title: "Impostor em 3 passos",
+    title: "Como jogar Impostor",
     copy:
-      "Monte a rodada, revele os papéis com privacidade e depois deixem a conversa decidir quem está mentindo.",
+      "Jogadores comuns conhecem a palavra secreta. Impostores conhecem apenas o tema. Ninguém pode falar diretamente a palavra secreta.",
     steps: [
       {
-        title: "Prepare o jogo",
-        copy: "Escolha jogadores e tema. O baralho evita repetições até completar o tema.",
+        title: "Configure a rodada",
+        copy: "Configure jogadores e tema.",
       },
       {
-        title: "Vejam e passem",
-        copy: "Cada pessoa toca em Ver meu papel e depois em Ocultar e passar.",
+        title: "Distribua os papéis",
+        copy: "Passe o celular para cada pessoa ver somente o próprio papel.",
       },
       {
-        title: "Joguem e encerrem",
-        copy: "Depois do Valendo!, conversem e encerrem a rodada para revelar o resultado.",
+        title: "Dê uma pista",
+        copy: "Cada jogador dá uma pista curta sem falar diretamente a palavra secreta.",
+      },
+      {
+        title: "Conversem",
+        copy: "O grupo conversa sobre as pistas e observa quem parece suspeito.",
+      },
+      {
+        title: "Escolham os suspeitos",
+        copy:
+          "O grupo deve escolher a mesma quantidade de suspeitos que o número de impostores.",
+      },
+      {
+        title: "Revelem o resultado",
+        copy:
+          "Se o grupo encontrar todos os impostores, eles recebem uma tentativa conjunta de adivinhar a palavra. Se acertarem, os impostores roubam a vitória. Se algum impostor passar despercebido, os impostores vencem.",
       },
     ],
   },

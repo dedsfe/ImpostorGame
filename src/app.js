@@ -4,24 +4,24 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js";
-import { rulesContent } from "./data/tutorials.js";
+} from "./data/catalogs.js?v=43";
+import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
-import { createInitialState } from "./state.js";
-import { getElements } from "./views/elements.js?v=41";
+import { createInitialState } from "./state.js?v=43";
+import { getElements } from "./views/elements.js?v=43";
 import { createCityController } from "./games/city.js";
-import { createImpostorController } from "./games/impostor.js?v=41";
+import { createImpostorController } from "./games/impostor.js?v=43";
 import { createMimicaController } from "./games/mimica.js";
 import { createPoliceController } from "./games/police.js";
 import { createWhoAmIController } from "./games/whoami.js";
 import { createHubController } from "./hub.js";
-import { createRoleFlow } from "./role-flow.js?v=41";
+import { createRoleFlow } from "./role-flow.js?v=43";
 
 document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v41";
+const APP_VERSION = "v43";
 
 const elements = getElements();
 

@@ -69,15 +69,15 @@ const roleTemplates = {
       badge: "Impostor",
       title: "Você é o impostor",
       description:
-        "Escute a conversa, tente entender a palavra e não entregue que você não a conhece.",
+        "Escute as pistas, tente descobrir a palavra secreta e não entregue que você não a conhece.",
       tone: "impostor",
     },
     {
       slug: "word-holder",
       name: "Palavra secreta",
       badge: "Palavra secreta",
-      title: "Sua palavra é",
-      description: "Guarde a palavra e pense em uma pista que não seja óbvia.",
+      title: "Sua palavra secreta é",
+      description: "Guarde a palavra secreta e pense em uma pista que não seja óbvia.",
       tone: "word",
     },
   ],

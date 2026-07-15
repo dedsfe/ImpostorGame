@@ -84,6 +84,16 @@ test("creates the requested number of roles for every role game", () => {
 
   assert.equal(impostor.roles.length, 8);
   assert.equal(impostor.roles.filter((role) => role.value === "IMPOSTOR").length, 2);
+  assert.deepEqual(impostor.instructions, [
+    "Cada pessoa dá uma pista curta.",
+    "Conversem sobre quem parece suspeito.",
+    "Escolham 2 suspeitos.",
+  ]);
+  assert.equal(impostor.secretWord, "bola");
+  assert.equal(
+    impostor.summary.some((item) => item.value === impostor.secretWord),
+    false,
+  );
   assert.equal(police.roles.length, 7);
   assert.equal(city.roles.length, 9);
 });

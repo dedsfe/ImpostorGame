@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Noite de Jogos</title>
-    <link rel="stylesheet" href="./styles.css?v=41" />
+    <link rel="stylesheet" href="./styles.css?v=43" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -435,8 +435,8 @@
             <p class="panel-label">Impostor</p>
             <h2 id="impostor-setup-title">Monte a rodada</h2>
             <p class="setup-description setup-description--impostor">
-              Um jogador não verá a palavra. Os outros recebem a mesma pista e precisam
-              descobrir quem está blefando.
+              O impostor verá apenas o tema. Os outros recebem a palavra secreta e todos
+              dão uma pista para descobrir quem está blefando.
             </p>
             <div class="setup-copy-actions">
               <button
@@ -546,16 +546,16 @@
                 <label class="field-group" for="impostor-require-names">
                   <span class="field-label">Identificar jogadores</span>
                   <select id="impostor-require-names" class="select-input">
-                    <option value="required" selected>Exigir nome</option>
-                    <option value="optional">Não pedir nome</option>
+                    <option value="optional" selected>Não pedir nome</option>
+                    <option value="required">Pedir nomes</option>
                   </select>
                 </label>
 
                 <label class="field-group" for="impostor-word-mode">
-                  <span class="field-label">Modo da palavra</span>
+                  <span class="field-label">Modo da palavra secreta</span>
                   <select id="impostor-word-mode" class="select-input">
                     <option value="deck" selected>Sortear sem repetir</option>
-                    <option value="custom">Usar palavra personalizada</option>
+                    <option value="custom">Usar palavra secreta personalizada</option>
                   </select>
                 </label>
 
@@ -565,7 +565,7 @@
                   for="impostor-secret-word"
                   hidden
                 >
-                  <span class="field-label">Palavra personalizada</span>
+                  <span class="field-label">Palavra secreta personalizada</span>
                   <div class="word-input-row word-input-row--impostor">
                     <input
                       id="impostor-secret-word"
@@ -579,7 +579,7 @@
                       id="impostor-toggle-word-visibility"
                       class="icon-button"
                       type="button"
-                      aria-label="Mostrar palavra personalizada"
+                      aria-label="Mostrar palavra secreta personalizada"
                       aria-pressed="false"
                     >
                       <svg
@@ -1261,11 +1261,14 @@
             </div>
 
             <div class="action-row">
-              <button id="show-role-reveal" class="secondary-button" type="button">
+              <button id="show-role-reveal" class="primary-button" type="button">
                 Mostrar quem é quem
               </button>
               <button id="play-again" class="primary-button" type="button">
                 Nova partida
+              </button>
+              <button id="change-settings" class="ghost-button" type="button" hidden>
+                Trocar configurações
               </button>
               <button id="go-hub-end" class="ghost-button" type="button">
                 Noite de jogos
@@ -1274,11 +1277,40 @@
           </div>
         </div>
       </section>
+
+      <dialog
+        id="result-confirm-dialog"
+        class="result-confirm-dialog"
+        aria-labelledby="result-confirm-title"
+        aria-describedby="result-confirm-copy"
+      >
+        <div class="result-confirm-content">
+          <h2 id="result-confirm-title">Revelar o resultado?</h2>
+          <p id="result-confirm-copy"></p>
+          <div class="result-confirm-actions">
+            <button
+              id="continue-playing"
+              class="result-confirm-action result-confirm-action--quiet"
+              type="button"
+            >
+              Continuar jogando
+            </button>
+            <button
+              id="confirm-result"
+              class="result-confirm-action result-confirm-action--reveal"
+              type="button"
+            >
+              Revelar resultado
+            </button>
+          </div>
+        </div>
+      </dialog>
+
       <footer class="app-version" aria-label="Versão do aplicativo">
         <span id="app-version">v0</span>
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=41"></script>
+    <script type="module" src="./script.js?v=43"></script>
   </body>
 </html>

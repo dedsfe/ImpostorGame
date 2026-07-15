@@ -5,39 +5,42 @@
 begin transaction;
 
 insert into games (id, slug, name, short_description, setup_screen, card_image_path, modal_image_path, min_players, max_players, supports_categories, supports_difficulties, supports_timer, is_active, created_at, updated_at) values
-  (1, 'impostor', 'Impostor', 'Um jogador não recebe a palavra e precisa blefar durante a conversa.', 'impostorSetup', './assets/impostor.png', './assets/HorizontalImgs/Impostor.png', 3, 20, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (1, 'impostor', 'Impostor', 'O impostor conhece apenas o tema e precisa blefar enquanto o grupo dá pistas.', 'impostorSetup', './assets/impostor.png', './assets/HorizontalImgs/Impostor.png', 3, 20, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 'police', 'Polícia e Ladrão', 'O app distribui aleatoriamente quem é polícia, ladrão e vítima na rodada.', 'policeSetup', './assets/policiaeladrao.png', './assets/HorizontalImgs/policiaeladrao.png', 3, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 'city', 'Cidade Dorme', 'A cidade dorme, o assassino ataca, o detetive investiga e todos tentam descobrir quem está mentindo.', 'citySetup', './assets/cidadedorme.png', './assets/HorizontalImgs/CidadeDorme.png', 5, 20, false, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 'whoami', 'Quem sou eu?', 'Escolha a categoria, coloque o celular na testa e revele um personagem em tela branca.', 'whoamiSetup', './assets/quemsoueu.png', './assets/HorizontalImgs/Quem sou Eu.png', 2, null, true, false, false, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 'mimica', 'Mímica Rápida', 'Faça mímicas e deixe a galera adivinhar com palavra grande e timer opcional.', 'mimicaSetup', './assets/mimica.png', './assets/HorizontalImgs/Mimica Rápida.png', 2, null, true, true, true, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
 
 insert into game_tutorials (id, game_id, title, copy, created_at, updated_at) values
-  (1, 1, 'Impostor em 3 passos', 'Monte a rodada, revele os papéis com privacidade e depois deixem a conversa decidir quem está mentindo.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (1, 1, 'Como jogar Impostor', 'Jogadores comuns conhecem a palavra secreta. Impostores conhecem apenas o tema. Ninguém pode falar diretamente a palavra secreta.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (2, 2, 'Polícia e Ladrão em 3 passos', 'Você define os papéis da rodada e o app faz a distribuição segura antes do grupo começar a investigar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 3, 'Cidade Dorme em 3 passos', 'O app só prepara a rodada. Depois disso, o narrador assume e a conversa do grupo conduz o jogo.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 4, 'Quem sou eu? em 3 passos', 'Escolha o universo dos personagens e revele o nome em tela branca, pronto para jogar com o celular na testa.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 5, 'Mímica Rápida em 3 passos', 'Ajuste a rodada e só revele a palavra quando o mímico estiver pronto para começar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
 
 insert into tutorial_steps (id, tutorial_id, step_order, title, copy, created_at, updated_at) values
-  (1, 1, 1, 'Prepare o jogo', 'Escolha jogadores e tema. O baralho evita repetições até completar o tema.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2, 1, 2, 'Vejam e passem', 'Cada pessoa toca em Ver meu papel e depois em Ocultar e passar.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (3, 1, 3, 'Joguem e encerrem', 'Depois do Valendo!, conversem e encerrem a rodada para revelar o resultado.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (4, 2, 1, 'Monte a composição', 'Escolha quantos serão policiais, ladrões e vítimas.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (5, 2, 2, 'Revelem em privacidade', 'Cada jogador vê só o próprio papel antes de passar o celular.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (6, 2, 3, 'Comecem a rodada', 'Depois da distribuição, o grupo conduz a dinâmica fora do app.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (7, 3, 1, 'Defina os papéis', 'Escolha jogadores, assassinos e detetives. O restante vira cidadão.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (8, 3, 2, 'Distribua com segurança', 'Cada participante vê só o próprio papel antes de passar o celular.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (9, 3, 3, 'Narrador conduz', 'Quando a distribuição termina, o grupo segue a noite e a votação fora da tela.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (10, 4, 1, 'Escolha a categoria', 'Selecione o tema antes da revelação.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (11, 4, 2, 'Passe o celular', 'Quem vai jogar coloca o celular na testa antes do clique.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (12, 4, 3, 'Revele e troque se precisar', 'A tela final destaca o personagem e, quando fizer sentido, mostra a obra em texto pequeno.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (13, 5, 1, 'Defina categoria e tempo', 'Escolha tema, dificuldade e duração da rodada.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (14, 5, 2, 'Prepare o mímico', 'Outra pessoa toca em mostrar palavra só na hora certa.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (15, 5, 3, 'Joguem em sequência', 'Ao fim, avance para a próxima palavra ou troque de mímico.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
+  (1, 1, 1, 'Configure a rodada', 'Configure jogadores e tema.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (2, 1, 2, 'Distribua os papéis', 'Passe o celular para cada pessoa ver somente o próprio papel.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (3, 1, 3, 'Dê uma pista', 'Cada jogador dá uma pista curta sem falar diretamente a palavra secreta.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (4, 1, 4, 'Conversem', 'O grupo conversa sobre as pistas e observa quem parece suspeito.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (5, 1, 5, 'Escolham os suspeitos', 'O grupo deve escolher a mesma quantidade de suspeitos que o número de impostores.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (6, 1, 6, 'Revelem o resultado', 'Se o grupo encontrar todos os impostores, eles recebem uma tentativa conjunta de adivinhar a palavra. Se acertarem, os impostores roubam a vitória. Se algum impostor passar despercebido, os impostores vencem.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (7, 2, 1, 'Monte a composição', 'Escolha quantos serão policiais, ladrões e vítimas.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (8, 2, 2, 'Revelem em privacidade', 'Cada jogador vê só o próprio papel antes de passar o celular.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (9, 2, 3, 'Comecem a rodada', 'Depois da distribuição, o grupo conduz a dinâmica fora do app.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (10, 3, 1, 'Defina os papéis', 'Escolha jogadores, assassinos e detetives. O restante vira cidadão.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (11, 3, 2, 'Distribua com segurança', 'Cada participante vê só o próprio papel antes de passar o celular.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (12, 3, 3, 'Narrador conduz', 'Quando a distribuição termina, o grupo segue a noite e a votação fora da tela.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (13, 4, 1, 'Escolha a categoria', 'Selecione o tema antes da revelação.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (14, 4, 2, 'Passe o celular', 'Quem vai jogar coloca o celular na testa antes do clique.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (15, 4, 3, 'Revele e troque se precisar', 'A tela final destaca o personagem e, quando fizer sentido, mostra a obra em texto pequeno.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (16, 5, 1, 'Defina categoria e tempo', 'Escolha tema, dificuldade e duração da rodada.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (17, 5, 2, 'Prepare o mímico', 'Outra pessoa toca em mostrar palavra só na hora certa.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (18, 5, 3, 'Joguem em sequência', 'Ao fim, avance para a próxima palavra ou troque de mímico.', '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z');
 
 insert into role_templates (id, game_id, slug, name, badge, title, description, tone, sort_order, is_active, created_at, updated_at) values
-  (1, 1, 'impostor', 'Impostor', 'Impostor', 'Você é o impostor', 'Escute a conversa, tente entender a palavra e não entregue que você não a conhece.', 'impostor', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
-  (2, 1, 'word-holder', 'Palavra secreta', 'Palavra secreta', 'Sua palavra é', 'Guarde a palavra e pense em uma pista que não seja óbvia.', 'word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (1, 1, 'impostor', 'Impostor', 'Impostor', 'Você é o impostor', 'Escute as pistas, tente descobrir a palavra secreta e não entregue que você não a conhece.', 'impostor', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
+  (2, 1, 'word-holder', 'Palavra secreta', 'Palavra secreta', 'Sua palavra secreta é', 'Guarde a palavra secreta e pense em uma pista que não seja óbvia.', 'word', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (3, 2, 'police', 'Polícia', 'Polícia', 'Você é a polícia', 'Observe a rodada com cuidado e tente identificar quem está agindo como ladrão.', 'police', 1, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (4, 2, 'thief', 'Ladrão', 'Ladrão', 'Você é o ladrão', 'Tente disfarçar seu papel e escapar da atenção dos policiais durante a rodada.', 'thief', 2, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),
   (5, 2, 'victim', 'Vítima', 'Vítima', 'Você é a vítima', 'Observe os outros jogadores e tente perceber quem pode estar do seu lado ou contra você.', 'victim', 3, true, '2026-03-11T00:00:00Z', '2026-03-11T00:00:00Z'),

@@ -1,4 +1,9 @@
 import { normalizeWord } from "./shared/utils.js";
+import {
+  buildImpostorResult,
+  buildRevealResultPrompt,
+  fitSessionPlayerNames,
+} from "./games/impostor-ux.js";
 
 const ROLE_TONE_CLASSES = [
   "is-impostor",
@@ -16,6 +21,7 @@ export function createRoleFlow({
   state,
 }) {
   const { end, turn } = elements;
+  let resultDialogTrigger = null;
 
   function clearTone() {
     ROLE_TONE_CLASSES.forEach((className) => {
@@ -42,9 +48,25 @@ export function createRoleFlow({
     turn.panel.classList.toggle("is-reveal", !isPreparation);
   }
 
-  function resetPlayers() {
+  function clearTurnSecret() {
+    state.turnRevealVisible = false;
+    turn.roleBadge.textContent = "";
+    turn.roleTitle.textContent = "";
+    turn.roleDescription.textContent = "";
+    turn.wordCard.textContent = "";
+    turn.impostorHint.textContent = "";
+    turn.impostorHint.hidden = true;
+  }
+
+  function resetPlayers({ preserveNames = false, totalPlayers = 0 } = {}) {
     state.currentPlayer = 0;
-    state.playerNames = [];
+    state.playerNames = fitSessionPlayerNames(
+      state.playerNames,
+      totalPlayers,
+      { preserve: preserveNames },
+    );
+    state.turnRoleViewed = false;
+    clearTurnSecret();
     turn.playerName.value = "";
     turn.revealRole.disabled = true;
   }
@@ -106,6 +128,29 @@ export function createRoleFlow({
       : "Mostrar quem é quem";
   }
 
+  function closeResultDialog({ restoreFocus = true } = {}) {
+    const returnTarget = resultDialogTrigger;
+    resultDialogTrigger = null;
+
+    if (end.resultDialog.open) {
+      end.resultDialog.close();
+    }
+
+    if (restoreFocus && returnTarget?.isConnected) {
+      queueMicrotask(() => returnTarget.focus());
+    }
+  }
+
+  function openResultDialog() {
+    const prompt = buildRevealResultPrompt(state.currentGame.impostorCount);
+
+    end.resultDialogTitle.textContent = prompt.title;
+    end.resultDialogCopy.textContent = prompt.copy;
+    resultDialogTrigger = document.activeElement;
+    end.resultDialog.showModal();
+    queueMicrotask(() => end.continuePlaying.focus());
+  }
+
   function renderSecret(role) {
     const isVisible = state.turnRevealVisible;
     const showImpostorHint = isVisible && role.tone === "impostor";
@@ -139,6 +184,7 @@ export function createRoleFlow({
   }
 
   function openHub() {
+    closeResultDialog({ restoreFocus: false });
     state.currentGame = null;
     resetPlayers();
     clearTone();
@@ -147,16 +193,29 @@ export function createRoleFlow({
   }
 
   function openSetup(screen) {
+    closeResultDialog({ restoreFocus: false });
+    const previousGame = state.currentGame;
+    const preserveNames = previousGame?.type === "impostor";
+
     state.currentGame = null;
-    resetPlayers();
+    resetPlayers({
+      preserveNames,
+      totalPlayers: previousGame?.totalPlayers ?? state.playerNames.length,
+    });
     clearTone();
     setPhase("prep");
     showScreen(screen);
   }
 
   function startGame(game) {
+    closeResultDialog({ restoreFocus: false });
+    const preserveNames =
+      game.type === "impostor" && game.requirePlayerNames === true;
+
     state.currentGame = game;
-    resetPlayers();
+    resetPlayers({ preserveNames, totalPlayers: game.totalPlayers });
+    end.roleRevealList.replaceChildren();
+    end.roleRevealPanel.hidden = true;
     renderPreparation();
   }
 
@@ -171,6 +230,7 @@ export function createRoleFlow({
       copy:
         "Mantenha a tela coberta e revele o papel somente quando a pessoa certa estiver pronta.",
     });
+    state.turnRoleViewed = false;
     state.turnRevealVisible = false;
     turn.panel.dataset.game = state.currentGame.type;
     turn.gameLabel.textContent = state.currentGame.name;
@@ -201,6 +261,7 @@ export function createRoleFlow({
       state.currentPlayer === state.currentGame.totalPlayers - 1;
 
     setHero(state.currentGame.hero);
+    state.turnRoleViewed = true;
     state.turnRevealVisible = simpleReveal;
     turn.panel.dataset.game = state.currentGame.type;
     turn.gameLabel.textContent = state.currentGame.name;
@@ -222,7 +283,9 @@ export function createRoleFlow({
 
   function renderEndScreen() {
     const deferRoleReveal = state.currentGame.deferRoleReveal === true;
+    const isImpostor = state.currentGame.type === "impostor";
 
+    clearTurnSecret();
     state.currentGame.roundEnded = false;
     setHero(
       deferRoleReveal
@@ -243,13 +306,14 @@ export function createRoleFlow({
     end.title.textContent = state.currentGame.endTitle;
     let description = state.currentGame.endDescription;
 
-    if (state.currentGame.type === "impostor") {
-      const starterIndex = Math.floor(
-        Math.random() * state.currentGame.totalPlayers,
-      );
+    if (isImpostor) {
+      const starterIndex = Number.isInteger(state.currentGame.starterIndex)
+        ? state.currentGame.starterIndex
+        : Math.floor(Math.random() * state.currentGame.totalPlayers);
+      state.currentGame.starterIndex = starterIndex;
       const starterName =
         state.playerNames[starterIndex] || `Jogador ${starterIndex + 1}`;
-      description += ` Sorteio: quem começa perguntando é ${starterName}!`;
+      description = `${starterName} começa dando uma pista.`;
     }
 
     end.description.textContent = description;
@@ -263,8 +327,9 @@ export function createRoleFlow({
       }),
     );
     end.playAgain.textContent = deferRoleReveal
-      ? "Jogar novamente"
+      ? "Jogar outra"
       : `Nova partida de ${state.currentGame.name}`;
+    end.summaryGrid.hidden = false;
     end.summaryGrid.replaceChildren(
       ...state.currentGame.summary.map((summary) => {
         const card = document.createElement("article");
@@ -279,13 +344,16 @@ export function createRoleFlow({
         return card;
       }),
     );
-    renderRoleList();
+    end.roleRevealList.replaceChildren();
     setRoleListVisible(false);
     end.showRoleReveal.hidden = false;
     end.showRoleReveal.textContent = deferRoleReveal
-      ? "Encerrar rodada"
+      ? "A votação terminou"
       : "Mostrar quem é quem";
     end.playAgain.hidden = deferRoleReveal;
+    end.changeSettings.hidden = true;
+    end.goHub.hidden = deferRoleReveal;
+    end.goHub.textContent = "Noite de jogos";
     showScreen("end");
   }
 
@@ -294,6 +362,12 @@ export function createRoleFlow({
       return;
     }
 
+    const result = buildImpostorResult({
+      playerNames: state.playerNames,
+      roles: state.currentGame.roles,
+      secretWord: state.currentGame.secretWord,
+    });
+
     state.currentGame.roundEnded = true;
     setHero({
       eyebrow: state.currentGame.name,
@@ -301,11 +375,24 @@ export function createRoleFlow({
       copy: "A rodada acabou. Agora vocês podem conferir todos os papéis.",
     });
     end.label.textContent = "Resultado";
-    end.title.textContent = "Quem era quem?";
-    end.description.textContent = "Confiram os papéis e decidam se o impostor escapou.";
+    end.title.textContent = result.title;
+    end.description.textContent = result.secret;
+    end.instructions.hidden = true;
+    end.summaryGrid.hidden = true;
+    renderRoleList();
     setRoleListVisible(true);
     end.showRoleReveal.hidden = true;
     end.playAgain.hidden = false;
+    end.playAgain.textContent = "Jogar outra";
+    end.changeSettings.hidden = false;
+    end.goHub.hidden = false;
+    end.goHub.textContent = "Sair do jogo";
+  }
+
+  function revealConfirmedResult() {
+    closeResultDialog({ restoreFocus: false });
+    renderResult();
+    queueMicrotask(() => end.playAgain.focus());
   }
 
   function restartGame() {
@@ -349,9 +436,14 @@ export function createRoleFlow({
         return;
       }
       state.turnRevealVisible = !state.turnRevealVisible;
+      state.turnRoleViewed ||= state.turnRevealVisible;
       renderSecret(state.currentGame.roles[state.currentPlayer]);
     });
     turn.nextPlayer.addEventListener("click", () => {
+      if (state.currentGame?.type === "impostor" && !state.turnRoleViewed) {
+        return;
+      }
+
       const isLastPlayer =
         state.currentPlayer === state.currentGame.totalPlayers - 1;
       if (isLastPlayer) {
@@ -365,12 +457,50 @@ export function createRoleFlow({
     turn.goHub.addEventListener("click", openHub);
     end.showRoleReveal.addEventListener("click", () => {
       if (state.currentGame?.deferRoleReveal && !state.currentGame.roundEnded) {
-        renderResult();
+        openResultDialog();
         return;
       }
       setRoleListVisible(end.roleRevealPanel.hidden);
     });
+    end.continuePlaying.addEventListener("click", () => {
+      closeResultDialog();
+    });
+    end.confirmResult.addEventListener("click", () => {
+      revealConfirmedResult();
+    });
+    end.resultDialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeResultDialog();
+    });
+    end.resultDialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeResultDialog();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        event.preventDefault();
+        const actions = [end.continuePlaying, end.confirmResult];
+        const currentIndex = actions.indexOf(document.activeElement);
+        const direction = event.shiftKey ? -1 : 1;
+        const nextIndex = (currentIndex + direction + actions.length) % actions.length;
+        actions[nextIndex].focus();
+        return;
+      }
+
+      if (event.key === "Enter") {
+        if (document.activeElement === end.continuePlaying) {
+          event.preventDefault();
+          closeResultDialog();
+        } else if (document.activeElement === end.confirmResult) {
+          event.preventDefault();
+          revealConfirmedResult();
+        }
+      }
+    });
     end.playAgain.addEventListener("click", playAgain);
+    end.changeSettings.addEventListener("click", restartGame);
     end.goHub.addEventListener("click", openHub);
   }
 

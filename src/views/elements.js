@@ -158,7 +158,13 @@ export function getElements() {
       roleRevealList: document.getElementById("role-reveal-list"),
       showRoleReveal: document.getElementById("show-role-reveal"),
       playAgain: document.getElementById("play-again"),
+      changeSettings: document.getElementById("change-settings"),
       goHub: document.getElementById("go-hub-end"),
+      resultDialog: document.getElementById("result-confirm-dialog"),
+      resultDialogTitle: document.getElementById("result-confirm-title"),
+      resultDialogCopy: document.getElementById("result-confirm-copy"),
+      continuePlaying: document.getElementById("continue-playing"),
+      confirmResult: document.getElementById("confirm-result"),
     },
   };
 }
