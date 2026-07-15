@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx vercel dev",
     "test": "node --test test/*.test.cjs test/*.test.mjs && npm test --prefix backend",
-    "check": "npm test && node --check script.js && node --check src/app.js && node --check src/hub.js && node --check src/role-flow.js && node --check src/games/impostor.js && node --check src/games/impostor-deck.js && node --check src/games/impostor-ux.js && node --check server/catalog-snapshot.cjs && node --check api/catalog.js",
+    "check": "npm test && node --check script.js && node --check src/app.js && node --check src/state.js && node --check src/party-session.js && node --check src/party-flow.js && node --check src/motion.js && node --check src/hub.js && node --check src/role-flow.js && node --check src/games/impostor.js && node --check src/games/impostor-deck.js && node --check src/games/impostor-ux.js && node --check src/games/police.js && node --check src/games/city.js && node --check src/games/mimica.js && node --check src/games/whoami.js && node --check server/catalog-snapshot.cjs && node --check api/catalog.js",
     "catalog:build": "node database/scripts/build-seed.mjs"
   }
 }

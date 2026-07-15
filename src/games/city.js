@@ -57,7 +57,12 @@ export function normalizeCitySetup(
   return { ...counts, citizens };
 }
 
-export function createCityGame({ totalPlayers, assassinCount, detectiveCount }) {
+export function createCityGame({
+  party = null,
+  totalPlayers,
+  assassinCount,
+  detectiveCount,
+}) {
   const citizenCount = totalPlayers - assassinCount - detectiveCount;
   const roles = shuffleArray([
     ...Array.from({ length: assassinCount }, () => ({
@@ -89,8 +94,10 @@ export function createCityGame({ totalPlayers, assassinCount, detectiveCount }) 
   return {
     type: "city",
     name: "Cidade Dorme",
+    party,
     totalPlayers,
     roles,
+    simpleReveal: true,
     setupScreen: "citySetup",
     endLabel: "Rodada pronta",
     endTitle: "Todos já receberam seus papéis",
@@ -125,7 +132,13 @@ export function createCityGame({ totalPlayers, assassinCount, detectiveCount }) 
   };
 }
 
-export function createCityController({ elements, openHub, openRoleSetup, startRoleGame }) {
+export function createCityController({
+  elements,
+  openHub,
+  openRoleSetup,
+  partySession,
+  startRoleGame,
+}) {
   function updateFeedback(message = "") {
     elements.feedback.textContent = message;
   }
@@ -133,14 +146,13 @@ export function createCityController({ elements, openHub, openRoleSetup, startRo
   function syncSetup(preferredField = "players", nextValue = null) {
     const counts = normalizeCitySetup(
       {
-        players: elements.playerCount.value,
+        players: partySession.getPlayerCount() || 5,
         assassins: elements.assassinCount.value,
         detectives: elements.detectiveCount.value,
       },
       { preferredField, nextValue },
     );
 
-    elements.playerCount.value = counts.players;
     elements.assassinCount.value = counts.assassins;
     elements.detectiveCount.value = counts.detectives;
     elements.roleSummary.textContent = `Total: ${counts.players} ${pluralize(
@@ -171,27 +183,27 @@ export function createCityController({ elements, openHub, openRoleSetup, startRo
   }
 
   function start() {
+    const party = partySession.createRoundSnapshot();
+
+    if (!party) {
+      updateFeedback("Monte o grupo antes de começar.");
+      return false;
+    }
+
     const counts = syncSetup();
     updateFeedback("");
     startRoleGame(
       createCityGame({
+        party,
         totalPlayers: counts.players,
         assassinCount: counts.assassins,
         detectiveCount: counts.detectives,
       }),
     );
+    return true;
   }
 
   function bind() {
-    elements.decreasePlayers.addEventListener("click", () => {
-      syncSetup("players", Number(elements.playerCount.value) - 1);
-    });
-    elements.increasePlayers.addEventListener("click", () => {
-      syncSetup("players", Number(elements.playerCount.value) + 1);
-    });
-    elements.playerCount.addEventListener("change", (event) => {
-      syncSetup("players", event.target.value);
-    });
     elements.decreaseAssassins.addEventListener("click", () => {
       syncSetup("assassins", Number(elements.assassinCount.value) - 1);
     });
@@ -222,6 +234,7 @@ export function createCityController({ elements, openHub, openRoleSetup, startRo
     setupScreen: "citySetup",
     bind,
     initialize: syncSetup,
+    minimumPlayers: 5,
     openSetup,
   };
 }

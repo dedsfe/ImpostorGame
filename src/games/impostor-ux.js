@@ -15,25 +15,6 @@ function joinNames(names) {
   return `${names.slice(0, -1).join(", ")} e ${names.at(-1)}`;
 }
 
-export function isNameIdentificationEnabled(value) {
-  return value === "required";
-}
-
-export function fitSessionPlayerNames(
-  currentNames,
-  totalPlayers,
-  { preserve = false } = {},
-) {
-  if (!preserve) {
-    return [];
-  }
-
-  return Array.from(
-    { length: Math.max(0, Number(totalPlayers) || 0) },
-    (_, index) => currentNames[index] ?? "",
-  );
-}
-
 export function buildImpostorRoundInstructions(impostorCount) {
   const count = safeImpostorCount(impostorCount);
 

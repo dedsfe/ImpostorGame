@@ -1,9 +1,8 @@
-import { normalizeWord } from "./shared/utils.js";
 import {
   buildImpostorResult,
   buildRevealResultPrompt,
-  fitSessionPlayerNames,
 } from "./games/impostor-ux.js";
+import { animateElement } from "./motion.js";
 
 const ROLE_TONE_CLASSES = [
   "is-impostor",
@@ -58,21 +57,11 @@ export function createRoleFlow({
     turn.impostorHint.hidden = true;
   }
 
-  function resetPlayers({ preserveNames = false, totalPlayers = 0 } = {}) {
+  function resetPlayers() {
     state.currentPlayer = 0;
-    state.playerNames = fitSessionPlayerNames(
-      state.playerNames,
-      totalPlayers,
-      { preserve: preserveNames },
-    );
+    state.playerNames = [];
     state.turnRoleViewed = false;
     clearTurnSecret();
-    turn.playerName.value = "";
-    turn.revealRole.disabled = true;
-  }
-
-  function requiresPlayerNames() {
-    return state.currentGame?.requirePlayerNames !== false;
   }
 
   function currentPlayerName() {
@@ -81,18 +70,6 @@ export function createRoleFlow({
 
   function currentPlayerLabel() {
     return currentPlayerName() || `Jogador ${state.currentPlayer + 1}`;
-  }
-
-  function syncPlayerName() {
-    if (!requiresPlayerNames()) {
-      turn.revealRole.disabled = false;
-      return "";
-    }
-
-    const playerName = normalizeWord(turn.playerName.value);
-    state.playerNames[state.currentPlayer] = playerName;
-    turn.revealRole.disabled = playerName.length === 0;
-    return playerName;
   }
 
   function publicRoleLabel(role) {
@@ -148,6 +125,14 @@ export function createRoleFlow({
     end.resultDialogCopy.textContent = prompt.copy;
     resultDialogTrigger = document.activeElement;
     end.resultDialog.showModal();
+    void animateElement(
+      end.resultDialog.querySelector(".result-confirm-content"),
+      [
+        { transform: "translateY(6px)" },
+        { transform: "translateY(0)" },
+      ],
+      { duration: 170 },
+    );
     queueMicrotask(() => end.continuePlaying.focus());
   }
 
@@ -177,7 +162,7 @@ export function createRoleFlow({
       return;
     }
 
-    turn.roleBadge.textContent = role.badge;
+    turn.roleBadge.textContent = `${currentPlayerLabel()}, veja seu papel`;
     turn.roleTitle.textContent = role.title;
     turn.roleDescription.textContent = role.description;
     turn.wordCard.textContent = role.value;
@@ -194,14 +179,8 @@ export function createRoleFlow({
 
   function openSetup(screen) {
     closeResultDialog({ restoreFocus: false });
-    const previousGame = state.currentGame;
-    const preserveNames = previousGame?.type === "impostor";
-
     state.currentGame = null;
-    resetPlayers({
-      preserveNames,
-      totalPlayers: previousGame?.totalPlayers ?? state.playerNames.length,
-    });
+    resetPlayers();
     clearTone();
     setPhase("prep");
     showScreen(screen);
@@ -209,11 +188,15 @@ export function createRoleFlow({
 
   function startGame(game) {
     closeResultDialog({ restoreFocus: false });
-    const preserveNames =
-      game.type === "impostor" && game.requirePlayerNames === true;
+    const players = game.party?.players ?? [];
+
+    if (players.length !== game.totalPlayers) {
+      throw new Error("O snapshot do grupo não corresponde à rodada.");
+    }
 
     state.currentGame = game;
-    resetPlayers({ preserveNames, totalPlayers: game.totalPlayers });
+    resetPlayers();
+    state.playerNames = players.map((player) => player.name);
     end.roleRevealList.replaceChildren();
     end.roleRevealPanel.hidden = true;
     renderPreparation();
@@ -221,36 +204,37 @@ export function createRoleFlow({
 
   function renderPreparation() {
     const playerNumber = state.currentPlayer + 1;
-    const requireNames = requiresPlayerNames();
     const simpleReveal = state.currentGame.simpleReveal === true;
+    const playerName = currentPlayerLabel();
 
     setHero({
       eyebrow: state.currentGame.name,
-      title: "Passe para o próximo jogador",
-      copy:
-        "Mantenha a tela coberta e revele o papel somente quando a pessoa certa estiver pronta.",
+      title: `Passe para ${playerName}`,
+      copy: `Só ${playerName} deve olhar a próxima tela.`,
     });
     state.turnRoleViewed = false;
-    state.turnRevealVisible = false;
+    clearTurnSecret();
     turn.panel.dataset.game = state.currentGame.type;
     turn.gameLabel.textContent = state.currentGame.name;
-    turn.progress.textContent = `Jogador ${playerNumber} de ${state.currentGame.totalPlayers}`;
-    turn.prepTitle.textContent = `Prepare o Jogador ${playerNumber}`;
-    turn.prepDescription.textContent = requireNames
-      ? "Digite o nome antes de revelar. Só a pessoa com esse nome deve tocar para ver o papel."
-      : "Passe o celular com a tela coberta e toque em mostrar apenas quando a pessoa estiver pronta.";
-    turn.revealRole.textContent = simpleReveal ? "Ver meu papel" : "Mostrar papel";
+    turn.progress.textContent = `${playerName} · ${playerNumber} de ${state.currentGame.totalPlayers}`;
+    turn.prepTitle.textContent = `Passe para ${playerName}`;
+    turn.prepDescription.textContent = `Só ${playerName} deve tocar para ver o papel.`;
+    turn.revealRole.textContent = "Ver meu papel";
+    turn.revealRole.disabled = false;
     turn.toggleVisibility.hidden = simpleReveal;
-    turn.playerName.closest(".turn-name-field").hidden = !requireNames;
-    turn.playerName.value = currentPlayerName();
-    syncPlayerName();
 
     clearTone();
     setPhase("prep");
     showScreen("turn");
-    if (requireNames) {
-      turn.playerName.focus();
-    }
+    void animateElement(
+      turn.prepView,
+      [
+        { transform: "translateX(-6px)" },
+        { transform: "translateX(0)" },
+      ],
+      { duration: 170 },
+    );
+    queueMicrotask(() => turn.revealRole.focus());
   }
 
   function renderReveal() {
@@ -260,7 +244,11 @@ export function createRoleFlow({
     const isLastPlayer =
       state.currentPlayer === state.currentGame.totalPlayers - 1;
 
-    setHero(state.currentGame.hero);
+    setHero({
+      eyebrow: state.currentGame.name,
+      title: `${currentPlayerLabel()}, veja seu papel`,
+      copy: "Leia em silêncio, oculte a tela e passe o aparelho.",
+    });
     state.turnRoleViewed = true;
     state.turnRevealVisible = simpleReveal;
     turn.panel.dataset.game = state.currentGame.type;
@@ -270,7 +258,10 @@ export function createRoleFlow({
     turn.nextPlayer.textContent = simpleReveal
       ? isLastPlayer
         ? "Ocultar e começar"
-        : "Ocultar e passar"
+        : `Ocultar e passar para ${
+            state.playerNames[state.currentPlayer + 1] ??
+            `Jogador ${state.currentPlayer + 2}`
+          }`
       : isLastPlayer
         ? "Finalizar distribuição"
         : "Próximo jogador";
@@ -279,6 +270,14 @@ export function createRoleFlow({
     renderSecret(role);
     setPhase("reveal");
     showScreen("turn");
+    void animateElement(
+      turn.revealView,
+      [
+        { transform: "translateX(6px)" },
+        { transform: "translateX(0)" },
+      ],
+      { duration: 180 },
+    );
   }
 
   function renderEndScreen() {
@@ -355,6 +354,14 @@ export function createRoleFlow({
     end.goHub.hidden = deferRoleReveal;
     end.goHub.textContent = "Noite de jogos";
     showScreen("end");
+    void animateElement(
+      end.panel,
+      [
+        { transform: "translateY(6px)" },
+        { transform: "translateY(0)" },
+      ],
+      { duration: 180 },
+    );
   }
 
   function renderResult() {
@@ -387,6 +394,14 @@ export function createRoleFlow({
     end.changeSettings.hidden = false;
     end.goHub.hidden = false;
     end.goHub.textContent = "Sair do jogo";
+    void animateElement(
+      end.panel,
+      [
+        { transform: "translateY(6px)" },
+        { transform: "translateY(0)" },
+      ],
+      { duration: 180 },
+    );
   }
 
   function revealConfirmedResult() {
@@ -415,20 +430,7 @@ export function createRoleFlow({
   }
 
   function bind() {
-    turn.playerName.addEventListener("input", syncPlayerName);
-    turn.playerName.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        if (!turn.revealRole.disabled) {
-          renderReveal();
-        }
-      }
-    });
     turn.revealRole.addEventListener("click", () => {
-      if (requiresPlayerNames() && !syncPlayerName()) {
-        turn.playerName.focus();
-        return;
-      }
       renderReveal();
     });
     turn.toggleVisibility.addEventListener("click", () => {
@@ -453,7 +455,6 @@ export function createRoleFlow({
       state.currentPlayer += 1;
       renderPreparation();
     });
-    turn.restart.addEventListener("click", restartGame);
     turn.goHub.addEventListener("click", openHub);
     end.showRoleReveal.addEventListener("click", () => {
       if (state.currentGame?.deferRoleReveal && !state.currentGame.roundEnded) {

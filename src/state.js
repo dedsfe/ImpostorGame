@@ -1,8 +1,13 @@
-export function createInitialState() {
+import { createPartySession } from "./party-session.js";
+
+export function createInitialState({
+  partySession = createPartySession(),
+} = {}) {
   return {
     currentScreen: "hub",
     currentPlayer: 0,
     currentGame: null,
+    partySession,
     playerNames: [],
     hubModalOpen: false,
     hubModalGameId: null,

@@ -11,8 +11,8 @@ import {
 } from "./impostor-deck.js";
 import {
   buildImpostorRoundInstructions,
-  isNameIdentificationEnabled,
 } from "./impostor-ux.js";
+import { animateElement } from "../motion.js";
 
 const THEME_LABELS = {
   animais: "Animais",
@@ -47,7 +47,7 @@ export function normalizeImpostorSetup({ totalPlayers, impostorCount }) {
 export function createImpostorGame({
   totalPlayers,
   impostorCount,
-  requirePlayerNames,
+  party = null,
   secretWord,
   theme,
   category,
@@ -95,7 +95,7 @@ export function createImpostorGame({
     impostorCount: safeImpostorCount,
     instructions: buildImpostorRoundInstructions(safeImpostorCount),
     name: "Impostor",
-    requirePlayerNames,
+    party,
     roles,
     setupScreen: "impostorSetup",
     simpleReveal: true,
@@ -116,10 +116,12 @@ export function createImpostorController({
   elements,
   openHub,
   openRoleSetup,
+  partySession,
   pools,
   startRoleGame,
 }) {
   const wordDeck = createImpostorWordDeck({ pools });
+  let lastDeckProgress = "";
 
   function setWordVisibility(isVisible) {
     elements.secretWord.type = isVisible ? "text" : "password";
@@ -138,25 +140,12 @@ export function createImpostorController({
     elements.feedback.textContent = message;
   }
 
-  function syncPlayers(nextValue) {
-    const setup = normalizeImpostorSetup({
-      impostorCount: elements.impostorCount.value,
-      totalPlayers: nextValue,
-    });
-
-    elements.playerCount.value = setup.totalPlayers;
-    elements.impostorCount.max = setup.maxImpostors;
-    elements.impostorCount.value = setup.impostorCount;
-    return setup.totalPlayers;
-  }
-
   function syncImpostors(nextValue) {
     const setup = normalizeImpostorSetup({
       impostorCount: nextValue,
-      totalPlayers: elements.playerCount.value,
+      totalPlayers: partySession.getPlayerCount() || 3,
     });
 
-    elements.playerCount.value = setup.totalPlayers;
     elements.impostorCount.max = setup.maxImpostors;
     elements.impostorCount.value = setup.impostorCount;
     return setup.impostorCount;
@@ -195,9 +184,23 @@ export function createImpostorController({
 
   function renderDeckProgress(theme = elements.wordCategory.value) {
     const progress = wordDeck.getProgress(theme);
-    elements.deckProgress.textContent = `${getImpostorThemeLabel(
+    const nextProgress = `${getImpostorThemeLabel(
       progress.theme,
     )} — ${progress.used} de ${progress.total} palavras vistas`;
+    elements.deckProgress.textContent = nextProgress;
+
+    if (lastDeckProgress && lastDeckProgress !== nextProgress) {
+      void animateElement(
+        elements.deckProgress,
+        [
+          { transform: "translateY(-4px)" },
+          { transform: "translateY(0)" },
+        ],
+        { duration: 150 },
+      );
+    }
+
+    lastDeckProgress = nextProgress;
   }
 
   function resetHistory() {
@@ -215,11 +218,15 @@ export function createImpostorController({
   }
 
   function start() {
-    const totalPlayers = syncPlayers(elements.playerCount.value);
+    const party = partySession.createRoundSnapshot();
+
+    if (!party) {
+      updateFeedback("Monte o grupo antes de começar.");
+      return false;
+    }
+
+    const totalPlayers = party.players.length;
     const impostorCount = syncImpostors(elements.impostorCount.value);
-    const requirePlayerNames = isNameIdentificationEnabled(
-      elements.requireNames.value,
-    );
     const theme = syncTheme(elements.wordCategory.value);
     const wordMode = syncWordMode(elements.wordMode.value);
     const customWord =
@@ -239,7 +246,7 @@ export function createImpostorController({
     startRoleGame(
       createImpostorGame({
         impostorCount,
-        requirePlayerNames,
+        party,
         secretWord: selection.word,
         theme,
         totalPlayers,
@@ -250,15 +257,6 @@ export function createImpostorController({
   }
 
   function bind() {
-    elements.decreasePlayers.addEventListener("click", () => {
-      syncPlayers(Number(elements.playerCount.value) - 1);
-    });
-    elements.increasePlayers.addEventListener("click", () => {
-      syncPlayers(Number(elements.playerCount.value) + 1);
-    });
-    elements.playerCount.addEventListener("change", (event) => {
-      syncPlayers(event.target.value);
-    });
     elements.decreaseImpostors.addEventListener("click", () => {
       syncImpostors(Number(elements.impostorCount.value) - 1);
     });
@@ -290,7 +288,6 @@ export function createImpostorController({
   }
 
   function initialize() {
-    syncPlayers(elements.playerCount.value);
     syncImpostors(elements.impostorCount.value);
     refreshThemes();
     syncWordMode(elements.wordMode.value);
@@ -301,6 +298,7 @@ export function createImpostorController({
     bind,
     id: "impostor",
     initialize,
+    minimumPlayers: 3,
     openSetup,
     playAgain: start,
     setupScreen: "impostorSetup",

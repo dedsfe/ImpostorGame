@@ -1,4 +1,9 @@
-import { clampRoleCount, pluralize, shuffleArray } from "../shared/utils.js";
+import {
+  clampInteger,
+  clampRoleCount,
+  pluralize,
+  shuffleArray,
+} from "../shared/utils.js";
 
 export function normalizePoliceSetup(
   currentCounts,
@@ -39,7 +44,39 @@ export function normalizePoliceSetup(
   };
 }
 
-export function createPoliceGame({ totalPlayers, policeCount, thiefCount, victimCount }) {
+export function normalizePolicePartySetup(
+  currentCounts,
+  totalPlayers,
+  { preferredRole = "thief", nextValue = null } = {},
+) {
+  const total = clampInteger(totalPlayers, 3, 20, 3);
+  let police = clampInteger(currentCounts.police, 1, total - 2, 1);
+  let thief = clampInteger(currentCounts.thief, 1, total - police - 1, 1);
+
+  if (preferredRole === "police" && nextValue !== null) {
+    police = clampInteger(nextValue, 1, total - 2, police);
+    thief = clampInteger(thief, 1, total - police - 1, 1);
+  }
+
+  if (preferredRole === "thief" && nextValue !== null) {
+    thief = clampInteger(nextValue, 1, total - police - 1, thief);
+  }
+
+  return {
+    police,
+    thief,
+    totalPlayers: total,
+    victim: total - police - thief,
+  };
+}
+
+export function createPoliceGame({
+  party = null,
+  totalPlayers,
+  policeCount,
+  thiefCount,
+  victimCount,
+}) {
   const roles = shuffleArray([
     ...Array.from({ length: policeCount }, () => ({
       badge: "Polícia",
@@ -70,8 +107,10 @@ export function createPoliceGame({ totalPlayers, policeCount, thiefCount, victim
   return {
     type: "police",
     name: "Polícia e Ladrão",
+    party,
     totalPlayers,
     roles,
+    simpleReveal: true,
     setupScreen: "policeSetup",
     endLabel: "Papéis distribuídos",
     endTitle: "Todo mundo já sabe seu papel",
@@ -99,24 +138,29 @@ export function createPoliceGame({ totalPlayers, policeCount, thiefCount, victim
   };
 }
 
-export function createPoliceController({ elements, openHub, openRoleSetup, startRoleGame }) {
+export function createPoliceController({
+  elements,
+  openHub,
+  openRoleSetup,
+  partySession,
+  startRoleGame,
+}) {
   function updateFeedback(message = "") {
     elements.feedback.textContent = message;
   }
 
-  function syncSetup(preferredRole = "victim", nextValue = null) {
-    const counts = normalizePoliceSetup(
+  function syncSetup(preferredRole = "thief", nextValue = null) {
+    const counts = normalizePolicePartySetup(
       {
         police: elements.policeCount.value,
         thief: elements.thiefCount.value,
-        victim: elements.victimCount.value,
       },
+      partySession.getPlayerCount() || 3,
       { preferredRole, nextValue },
     );
 
     elements.policeCount.value = counts.police;
     elements.thiefCount.value = counts.thief;
-    elements.victimCount.value = counts.victim;
     elements.roleSummary.textContent = `Total: ${counts.totalPlayers} ${pluralize(
       counts.totalPlayers,
       "jogador",
@@ -141,16 +185,25 @@ export function createPoliceController({ elements, openHub, openRoleSetup, start
   }
 
   function start() {
+    const party = partySession.createRoundSnapshot();
+
+    if (!party) {
+      updateFeedback("Monte o grupo antes de começar.");
+      return false;
+    }
+
     const counts = syncSetup();
     updateFeedback("");
     startRoleGame(
       createPoliceGame({
+        party,
         totalPlayers: counts.totalPlayers,
         policeCount: counts.police,
         thiefCount: counts.thief,
         victimCount: counts.victim,
       }),
     );
+    return true;
   }
 
   function bind() {
@@ -172,15 +225,6 @@ export function createPoliceController({ elements, openHub, openRoleSetup, start
     elements.thiefCount.addEventListener("change", (event) => {
       syncSetup("thief", event.target.value);
     });
-    elements.decreaseVictims.addEventListener("click", () => {
-      syncSetup("victim", Number(elements.victimCount.value) - 1);
-    });
-    elements.increaseVictims.addEventListener("click", () => {
-      syncSetup("victim", Number(elements.victimCount.value) + 1);
-    });
-    elements.victimCount.addEventListener("change", (event) => {
-      syncSetup("victim", event.target.value);
-    });
     elements.form.addEventListener("submit", (event) => {
       event.preventDefault();
       start();
@@ -193,6 +237,7 @@ export function createPoliceController({ elements, openHub, openRoleSetup, start
     setupScreen: "policeSetup",
     bind,
     initialize: syncSetup,
+    minimumPlayers: 3,
     openSetup,
   };
 }

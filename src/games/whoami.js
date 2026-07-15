@@ -73,6 +73,7 @@ export function createWhoAmIController({
     state.currentGame = {
       type: "whoami",
       name: "Quem sou eu?",
+      setupScreen: "whoamiSetup",
     };
     state.currentPlayer = 0;
     syncCategory(elements.category.value);
@@ -98,6 +99,7 @@ export function createWhoAmIController({
     setupScreen: "whoamiSetup",
     bind,
     initialize: () => syncCategory(elements.category.value),
+    minimumPlayers: 1,
     openSetup,
   };
 }

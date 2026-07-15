@@ -7,34 +7,14 @@ import {
   buildImpostorResult,
   buildImpostorRoundInstructions,
   buildRevealResultPrompt,
-  fitSessionPlayerNames,
-  isNameIdentificationEnabled,
 } from "../src/games/impostor-ux.js";
 
-test("does not ask for names by default", () => {
+test("uses the global party instead of Impostor-specific player controls", () => {
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 
-  assert.equal(isNameIdentificationEnabled("optional"), false);
-  assert.equal(isNameIdentificationEnabled("required"), true);
-  assert.match(
-    html,
-    /<option value="optional" selected>Não pedir nome<\/option>/,
-  );
-});
-
-test("keeps session names for a rematch and fits the player count", () => {
-  assert.deepEqual(
-    fitSessionPlayerNames(["Ana", "Bia"], 3, { preserve: true }),
-    ["Ana", "Bia", ""],
-  );
-  assert.deepEqual(
-    fitSessionPlayerNames(["Ana", "Bia", "Caio"], 2, { preserve: true }),
-    ["Ana", "Bia"],
-  );
-  assert.deepEqual(
-    fitSessionPlayerNames(["Ana", "Bia"], 2, { preserve: false }),
-    [],
-  );
+  assert.doesNotMatch(html, /id="impostor-player-count"/);
+  assert.doesNotMatch(html, /id="impostor-require-names"/);
+  assert.match(html, /data-party-screen="impostorSetup"/);
 });
 
 test("guides the live round with the right number of suspects", () => {
@@ -127,6 +107,7 @@ test("uses the official clue language and keeps the secret out of Valendo", () =
   assert.doesNotMatch(roleFlowSource, /começa perguntando|quem começa perguntando/i);
   assert.doesNotMatch(html, /recebem a mesma pista/i);
   assert.match(roleFlowSource, /começa dando uma pista/);
+  assert.match(roleFlowSource, /clearTurnSecret\(\);[\s\S]*setPhase\("prep"\)/);
   assert.doesNotMatch(endScreenSource, /renderRoleList\(\)/);
   assert.match(endScreenSource, /roleRevealList\.replaceChildren\(\)/);
 });

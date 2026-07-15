@@ -3,6 +3,7 @@ import {
   normalizeMimicaEntry,
   randomIndex,
 } from "../shared/utils.js";
+import { nextPartyPlayerIndex } from "../party-flow.js";
 
 export function normalizeMimicaDifficulty(value) {
   return value === "facil" || value === "medio" || value === "dificil"
@@ -28,6 +29,7 @@ export function createMimicaController({
   elements,
   enterFullscreen,
   openHub,
+  partySession,
   pools,
   showScreen,
   state,
@@ -168,6 +170,7 @@ export function createMimicaController({
     state.currentGame = {
       type: "mimica",
       name: "Mímica Rápida",
+      setupScreen: "mimicaSetup",
     };
     state.currentPlayer = 0;
     clearTimer();
@@ -186,9 +189,11 @@ export function createMimicaController({
 
   function renderPreparation() {
     const isNextPlayer = state.mimica.prepMode === "next-player";
+    const player = state.currentGame?.party?.players[state.currentPlayer];
+    const playerName = player?.name ?? `Jogador ${state.currentPlayer + 1}`;
     elements.prepTitle.textContent = isNextPlayer
-      ? "Passe o celular para o próximo mímico"
-      : "Passe o celular para quem vai fazer a mímica";
+      ? `Passe o celular para ${playerName}`
+      : `${playerName} começa fazendo a mímica`;
     elements.prepDescription.textContent = isNextPlayer
       ? "Toque em mostrar quando a próxima pessoa estiver pronta para ver a palavra."
       : "Toque em mostrar apenas quando a pessoa estiver pronta para ver a palavra.";
@@ -222,12 +227,27 @@ export function createMimicaController({
   }
 
   function start() {
+    const party = partySession.createRoundSnapshot();
+
+    if (!party) {
+      updateFeedback("Monte o grupo antes de começar.");
+      return false;
+    }
+
     syncCategory(elements.category.value);
     syncDifficulty(elements.difficulty.value);
     syncTime(elements.time.value);
     state.mimica.prepMode = "start";
+    state.currentGame = {
+      name: "Mímica Rápida",
+      party,
+      setupScreen: "mimicaSetup",
+      type: "mimica",
+    };
+    state.currentPlayer = 0;
     updateFeedback("");
     renderPreparation();
+    return true;
   }
 
   function bind() {
@@ -248,6 +268,10 @@ export function createMimicaController({
     elements.success.addEventListener("click", markSuccess);
     elements.nextWord.addEventListener("click", renderWord);
     elements.nextPlayer.addEventListener("click", () => {
+      state.currentPlayer = nextPartyPlayerIndex(
+        state.currentPlayer,
+        state.currentGame?.party?.players.length,
+      );
       state.mimica.prepMode = "next-player";
       renderPreparation();
     });
@@ -274,6 +298,7 @@ export function createMimicaController({
     bind,
     cleanup,
     initialize,
+    minimumPlayers: 1,
     openSetup,
   };
 }

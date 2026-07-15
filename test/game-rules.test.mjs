@@ -27,8 +27,23 @@ import {
   normalizeMimicaTime,
   pickMimicaWord,
 } from "../src/games/mimica.js";
-import { createPoliceGame, normalizePoliceSetup } from "../src/games/police.js";
+import {
+  createPoliceGame,
+  normalizePolicePartySetup,
+  normalizePoliceSetup,
+} from "../src/games/police.js";
 import { drawWhoAmICharacter } from "../src/games/whoami.js";
+
+function createParty(playerCount) {
+  return Object.freeze({
+    mode: "named",
+    players: Object.freeze(
+      Array.from({ length: playerCount }, (_, index) =>
+        Object.freeze({ id: `player-${index + 1}`, name: `Pessoa ${index + 1}` }),
+      ),
+    ),
+  });
+}
 
 test("normalizes setup values with the game limits", () => {
   assert.equal(clampInteger("x", 1, 10, 4), 4);
@@ -62,7 +77,11 @@ test("builds shuffled collections without mutating their input", () => {
 });
 
 test("creates the requested number of roles for every role game", () => {
+  const impostorParty = createParty(8);
+  const policeParty = createParty(7);
+  const cityParty = createParty(9);
   const impostor = createImpostorGame({
+    party: impostorParty,
     totalPlayers: 8,
     impostorCount: 2,
     requirePlayerNames: true,
@@ -71,18 +90,21 @@ test("creates the requested number of roles for every role game", () => {
     difficulty: "facil",
   });
   const police = createPoliceGame({
+    party: policeParty,
     totalPlayers: 7,
     policeCount: 2,
     thiefCount: 2,
     victimCount: 3,
   });
   const city = createCityGame({
+    party: cityParty,
     totalPlayers: 9,
     assassinCount: 2,
     detectiveCount: 1,
   });
 
   assert.equal(impostor.roles.length, 8);
+  assert.equal(impostor.party, impostorParty);
   assert.equal(impostor.roles.filter((role) => role.value === "IMPOSTOR").length, 2);
   assert.deepEqual(impostor.instructions, [
     "Cada pessoa dá uma pista curta.",
@@ -95,7 +117,9 @@ test("creates the requested number of roles for every role game", () => {
     false,
   );
   assert.equal(police.roles.length, 7);
+  assert.equal(police.party, policeParty);
   assert.equal(city.roles.length, 9);
+  assert.equal(city.party, cityParty);
 });
 
 test("prevents an impostor-only round", () => {
@@ -125,6 +149,15 @@ test("normalizes every role setup before creating a round", () => {
   );
   assert.equal(police.totalPlayers, 20);
   assert.ok(police.police >= 1 && police.thief >= 1 && police.victim >= 1);
+
+  assert.deepEqual(
+    normalizePolicePartySetup(
+      { police: 2, thief: 2 },
+      5,
+      { preferredRole: "thief", nextValue: 2 },
+    ),
+    { police: 2, thief: 2, totalPlayers: 5, victim: 1 },
+  );
 
   const city = normalizeCitySetup(
     { players: 5, assassins: 10, detectives: 10 },
