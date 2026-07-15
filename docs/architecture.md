@@ -5,8 +5,9 @@
 O site usa módulos organizados por jogo, não MVVM formal.
 
 Cada jogo concentra suas regras, validação, eventos e telas relacionadas em um
-arquivo dentro de `src/games/`. O `src/app.js` mantém somente o que é realmente
-compartilhado: hub, navegação, modais e distribuição de papéis.
+arquivo dentro de `src/games/`. O `src/app.js` apenas inicializa e conecta os
+módulos. O hub vive em `src/hub.js` e a distribuição compartilhada de papéis em
+`src/role-flow.js`.
 
 Essa organização foi escolhida porque responde diretamente à pergunta mais
 comum de manutenção: “onde altero este jogo?”.
@@ -39,6 +40,8 @@ registrá-lo em `gameControllers`.
 
 - Regras e cálculos são funções puras sempre que possível.
 - Controllers traduzem eventos do DOM para regras do jogo.
+- `src/hub.js` controla cards e modais do catálogo.
+- `src/role-flow.js` controla o fluxo comum aos jogos de papéis.
 - O estado compartilhado fica em `src/state.js`.
 - Funções usadas por mais de um jogo ficam em `src/shared/utils.js`.
 - Referências ao HTML ficam em `src/views/elements.js`.

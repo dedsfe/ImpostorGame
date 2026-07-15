@@ -21,7 +21,7 @@ document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v39";
+const APP_VERSION = "v40";
 
 const elements = getElements();
 

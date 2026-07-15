@@ -8,6 +8,8 @@ Código relacionado a um jogo fica junto no arquivo daquele jogo.
 ```text
 src/
   app.js
+  hub.js
+  role-flow.js
   state.js
   games/
     impostor.js
@@ -22,7 +24,9 @@ src/
 
 ## Onde alterar
 
-- `app.js`: inicialização, hub e fluxo compartilhado de revelação de papéis.
+- `app.js`: inicialização, navegação e conexão entre os módulos.
+- `hub.js`: cards dos jogos e modais de apresentação e regras.
+- `role-flow.js`: preparação, revelação e encerramento dos jogos com papéis.
 - `state.js`: estado inicial da aplicação.
 - `games/`: regras, controles e eventos específicos de cada jogo.
 - `data/`: catálogo remoto, fallback local e textos de tutorial.

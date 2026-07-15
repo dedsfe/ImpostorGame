@@ -29,16 +29,18 @@ Esse é o comando que deve passar antes de qualquer commit.
 
 ```text
 index.html                 telas e conteúdo visual
-styles.css                estilos
-src/app.js                inicialização, hub e fluxo compartilhado
-src/state.js              estado inicial
-src/games/                um módulo por jogo
-src/data/                 catálogo e tutoriais
-src/shared/utils.js       funções reutilizadas
-src/views/elements.js     referências do HTML
-api/catalog.js            endpoint público da Vercel
+styles.css                 estilos
+src/app.js                 inicialização e conexão dos módulos
+src/hub.js                 cards, regras e modais do hub
+src/role-flow.js           distribuição compartilhada de papéis
+src/state.js               estado inicial
+src/games/                 um módulo por jogo
+src/data/                  catálogo e tutoriais
+src/shared/utils.js        funções reutilizadas
+src/views/elements.js      referências do HTML
+api/catalog.js             endpoint público da Vercel
 server/catalog-snapshot.cjs
-supabase/                 schema, migrations e verificação
+supabase/                  schema, migrations e verificação
 ```
 
 Para alterar um jogo, comece pelo arquivo com seu nome em `src/games/`. Consulte
