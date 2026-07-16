@@ -25,7 +25,7 @@
         });
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css?v=48" />
+    <link rel="stylesheet" href="./styles.css?v=49" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -514,19 +514,170 @@
         </div>
       </div>
 
+      <div id="impostor-settings-modal" class="settings-modal" hidden>
+        <div
+          id="impostor-settings-dialog"
+          class="settings-modal-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="impostor-settings-title"
+        >
+          <button
+            id="impostor-settings-close"
+            class="settings-modal-close"
+            type="button"
+            aria-label="Fechar configurações"
+          >
+            ×
+          </button>
+          <div class="settings-modal-content">
+            <p class="settings-modal-label">Configurações</p>
+            <h3 id="impostor-settings-title" class="settings-modal-title">
+              Ajustes da rodada
+            </h3>
+
+            <label class="field-group" for="impostor-count">
+              <span class="field-label">Número de impostores</span>
+              <div class="stepper">
+                <button
+                  id="impostor-decrease-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Diminuir impostores"
+                >
+                  -
+                </button>
+                <input
+                  id="impostor-count"
+                  class="stepper-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="19"
+                  value="1"
+                />
+                <button
+                  id="impostor-increase-count"
+                  class="stepper-button"
+                  type="button"
+                  aria-label="Aumentar impostores"
+                >
+                  +
+                </button>
+              </div>
+              <p class="field-hint">Sempre precisa sobrar alguém com a palavra.</p>
+            </label>
+
+            <label class="field-group" for="impostor-word-mode">
+              <span class="field-label">Modo da palavra secreta</span>
+              <select id="impostor-word-mode" class="select-input">
+                <option value="deck" selected>Sortear sem repetir</option>
+                <option value="custom">Usar palavra secreta personalizada</option>
+              </select>
+            </label>
+
+            <label
+              id="impostor-custom-word-group"
+              class="field-group"
+              for="impostor-secret-word"
+              hidden
+            >
+              <span class="field-label">Palavra secreta personalizada</span>
+              <div class="word-input-row word-input-row--impostor">
+                <input
+                  id="impostor-secret-word"
+                  class="text-input"
+                  type="password"
+                  maxlength="40"
+                  placeholder="Ex.: astronauta"
+                  autocomplete="off"
+                />
+                <button
+                  id="impostor-toggle-word-visibility"
+                  class="icon-button"
+                  type="button"
+                  aria-label="Mostrar palavra secreta personalizada"
+                  aria-pressed="false"
+                >
+                  <svg
+                    class="icon-eye"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+                  </svg>
+                  <span id="impostor-toggle-word-label">Mostrar</span>
+                </button>
+              </div>
+              <p class="field-hint">Este modo não altera o histórico do baralho.</p>
+            </label>
+
+            <button
+              id="impostor-reset-history"
+              class="history-reset-button"
+              type="button"
+            >
+              Reiniciar histórico
+            </button>
+
+            <button
+              id="impostor-settings-done"
+              class="settings-modal-action"
+              type="button"
+            >
+              Pronto
+            </button>
+          </div>
+        </div>
+      </div>
+
       <section
         id="impostor-setup-screen"
         class="screen"
         aria-labelledby="impostor-setup-title"
       >
+        <button
+          id="impostor-settings-button"
+          class="setup-gear"
+          type="button"
+          aria-haspopup="dialog"
+          aria-controls="impostor-settings-modal"
+          aria-label="Configurações da rodada"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path
+              d="M19.4 13a7.8 7.8 0 0 0 .06-2l1.8-1.4-1.9-3.3-2.1.8a7.6 7.6 0 0 0-1.7-1l-.3-2.3h-3.8l-.3 2.3a7.6 7.6 0 0 0-1.7 1l-2.1-.8-1.9 3.3L4.5 11a7.8 7.8 0 0 0 0 2l-1.8 1.4 1.9 3.3 2.1-.8c.5.4 1.1.7 1.7 1l.3 2.3h3.8l.3-2.3c.6-.3 1.2-.6 1.7-1l2.1.8 1.9-3.3-1.8-1.4Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
         <div class="setup-stage setup-stage--spotlight">
           <div class="setup-copy setup-copy--spotlight">
             <p class="panel-label">Impostor</p>
             <h2 id="impostor-setup-title">Monte a rodada</h2>
-            <p class="setup-description setup-description--impostor">
-              O impostor verá apenas o tema. Os outros recebem a palavra secreta e todos
-              dão uma pista para descobrir quem está blefando.
-            </p>
             <div class="setup-copy-actions">
               <button
                 id="open-impostor-rules"
@@ -564,114 +715,6 @@
               </p>
               <p class="field-hint">Sem repetições até completar o tema.</p>
             </div>
-
-            <details id="impostor-more-options" class="setup-more-options">
-              <summary>Mais opções</summary>
-              <div class="setup-more-options-content">
-                <label class="field-group" for="impostor-count">
-                  <span class="field-label">Número de impostores</span>
-                  <div class="stepper">
-                    <button
-                      id="impostor-decrease-count"
-                      class="stepper-button"
-                      type="button"
-                      aria-label="Diminuir impostores"
-                    >
-                      -
-                    </button>
-                    <input
-                      id="impostor-count"
-                      class="stepper-input"
-                      type="number"
-                      inputmode="numeric"
-                      min="1"
-                      max="19"
-                      value="1"
-                    />
-                    <button
-                      id="impostor-increase-count"
-                      class="stepper-button"
-                      type="button"
-                      aria-label="Aumentar impostores"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <p class="field-hint">
-                    Sempre precisa sobrar alguém com a palavra.
-                  </p>
-                </label>
-
-                <label class="field-group" for="impostor-word-mode">
-                  <span class="field-label">Modo da palavra secreta</span>
-                  <select id="impostor-word-mode" class="select-input">
-                    <option value="deck" selected>Sortear sem repetir</option>
-                    <option value="custom">Usar palavra secreta personalizada</option>
-                  </select>
-                </label>
-
-                <label
-                  id="impostor-custom-word-group"
-                  class="field-group"
-                  for="impostor-secret-word"
-                  hidden
-                >
-                  <span class="field-label">Palavra secreta personalizada</span>
-                  <div class="word-input-row word-input-row--impostor">
-                    <input
-                      id="impostor-secret-word"
-                      class="text-input"
-                      type="password"
-                      maxlength="40"
-                      placeholder="Ex.: astronauta"
-                      autocomplete="off"
-                    />
-                    <button
-                      id="impostor-toggle-word-visibility"
-                      class="icon-button"
-                      type="button"
-                      aria-label="Mostrar palavra secreta personalizada"
-                      aria-pressed="false"
-                    >
-                      <svg
-                        class="icon-eye"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M2 12C3.7 8.6 7.2 6 12 6C16.8 6 20.3 8.6 22 12C20.3 15.4 16.8 18 12 18C7.2 18 3.7 15.4 2 12Z"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="3"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                        />
-                      </svg>
-                      <span id="impostor-toggle-word-label">Mostrar</span>
-                    </button>
-                  </div>
-                  <p class="field-hint">
-                    Este modo não altera o histórico do baralho.
-                  </p>
-                </label>
-
-                <button
-                  id="impostor-reset-history"
-                  class="history-reset-button"
-                  type="button"
-                >
-                  Reiniciar histórico
-                </button>
-              </div>
-            </details>
 
             <p id="impostor-setup-feedback" class="feedback" aria-live="polite"></p>
 

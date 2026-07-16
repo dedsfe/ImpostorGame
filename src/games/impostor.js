@@ -140,6 +140,21 @@ export function createImpostorController({
     elements.feedback.textContent = message;
   }
 
+  function openSettings() {
+    elements.settingsModal.hidden = false;
+    document.body.classList.add("is-settings-modal-open");
+  }
+
+  function closeSettings() {
+    elements.settingsModal.hidden = true;
+    document.body.classList.remove("is-settings-modal-open");
+    queueMicrotask(() => {
+      if (elements.settingsButton?.isConnected) {
+        elements.settingsButton.focus();
+      }
+    });
+  }
+
   function syncImpostors(nextValue) {
     const setup = normalizeImpostorSetup({
       impostorCount: nextValue,
@@ -233,7 +248,7 @@ export function createImpostorController({
       wordMode === "custom" ? normalizeWord(elements.secretWord.value) : "";
 
     if (wordMode === "custom" && !customWord) {
-      elements.moreOptions.open = true;
+      openSettings();
       elements.customWordGroup.hidden = false;
       updateFeedback("Digite a palavra secreta personalizada para começar.");
       elements.secretWord.focus();
@@ -275,6 +290,19 @@ export function createImpostorController({
       updateFeedback("");
     });
     elements.resetHistory.addEventListener("click", resetHistory);
+    elements.settingsButton.addEventListener("click", openSettings);
+    elements.settingsClose.addEventListener("click", closeSettings);
+    elements.settingsDone.addEventListener("click", closeSettings);
+    elements.settingsModal.addEventListener("click", (event) => {
+      if (event.target === elements.settingsModal) {
+        closeSettings();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !elements.settingsModal.hidden) {
+        closeSettings();
+      }
+    });
     elements.toggleVisibility.addEventListener("click", () => {
       const isVisible =
         elements.toggleVisibility.getAttribute("aria-pressed") === "true";

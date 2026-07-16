@@ -1691,6 +1691,133 @@ h2 {
   cursor: pointer;
 }
 
+/* Botão de configurações (engrenagem) — topo direito da tela de setup. */
+#impostor-setup-screen {
+  position: relative;
+}
+
+.setup-gear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.setup-gear svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.setup-gear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: rotate(35deg);
+}
+
+.setup-gear:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.42);
+  outline-offset: 3px;
+}
+
+/* Modal de configurações — mesmo visual do modal de regras. */
+body.is-settings-modal-open {
+  overflow: hidden;
+}
+
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(4, 4, 4, 0.7);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  z-index: 34;
+}
+
+.settings-modal[hidden] {
+  display: none;
+}
+
+.settings-modal-dialog {
+  position: relative;
+  width: min(100%, 31rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  border-radius: 1.7rem;
+  border: 0;
+  background: #11140f;
+  box-shadow: 0 9px 20px rgba(0, 0, 0, 0.34);
+}
+
+.settings-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 1;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.settings-modal-close:focus-visible,
+.settings-modal-action:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.42);
+  outline-offset: 3px;
+}
+
+.settings-modal-content {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem;
+}
+
+.settings-modal-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.settings-modal-title {
+  margin: 0 0 0.2rem;
+  font-family: "Rockwell", "Georgia", serif;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  line-height: 1;
+  color: #ffffff;
+}
+
+.settings-modal-action {
+  min-height: 3.15rem;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: #f3f3f3;
+  color: #09131b;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .turn-topbar {
   display: flex;
   align-items: flex-start;
