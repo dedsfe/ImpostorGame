@@ -440,6 +440,9 @@ body.is-intro-active {
     --art-h: 1651;
     --anchor-cx: 51.9%;
     --glass-cx: 51.1%;
+    /* zoom extra: o gabinete sangra ~1-3px nas DUAS bordas, entao nao
+       sobra tira de parede em lado nenhum — simetrico por construcao. */
+    --overscan: 1.1;
     --glass-cy: 38.55%;
     --glass-w: 60.52%;
     --glass-h: 27.92%;
