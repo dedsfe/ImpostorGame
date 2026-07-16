@@ -53,6 +53,10 @@ body.is-intro-active {
   --glass-cy: 48.14%;
   --glass-w: 52.35%;
   --glass-h: 74.22%;
+  /* ponto da arte que a camera centraliza: o GABINETE da TV (vaos
+     laterais iguais). O vidro pode nao estar no centro do gabinete. */
+  --anchor-cx: var(--glass-cx);
+  --anchor-cy: var(--glass-cy);
   /* folga pra arte nunca revelar borda ao reancorar pelo vidro */
   --overscan: 1.04;
 
@@ -74,7 +78,7 @@ body.is-intro-active {
   top: var(--intro-frame-origin-y);
   width: calc(max(100cqw, 100cqh * var(--art-w) / var(--art-h)) * var(--overscan));
   height: calc(max(100cqh, 100cqw * var(--art-h) / var(--art-w)) * var(--overscan));
-  translate: calc(-1 * var(--glass-cx)) calc(-1 * var(--glass-cy));
+  translate: calc(-1 * var(--anchor-cx)) calc(-1 * var(--anchor-cy));
 }
 
 .game-intro.is-framed .intro-camera {
@@ -427,12 +431,15 @@ body.is-intro-active {
   }
 
   /* arte de portrait: outra imagem, logo outro vidro.
-     glass-cx calibrado no olho do dono: a TV foi renderizada levemente
-     a esquerda do centro da arte (cada 0.17% ~ 1px em iPhone). */
+     anchor-cx centraliza o GABINETE da TV (14.7%..88.7% da arte, centro
+     51.7%) + 0.2% de compensacao optica: o vao esquerdo e iluminado
+     pelo abajur e o direito some no escuro, entao a esquerda "pesa"
+     mais. glass-cx segue sendo o centro do VIDRO, onde mora o titulo. */
   .intro-camera {
     --art-w: 953;
     --art-h: 1651;
-    --glass-cx: 50.45%;
+    --anchor-cx: 51.9%;
+    --glass-cx: 51.1%;
     --glass-cy: 38.55%;
     --glass-w: 60.52%;
     --glass-h: 27.92%;
