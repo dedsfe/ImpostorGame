@@ -394,15 +394,10 @@
           <div class="panel party-panel">
             <p class="panel-label">Grupo da sessão</p>
             <h2 id="party-setup-title" tabindex="-1">Quem vai jogar?</h2>
-            <p class="support-copy">
-              Adicione as pessoas que estão nesta rodada. O grupo será usado nos
-              outros jogos desta noite.
-            </p>
 
             <div id="party-name-mode">
               <form id="party-name-form" class="party-name-form" novalidate>
                 <div class="field-group">
-                  <label class="field-label" for="party-player-name">Nome do jogador</label>
                   <div class="party-name-entry">
                     <input
                       id="party-player-name"
@@ -410,6 +405,8 @@
                       type="text"
                       maxlength="30"
                       autocomplete="off"
+                      placeholder="Nome do jogador"
+                      aria-label="Nome do jogador"
                       aria-describedby="party-feedback"
                     />
                     <button id="party-add-player" class="secondary-button" type="submit">
