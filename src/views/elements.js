@@ -1,5 +1,11 @@
 export function getElements() {
   return {
+    shell: document.getElementById("app-shell"),
+    intro: {
+      root: document.getElementById("game-intro"),
+      device: document.getElementById("intro-device"),
+      enter: document.getElementById("intro-enter"),
+    },
     navHome: document.getElementById("go-home-nav"),
     heroEyebrow: document.getElementById("hero-eyebrow"),
     heroTitle: document.getElementById("hero-title"),
