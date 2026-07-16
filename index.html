@@ -25,7 +25,7 @@
         });
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css?v=49" />
+    <link rel="stylesheet" href="./styles.css?v=50" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -1135,7 +1135,6 @@
           </div>
 
           <div class="turn-view is-active">
-            <p class="status-pill">Tela de preparação</p>
             <h2 id="mimica-prep-title">Passe o celular para quem vai fazer a mímica</h2>
             <p id="mimica-prep-description" class="support-copy">
               Toque em mostrar apenas quando a pessoa estiver pronta para ver a palavra.
@@ -1229,22 +1228,14 @@
         <div class="flow-stage flow-stage--turn">
           <div id="turn-panel" class="panel flow-panel turn-panel is-prep" data-game="impostor">
             <div class="turn-topbar">
-              <div>
-                <p id="turn-game-label" class="panel-label">Distribuição</p>
-                <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
-              </div>
-              <div class="topbar-actions">
-                <button id="go-hub-turn" class="ghost-button" type="button">
-                  Noite de jogos
-                </button>
-                <button id="edit-party-turn" class="ghost-button" type="button">
-                  Editar grupo
-                </button>
-              </div>
+              <p id="turn-game-label" class="panel-label">Distribuição</p>
+              <p id="turn-progress" class="turn-progress">Jogador 1 de 4</p>
+              <button id="edit-party-turn" class="ghost-button turn-edit-party" type="button">
+                Editar grupo
+              </button>
             </div>
 
             <div id="prep-view" class="turn-view is-active">
-              <p class="status-pill">Tela de preparação</p>
               <h2 id="prep-title">Prepare o Jogador 1</h2>
               <p id="prep-description" class="support-copy">
                 Passe o celular para o próximo jogador e toque em mostrar apenas
@@ -1402,6 +1393,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=48"></script>
+    <script type="module" src="./script.js?v=49"></script>
   </body>
 </html>

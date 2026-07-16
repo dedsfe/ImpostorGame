@@ -218,7 +218,7 @@ export function createRoleFlow({
     turn.gameLabel.textContent = state.currentGame.name;
     turn.progress.textContent = `${playerName} · ${playerNumber} de ${state.currentGame.totalPlayers}`;
     turn.prepTitle.textContent = `Passe para ${playerName}`;
-    turn.prepDescription.textContent = `Só ${playerName} deve tocar para ver o papel.`;
+    turn.prepDescription.textContent = `Só ${playerName} deve ver o papel.`;
     turn.revealRole.textContent = "Ver meu papel";
     turn.revealRole.disabled = false;
     turn.toggleVisibility.hidden = simpleReveal;
@@ -455,7 +455,6 @@ export function createRoleFlow({
       state.currentPlayer += 1;
       renderPreparation();
     });
-    turn.goHub.addEventListener("click", openHub);
     end.showRoleReveal.addEventListener("click", () => {
       if (state.currentGame?.deferRoleReveal && !state.currentGame.roundEnded) {
         openResultDialog();

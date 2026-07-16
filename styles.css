@@ -1820,10 +1820,15 @@ body.is-settings-modal-open {
 
 .turn-topbar {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+
+.turn-edit-party {
+  margin-top: 0.5rem;
 }
 
 .turn-progress {

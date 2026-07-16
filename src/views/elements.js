@@ -161,7 +161,6 @@ export function getElements() {
       wordCard: document.getElementById("word-card"),
       impostorHint: document.getElementById("impostor-hint"),
       nextPlayer: document.getElementById("next-player"),
-      goHub: document.getElementById("go-hub-turn"),
     },
     end: {
       panel: document.getElementById("end-panel"),

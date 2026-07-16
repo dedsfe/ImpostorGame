@@ -8,7 +8,7 @@ import {
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js?v=45";
-import { getElements } from "./views/elements.js?v=48";
+import { getElements } from "./views/elements.js?v=49";
 import { createCityController } from "./games/city.js?v=45";
 import { createImpostorController } from "./games/impostor.js?v=48";
 import { createMimicaController } from "./games/mimica.js?v=45";
@@ -21,7 +21,7 @@ import {
   formatPartyNames,
   shouldConfirmPartyEdit,
 } from "./party-flow.js?v=47";
-import { createRoleFlow } from "./role-flow.js?v=47";
+import { createRoleFlow } from "./role-flow.js?v=48";
 import { animateElement } from "./motion.js";
 import { track } from "./analytics.js?v=1";
 import { initAds } from "./ads.js?v=1";
@@ -30,7 +30,7 @@ document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v47";
+const APP_VERSION = "v48";
 
 const elements = getElements();
 let gameEntryCoordinator = null;
