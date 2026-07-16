@@ -85,7 +85,7 @@ body.is-intro-active {
 }
 
 .intro-left-light {
-  opacity: 0.26;
+  opacity: 0.12;
   background: radial-gradient(
     ellipse 40% 64% at -18% 72%,
     rgba(255, 177, 84, 0.55) 0%,
@@ -93,11 +93,11 @@ body.is-intro-active {
     rgba(191, 76, 22, 0.1) 54%,
     transparent 72%
   );
-  animation: intro-lamp-flicker 12s linear infinite;
+  animation: intro-lamp-flicker 8.6s steps(1, end) infinite;
 }
 
 .intro-right-light {
-  opacity: 0.22;
+  opacity: 0.12;
   background: radial-gradient(
     ellipse 32% 58% at 118% 66%,
     rgba(224, 111, 43, 0.34) 0%,
@@ -105,7 +105,7 @@ body.is-intro-active {
     rgba(115, 35, 18, 0.05) 56%,
     transparent 74%
   );
-  animation: intro-right-flicker 10.6s linear infinite;
+  animation: intro-right-flicker 7.4s steps(1, end) infinite;
 }
 
 .intro-device {
@@ -334,75 +334,75 @@ body.is-intro-active {
   69%,
   79%,
   100% {
-    opacity: 0.26;
-  }
-
-  5.8% {
-    opacity: 0.82;
-  }
-
-  6.5% {
     opacity: 0.12;
   }
 
+  5.8% {
+    opacity: 0.92;
+  }
+
+  6.5% {
+    opacity: 0.04;
+  }
+
   7.2% {
-    opacity: 0.66;
+    opacity: 0.72;
   }
 
   7.8% {
-    opacity: 0.18;
+    opacity: 0.08;
   }
 
   9.2% {
-    opacity: 0.88;
+    opacity: 0.96;
   }
 
   11.5% {
-    opacity: 0.16;
+    opacity: 0.06;
   }
 
   26.2% {
-    opacity: 0.74;
+    opacity: 0.84;
   }
 
   28% {
-    opacity: 0.16;
+    opacity: 0.06;
   }
 
   30.4% {
-    opacity: 0.86;
+    opacity: 0.94;
   }
 
   45.7% {
-    opacity: 0.9;
+    opacity: 0.98;
   }
 
   46.3% {
-    opacity: 0.1;
+    opacity: 0.04;
   }
 
   47.4% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   48.4% {
-    opacity: 0.18;
+    opacity: 0.08;
   }
 
   51.5% {
-    opacity: 0.82;
+    opacity: 0.9;
   }
 
   54% {
-    opacity: 0.14;
+    opacity: 0.05;
   }
 
   73% {
-    opacity: 0.78;
+    opacity: 0.86;
   }
 
   76% {
-    opacity: 0.13;
+    opacity: 0.05;
   }
 }
 
@@ -415,31 +415,31 @@ body.is-intro-active {
   80%,
   85%,
   100% {
-    opacity: 0.22;
+    opacity: 0.12;
   }
 
   18% {
-    opacity: 0.62;
+    opacity: 0.82;
   }
 
   19% {
-    opacity: 0.1;
+    opacity: 0.04;
   }
 
   21% {
-    opacity: 0.48;
+    opacity: 0.62;
   }
 
   54% {
-    opacity: 0.58;
+    opacity: 0.78;
   }
 
   82% {
-    opacity: 0.68;
+    opacity: 0.88;
   }
 
   83% {
-    opacity: 0.09;
+    opacity: 0.04;
   }
 }
 
@@ -451,7 +451,7 @@ body.is-intro-active {
   }
 
   .intro-background {
-    object-position: 50% 50%;
+    object-position: 53.5% 50%;
   }
 
   .intro-left-light,
@@ -462,21 +462,21 @@ body.is-intro-active {
 
   .intro-left-light {
     background: radial-gradient(
-      ellipse 54% 46% at -24% 52%,
-      rgba(255, 177, 84, 0.78) 0%,
-      rgba(238, 126, 43, 0.38) 34%,
-      rgba(191, 76, 22, 0.13) 54%,
-      transparent 72%
+      ellipse 64% 52% at -18% 54%,
+      rgba(255, 177, 84, 0.98) 0%,
+      rgba(238, 126, 43, 0.62) 34%,
+      rgba(191, 76, 22, 0.22) 54%,
+      transparent 68%
     );
   }
 
   .intro-right-light {
     background: radial-gradient(
-      ellipse 50% 44% at 118% 54%,
-      rgba(224, 111, 43, 0.86) 0%,
-      rgba(181, 67, 27, 0.44) 36%,
-      rgba(115, 35, 18, 0.13) 56%,
-      transparent 74%
+      ellipse 64% 52% at 118% 54%,
+      rgba(224, 111, 43, 0.94) 0%,
+      rgba(181, 67, 27, 0.56) 36%,
+      rgba(115, 35, 18, 0.2) 56%,
+      transparent 68%
     );
   }
 
@@ -529,11 +529,11 @@ body.is-intro-active {
   }
 
   .intro-left-light {
-    opacity: 0.28;
+    opacity: 0.14;
   }
 
   .intro-right-light {
-    opacity: 0.22;
+    opacity: 0.14;
   }
 }
 
