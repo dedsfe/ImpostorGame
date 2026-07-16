@@ -43,12 +43,38 @@ body.is-intro-active {
 }
 
 .intro-camera {
+  /* Dimensoes da arte e posicao do vidro da TV DENTRO dela, medidos na
+     propria imagem. Tudo abaixo e ancorado nestes numeros, entao o
+     conteudo do CRT acompanha a TV em qualquer tela -- sem numero magico
+     por aparelho. Se a arte mudar, remeca e atualize so este bloco. */
+  --art-w: 1672;
+  --art-h: 941;
+  --glass-cx: 50.15%;
+  --glass-cy: 48.14%;
+  --glass-w: 52.35%;
+  --glass-h: 74.22%;
+  /* folga pra arte nunca revelar borda ao reancorar pelo vidro */
+  --overscan: 1.04;
+
   position: absolute;
   inset: 0;
   z-index: 0;
+  container-type: size;
   transform: translate3d(0, 0, 0) scale(1);
   transform-origin: 50% var(--intro-frame-origin-y);
   transition: transform 1850ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Reproduz object-fit:cover como caixa real, dando a arte um sistema de
+   coordenadas proprio. Ancorada pelo VIDRO (nao pelo centro da arte),
+   entao a TV cai no ponto de enquadramento exato em qualquer tela. */
+.intro-stage {
+  position: absolute;
+  left: 50%;
+  top: var(--intro-frame-origin-y);
+  width: calc(max(100cqw, 100cqh * var(--art-w) / var(--art-h)) * var(--overscan));
+  height: calc(max(100cqh, 100cqw * var(--art-h) / var(--art-w)) * var(--overscan));
+  translate: calc(-1 * var(--glass-cx)) calc(-1 * var(--glass-cy));
 }
 
 .game-intro.is-framed .intro-camera {
@@ -107,10 +133,10 @@ body.is-intro-active {
 
 .intro-screen {
   position: absolute;
-  top: 47.8%;
-  left: 50%;
-  width: 52.3vw;
-  height: 75.5vh;
+  top: var(--glass-cy);
+  left: var(--glass-cx);
+  width: var(--glass-w);
+  height: var(--glass-h);
   overflow: hidden;
   border-radius: 12% / 10%;
   color: #ded9bd;
@@ -400,8 +426,14 @@ body.is-intro-active {
     --intro-frame-shift-y: 8.5svh;
   }
 
-  .intro-background {
-    object-position: 53.5% 50%;
+  /* arte de portrait: outra imagem, logo outro vidro */
+  .intro-camera {
+    --art-w: 953;
+    --art-h: 1651;
+    --glass-cx: 51.1%;
+    --glass-cy: 38.55%;
+    --glass-w: 60.52%;
+    --glass-h: 27.92%;
   }
 
   .intro-left-light {
@@ -419,21 +451,12 @@ body.is-intro-active {
     );
   }
 
-  .intro-screen {
-    top: 38.3%;
-    width: 73vw;
-    height: 29.5vh;
-  }
 }
 
 @media (min-aspect-ratio: 2 / 1) {
   .game-intro {
     --intro-frame-origin-y: 47.2%;
     --intro-frame-scale: 1.48;
-  }
-
-  .intro-screen {
-    top: 47.2%;
   }
 }
 
