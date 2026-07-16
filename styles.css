@@ -427,12 +427,12 @@ body.is-intro-active {
   }
 
   /* arte de portrait: outra imagem, logo outro vidro.
-     glass-cx ajustado +0.35% a pedido do olho do dono: a TV foi
-     renderizada levemente a direita do centro da arte. */
+     glass-cx calibrado no olho do dono: a TV foi renderizada levemente
+     a esquerda do centro da arte (cada 0.17% ~ 1px em iPhone). */
   .intro-camera {
     --art-w: 953;
     --art-h: 1651;
-    --glass-cx: 51.45%;
+    --glass-cx: 50.75%;
     --glass-cy: 38.55%;
     --glass-w: 60.52%;
     --glass-h: 27.92%;
