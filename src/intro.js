@@ -48,7 +48,7 @@ export function createIntroController({ elements }) {
     root.classList.remove("is-framing");
     enter.disabled = false;
     isAnimating = false;
-    enter.focus();
+    enter.focus({ preventScroll: true });
   }
 
   function startFraming() {
@@ -107,7 +107,7 @@ export function createIntroController({ elements }) {
     root.classList.remove("is-returning");
     enter.disabled = false;
     isAnimating = false;
-    enter.focus();
+    enter.focus({ preventScroll: true });
   }
 
   function returnToIntro() {
@@ -123,6 +123,7 @@ export function createIntroController({ elements }) {
     root.classList.add("is-resetting", "is-returning", "is-zooming", "is-tuning");
     root.classList.remove("is-leaving");
     root.hidden = false;
+    root.scrollTo(0, 0);
     void root.offsetWidth;
     root.classList.remove("is-resetting");
 
@@ -159,6 +160,7 @@ export function createIntroController({ elements }) {
     enter.disabled = true;
     isAnimating = true;
     setAppInteractive(false);
+    root.scrollTo(0, 0);
     void root.offsetWidth;
     startFraming();
   }

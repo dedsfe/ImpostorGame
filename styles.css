@@ -27,6 +27,7 @@ body.is-intro-active {
 .game-intro {
   --intro-frame-origin-y: 47.8%;
   --intro-frame-scale: 1.42;
+  --intro-frame-shift-y: 0px;
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -51,7 +52,7 @@ body.is-intro-active {
 }
 
 .game-intro.is-framed .intro-camera {
-  transform: translate3d(0, 0, 0) scale(var(--intro-frame-scale));
+  transform: translate3d(0, var(--intro-frame-shift-y), 0) scale(var(--intro-frame-scale));
 }
 
 .intro-picture {
@@ -96,7 +97,7 @@ body.is-intro-active {
 }
 
 .intro-right-light {
-  opacity: 0.14;
+  opacity: 0.22;
   background: radial-gradient(
     ellipse 32% 58% at 118% 66%,
     rgba(224, 111, 43, 0.34) 0%,
@@ -181,7 +182,6 @@ body.is-intro-active {
   text-shadow:
     0 0 2px rgba(255, 248, 224, 0.86),
     0 0 6px rgba(236, 172, 93, 0.38);
-  filter: blur(0.12px);
 }
 
 .intro-title-main {
@@ -197,20 +197,19 @@ body.is-intro-active {
     0 0 2px rgba(255, 248, 218, 0.98),
     0 0 7px rgba(255, 177, 77, 0.78),
     0 0 17px rgba(205, 83, 33, 0.46);
-  filter: blur(0.18px);
 }
 
 .intro-enter {
-  min-width: clamp(8rem, 15cqw, 10.5rem);
-  min-height: 2.75rem;
+  min-width: clamp(6.8rem, 12cqw, 8.75rem);
+  min-height: 2.5rem;
   margin-top: clamp(0.5rem, 2.2vh, 1.15rem);
-  padding: 0.7em 1.6em;
-  border: 1px solid rgba(242, 224, 181, 0.7);
+  padding: 0.58em 1.25em;
+  border: 1px solid rgba(242, 224, 181, 0.46);
   border-radius: 999px;
-  background: rgba(8, 10, 8, 0.34);
-  color: rgba(241, 233, 207, 0.9);
+  background: rgba(8, 10, 8, 0.2);
+  color: rgba(241, 233, 207, 0.86);
   font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  font-size: clamp(0.82rem, 1.7cqw, 1.15rem);
+  font-size: clamp(0.76rem, 1.45cqw, 1rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.11em;
@@ -219,9 +218,8 @@ body.is-intro-active {
     -0.7px 0 rgba(176, 61, 40, 0.45),
     0.7px 0 rgba(98, 146, 117, 0.22),
     0 0 2px rgba(255, 248, 222, 0.8),
-    0 0 6px rgba(238, 164, 76, 0.42);
-  filter: blur(0.1px);
-  opacity: 0.86;
+    0 0 4px rgba(238, 164, 76, 0.3);
+  opacity: 0.8;
   cursor: pointer;
   transition:
     background-color 120ms ease,
@@ -232,30 +230,30 @@ body.is-intro-active {
 }
 
 .intro-enter:hover {
-  border-color: rgba(255, 239, 199, 0.94);
-  background: rgba(239, 215, 165, 0.12);
+  border-color: rgba(255, 239, 199, 0.72);
+  background: rgba(239, 215, 165, 0.08);
   color: #fff2cf;
   opacity: 1;
   text-shadow:
     -0.8px 0 rgba(188, 62, 37, 0.56),
     0.8px 0 rgba(103, 159, 127, 0.28),
     0 0 3px rgba(255, 249, 224, 0.95),
-    0 0 9px rgba(246, 169, 76, 0.68);
+    0 0 6px rgba(246, 169, 76, 0.48);
 }
 
 .intro-enter:active {
-  background: rgba(239, 215, 165, 0.2);
+  background: rgba(239, 215, 165, 0.12);
 }
 
 .intro-enter:focus-visible {
-  border-color: rgba(255, 240, 202, 0.98);
+  border-color: rgba(255, 240, 202, 0.78);
   outline: none;
-  background: rgba(239, 215, 165, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(255, 240, 202, 0.34);
+  background: rgba(239, 215, 165, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 240, 202, 0.18);
 }
 
 .intro-enter:disabled {
-  border-color: rgba(242, 224, 181, 0.4);
+  border-color: rgba(242, 224, 181, 0.28);
   opacity: 0.58;
   cursor: wait;
 }
@@ -417,31 +415,31 @@ body.is-intro-active {
   80%,
   85%,
   100% {
-    opacity: 0.14;
+    opacity: 0.22;
   }
 
   18% {
-    opacity: 0.48;
+    opacity: 0.62;
   }
 
   19% {
-    opacity: 0.08;
+    opacity: 0.1;
   }
 
   21% {
-    opacity: 0.36;
+    opacity: 0.48;
   }
 
   54% {
-    opacity: 0.44;
+    opacity: 0.58;
   }
 
   82% {
-    opacity: 0.52;
+    opacity: 0.68;
   }
 
   83% {
-    opacity: 0.07;
+    opacity: 0.09;
   }
 }
 
@@ -449,28 +447,35 @@ body.is-intro-active {
   .game-intro {
     --intro-frame-origin-y: 38.3%;
     --intro-frame-scale: 1.24;
+    --intro-frame-shift-y: 8.5svh;
   }
 
   .intro-background {
     object-position: 50% 50%;
   }
 
+  .intro-left-light,
+  .intro-right-light {
+    mix-blend-mode: normal;
+    will-change: opacity;
+  }
+
   .intro-left-light {
     background: radial-gradient(
       ellipse 54% 46% at -24% 52%,
-      rgba(255, 177, 84, 0.48) 0%,
-      rgba(238, 126, 43, 0.24) 34%,
-      rgba(191, 76, 22, 0.09) 54%,
+      rgba(255, 177, 84, 0.78) 0%,
+      rgba(238, 126, 43, 0.38) 34%,
+      rgba(191, 76, 22, 0.13) 54%,
       transparent 72%
     );
   }
 
   .intro-right-light {
     background: radial-gradient(
-      ellipse 50% 44% at 124% 54%,
-      rgba(224, 111, 43, 0.3) 0%,
-      rgba(181, 67, 27, 0.14) 36%,
-      rgba(115, 35, 18, 0.04) 56%,
+      ellipse 50% 44% at 118% 54%,
+      rgba(224, 111, 43, 0.86) 0%,
+      rgba(181, 67, 27, 0.44) 36%,
+      rgba(115, 35, 18, 0.13) 56%,
       transparent 74%
     );
   }
@@ -528,7 +533,7 @@ body.is-intro-active {
   }
 
   .intro-right-light {
-    opacity: 0.14;
+    opacity: 0.22;
   }
 }
 
