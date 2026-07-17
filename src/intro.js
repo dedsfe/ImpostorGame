@@ -8,7 +8,7 @@ const RETURN_FINISH_DELAY = 2420;
 const REDUCED_DELAY = 90;
 
 export function createIntroController({ elements }) {
-  const { root, enter } = elements.intro;
+  const { root, enter, remote } = elements.intro;
   const { shell } = elements;
   const pendingTimers = new Set();
   let isAnimating = false;
@@ -91,6 +91,7 @@ export function createIntroController({ elements }) {
     enter.disabled = true;
     root.classList.remove("is-leaving", "is-returning", "is-tuning");
     root.classList.add("is-zooming");
+    remote.classList.add("is-visible");
 
     if (prefersReducedMotion()) {
       root.classList.add("is-tuning");
@@ -118,6 +119,7 @@ export function createIntroController({ elements }) {
     clearTimers();
     isAnimating = true;
     enter.disabled = true;
+    remote.classList.remove("is-visible");
     setAppInteractive(false);
 
     root.classList.add("is-resetting", "is-returning", "is-zooming", "is-tuning");
@@ -158,6 +160,7 @@ export function createIntroController({ elements }) {
       "is-zooming",
     );
     enter.disabled = true;
+    remote.classList.remove("is-visible");
     isAnimating = true;
     setAppInteractive(false);
     root.scrollTo(0, 0);

@@ -5,6 +5,7 @@ export function getElements() {
       root: document.getElementById("game-intro"),
       device: document.getElementById("intro-device"),
       enter: document.getElementById("intro-enter"),
+      remote: document.getElementById("game-remote"),
     },
     navHome: document.getElementById("go-home-nav"),
     heroEyebrow: document.getElementById("hero-eyebrow"),

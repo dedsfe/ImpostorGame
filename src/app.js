@@ -8,8 +8,8 @@ import {
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js?v=45";
-import { getElements } from "./views/elements.js?v=50";
-import { createIntroController } from "./intro.js?v=5";
+import { getElements } from "./views/elements.js?v=51";
+import { createIntroController } from "./intro.js?v=6";
 import { createCityController } from "./games/city.js?v=45";
 import { createImpostorController } from "./games/impostor.js?v=48";
 import { createMimicaController } from "./games/mimica.js?v=45";
@@ -125,6 +125,7 @@ async function exitFullscreenIfNeeded() {
 function setActiveScreen(screen) {
   const previousScreen = state.currentScreen;
   state.currentScreen = screen;
+  document.body.classList.toggle("is-hub-screen", screen === "hub");
   elements.navHome.setAttribute(
     "aria-label",
     screen === "hub" ? "Voltar para a sala" : "Voltar para a home",
