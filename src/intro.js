@@ -1,8 +1,5 @@
 import { prefersReducedMotion } from "./motion.js";
 
-const ENTER_STATIC_DELAY = 1620;
-const ENTER_FINISH_DELAY = 2050;
-const FADE_DELAY = 230;
 const FRAME_FINISH_DELAY = 1900;
 const RETURN_FINISH_DELAY = 2420;
 const REDUCED_DELAY = 90;
@@ -40,10 +37,6 @@ export function createIntroController({ elements }) {
     shell.setAttribute("aria-hidden", "true");
   }
 
-  function focusHub() {
-    elements.hub.grid.querySelector("button")?.focus();
-  }
-
   function finishFraming() {
     root.classList.remove("is-framing");
     enter.disabled = false;
@@ -68,39 +61,12 @@ export function createIntroController({ elements }) {
     });
   }
 
-  function finishEntering() {
-    root.classList.add("is-leaving");
-    setAppInteractive(true);
-
-    schedule(() => {
-      root.hidden = true;
-      root.classList.remove("is-leaving", "is-tuning", "is-returning");
-      enter.disabled = false;
-      isAnimating = false;
-      focusHub();
-    }, FADE_DELAY);
-  }
-
-  function enterApp() {
-    if (isAnimating || root.hidden) {
+  function revealRemote() {
+    if (isAnimating || root.hidden || remote.classList.contains("is-visible")) {
       return false;
     }
 
-    clearTimers();
-    isAnimating = true;
-    enter.disabled = true;
-    root.classList.remove("is-leaving", "is-returning", "is-tuning");
-    root.classList.add("is-zooming");
     remote.classList.add("is-visible");
-
-    if (prefersReducedMotion()) {
-      root.classList.add("is-tuning");
-      schedule(finishEntering, REDUCED_DELAY);
-      return true;
-    }
-
-    schedule(() => root.classList.add("is-tuning"), ENTER_STATIC_DELAY);
-    schedule(finishEntering, ENTER_FINISH_DELAY);
     return true;
   }
 
@@ -143,7 +109,7 @@ export function createIntroController({ elements }) {
   }
 
   function bind() {
-    enter.addEventListener("click", enterApp);
+    enter.addEventListener("click", revealRemote);
   }
 
   function initialize() {
@@ -170,7 +136,7 @@ export function createIntroController({ elements }) {
 
   return {
     bind,
-    enterApp,
+    enterApp: revealRemote,
     initialize,
     isVisible: () => !root.hidden,
     returnToIntro,
