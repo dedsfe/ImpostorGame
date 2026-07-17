@@ -52,6 +52,7 @@ body.is-intro-active {
   z-index: 33;
   width: var(--remote-width);
   aspect-ratio: 501 / 1313;
+  container-type: inline-size;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -81,6 +82,122 @@ body.is-hub-screen .game-remote.is-visible {
   height: auto;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+/* Primeiro hotspot do controle: a area acompanha a tecla esquerda da foto.
+   O triangulo fica contido nela; o brilho e curto e quente, como reflexo do CRT. */
+.remote-direction {
+  position: absolute;
+  z-index: 1;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  color: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.remote-direction--left {
+  top: 38.75%;
+  right: 60.5%;
+  width: 18%;
+  height: 7.7%;
+  background: transparent;
+  clip-path: polygon(100% 4%, 100% 96%, 0 50%);
+  transform: translateY(-50%);
+}
+
+.remote-direction--left::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: min(100%, 18cqw);
+  height: min(100%, 20.2cqw);
+  background: rgba(255, 235, 191, 0.05);
+  clip-path: polygon(100% 4%, 100% 96%, 0 50%);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.game-remote.is-visible .remote-direction--left::before {
+  animation: remote-left-hint 3.6s steps(1, end) infinite;
+}
+
+.game-remote.is-visible .remote-direction--left:hover,
+.game-remote.is-visible .remote-direction--left:focus-visible {
+  outline: none;
+}
+
+.game-remote.is-visible .remote-direction--left:hover::before,
+.game-remote.is-visible .remote-direction--left:focus-visible::before {
+  animation: none;
+  background: rgba(255, 240, 207, 0.14);
+  filter:
+    blur(0.35px)
+    drop-shadow(0 0 2px rgba(255, 252, 236, 0.78))
+    drop-shadow(0 0 4px rgba(227, 167, 78, 0.5));
+}
+
+.game-remote.is-visible .remote-direction--left:active::before {
+  animation: none;
+  background: rgba(255, 244, 218, 0.24);
+  filter:
+    blur(0.45px)
+    drop-shadow(0 0 2px rgba(255, 255, 247, 0.92))
+    drop-shadow(0 0 5px rgba(230, 169, 76, 0.62));
+}
+
+.game-remote.is-visible .remote-direction--left.is-confirmed::before {
+  animation: remote-left-confirm 680ms ease-out both;
+}
+
+@keyframes remote-left-hint {
+  0%,
+  14%,
+  25%,
+  100% {
+    background: rgba(255, 235, 191, 0.05);
+    filter: blur(0.15px) drop-shadow(0 0 0 rgba(227, 167, 78, 0));
+  }
+
+  17% {
+    background: rgba(255, 242, 213, 0.16);
+    filter:
+      blur(0.4px)
+      drop-shadow(0 0 1px rgba(255, 253, 240, 0.58))
+      drop-shadow(0 0 3px rgba(227, 167, 78, 0.42));
+  }
+
+  20% {
+    background: rgba(255, 235, 191, 0.06);
+    filter: blur(0.2px) drop-shadow(0 0 1px rgba(227, 167, 78, 0.16));
+  }
+
+  23% {
+    background: rgba(255, 244, 220, 0.12);
+    filter: blur(0.35px) drop-shadow(0 0 2px rgba(237, 181, 94, 0.34));
+  }
+}
+
+@keyframes remote-left-confirm {
+  0%,
+  100% {
+    background: rgba(255, 235, 191, 0.05);
+    filter: blur(0.15px) drop-shadow(0 0 0 rgba(227, 167, 78, 0));
+  }
+
+  38% {
+    background: rgba(255, 246, 224, 0.26);
+    filter:
+      blur(0.45px)
+      drop-shadow(0 0 2px rgba(255, 255, 247, 0.96))
+      drop-shadow(0 0 5px rgba(232, 174, 85, 0.66));
+  }
 }
 
 .intro-camera {
@@ -528,6 +645,14 @@ body.is-hub-screen .game-remote.is-visible {
 
   .game-remote {
     transition-duration: 80ms;
+  }
+
+  .game-remote.is-visible .remote-direction--left::before {
+    animation: none;
+    background: rgba(255, 240, 207, 0.11);
+    filter:
+      blur(0.25px)
+      drop-shadow(0 0 2px rgba(227, 167, 78, 0.34));
   }
 
   .intro-camera {

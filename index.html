@@ -49,7 +49,7 @@
         });
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css?v=78" />
+    <link rel="stylesheet" href="./styles.css?v=79" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -449,7 +449,7 @@
       <div class="intro-static" aria-hidden="true"></div>
     </section>
 
-    <div id="game-remote" class="game-remote" aria-hidden="true">
+    <div id="game-remote" class="game-remote" aria-hidden="true" inert>
       <img
         src="./assets/intro/retro-remote.png"
         width="501"
@@ -457,6 +457,12 @@
         alt=""
         draggable="false"
       />
+      <button
+        id="remote-left"
+        class="remote-direction remote-direction--left"
+        type="button"
+        aria-label="Jogo anterior"
+      ></button>
     </div>
 
     <div class="ambient ambient-left" aria-hidden="true"></div>
@@ -1487,6 +1493,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=57"></script>
+    <script type="module" src="./script.js?v=58"></script>
   </body>
 </html>

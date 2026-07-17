@@ -5,10 +5,11 @@ const RETURN_FINISH_DELAY = 2420;
 const REDUCED_DELAY = 90;
 
 export function createIntroController({ elements }) {
-  const { root, enter, remote } = elements.intro;
+  const { root, enter, remote, remoteLeft } = elements.intro;
   const { shell } = elements;
   const pendingTimers = new Set();
   let isAnimating = false;
+  let leftFeedbackTimer = 0;
 
   function schedule(callback, delay) {
     const timer = window.setTimeout(() => {
@@ -23,6 +24,18 @@ export function createIntroController({ elements }) {
   function clearTimers() {
     pendingTimers.forEach((timer) => window.clearTimeout(timer));
     pendingTimers.clear();
+    window.clearTimeout(leftFeedbackTimer);
+    leftFeedbackTimer = 0;
+  }
+
+  function setRemoteVisible(isVisible) {
+    remote.classList.toggle("is-visible", isVisible);
+    remote.toggleAttribute("inert", !isVisible);
+    remote.setAttribute("aria-hidden", String(!isVisible));
+
+    if (!isVisible) {
+      remoteLeft.classList.remove("is-confirmed");
+    }
   }
 
   function setAppInteractive(isInteractive) {
@@ -66,8 +79,23 @@ export function createIntroController({ elements }) {
       return false;
     }
 
-    remote.classList.add("is-visible");
+    setRemoteVisible(true);
     return true;
+  }
+
+  function previewPreviousGame() {
+    window.clearTimeout(leftFeedbackTimer);
+    remoteLeft.classList.remove("is-confirmed");
+    void remoteLeft.offsetWidth;
+    remoteLeft.classList.add("is-confirmed");
+    root.dataset.remoteDirection = "left";
+    root.dispatchEvent(
+      new CustomEvent("remote:navigate", { detail: { direction: "left" } }),
+    );
+    leftFeedbackTimer = window.setTimeout(() => {
+      remoteLeft.classList.remove("is-confirmed");
+      leftFeedbackTimer = 0;
+    }, 700);
   }
 
   function finishReturning() {
@@ -85,7 +113,7 @@ export function createIntroController({ elements }) {
     clearTimers();
     isAnimating = true;
     enter.disabled = true;
-    remote.classList.remove("is-visible");
+    setRemoteVisible(false);
     setAppInteractive(false);
 
     root.classList.add("is-resetting", "is-returning", "is-zooming", "is-tuning");
@@ -110,6 +138,7 @@ export function createIntroController({ elements }) {
 
   function bind() {
     enter.addEventListener("click", revealRemote);
+    remoteLeft.addEventListener("click", previewPreviousGame);
   }
 
   function initialize() {
@@ -126,7 +155,8 @@ export function createIntroController({ elements }) {
       "is-zooming",
     );
     enter.disabled = true;
-    remote.classList.remove("is-visible");
+    setRemoteVisible(false);
+    delete root.dataset.remoteDirection;
     isAnimating = true;
     setAppInteractive(false);
     root.scrollTo(0, 0);
