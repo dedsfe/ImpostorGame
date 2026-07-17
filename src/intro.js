@@ -3,13 +3,14 @@ import { prefersReducedMotion } from "./motion.js";
 const FRAME_FINISH_DELAY = 1900;
 const RETURN_FINISH_DELAY = 2420;
 const REDUCED_DELAY = 90;
+const REMOTE_CORNER_EXIT_DELAY = 460;
+const REMOTE_ENTRANCE_FINISH_DELAY = 840;
 
 export function createIntroController({ elements }) {
-  const { root, enter, remote, remoteLeft } = elements.intro;
+  const { root, enter, remote, remoteDirections } = elements.intro;
   const { shell } = elements;
   const pendingTimers = new Set();
   let isAnimating = false;
-  let leftFeedbackTimer = 0;
 
   function schedule(callback, delay) {
     const timer = window.setTimeout(() => {
@@ -24,18 +25,41 @@ export function createIntroController({ elements }) {
   function clearTimers() {
     pendingTimers.forEach((timer) => window.clearTimeout(timer));
     pendingTimers.clear();
-    window.clearTimeout(leftFeedbackTimer);
-    leftFeedbackTimer = 0;
   }
 
   function setRemoteVisible(isVisible) {
     remote.classList.toggle("is-visible", isVisible);
     remote.toggleAttribute("inert", !isVisible);
     remote.setAttribute("aria-hidden", String(!isVisible));
+  }
 
-    if (!isVisible) {
-      remoteLeft.classList.remove("is-confirmed");
+  function setRemoteCorner(isCorner) {
+    remote.classList.toggle("is-corner", isCorner);
+    remote.classList.remove("is-corner-leaving", "is-repositioning");
+
+    if (isCorner) {
+      setRemoteVisible(false);
     }
+  }
+
+  function finishRemoteEntrance() {
+    isAnimating = false;
+  }
+
+  function showRemoteFromBottom() {
+    remote.classList.add("is-repositioning");
+    remote.classList.remove("is-corner", "is-corner-leaving");
+    setRemoteVisible(false);
+    void remote.offsetWidth;
+    remote.classList.remove("is-repositioning");
+
+    window.requestAnimationFrame(() => {
+      setRemoteVisible(true);
+      schedule(
+        finishRemoteEntrance,
+        prefersReducedMotion() ? REDUCED_DELAY : REMOTE_ENTRANCE_FINISH_DELAY,
+      );
+    });
   }
 
   function setAppInteractive(isInteractive) {
@@ -79,27 +103,22 @@ export function createIntroController({ elements }) {
       return false;
     }
 
-    setRemoteVisible(true);
-    return true;
-  }
+    isAnimating = true;
+    enter.disabled = true;
 
-  function previewPreviousGame() {
-    window.clearTimeout(leftFeedbackTimer);
-    remoteLeft.classList.remove("is-confirmed");
-    void remoteLeft.offsetWidth;
-    remoteLeft.classList.add("is-confirmed");
-    root.dataset.remoteDirection = "left";
-    root.dispatchEvent(
-      new CustomEvent("remote:navigate", { detail: { direction: "left" } }),
-    );
-    leftFeedbackTimer = window.setTimeout(() => {
-      remoteLeft.classList.remove("is-confirmed");
-      leftFeedbackTimer = 0;
-    }, 700);
+    if (prefersReducedMotion()) {
+      showRemoteFromBottom();
+      return true;
+    }
+
+    remote.classList.add("is-corner-leaving");
+    schedule(showRemoteFromBottom, REMOTE_CORNER_EXIT_DELAY);
+    return true;
   }
 
   function finishReturning() {
     root.classList.remove("is-returning");
+    setRemoteCorner(true);
     enter.disabled = false;
     isAnimating = false;
     enter.focus({ preventScroll: true });
@@ -113,6 +132,7 @@ export function createIntroController({ elements }) {
     clearTimers();
     isAnimating = true;
     enter.disabled = true;
+    remote.classList.remove("is-corner", "is-corner-leaving", "is-repositioning");
     setRemoteVisible(false);
     setAppInteractive(false);
 
@@ -138,7 +158,6 @@ export function createIntroController({ elements }) {
 
   function bind() {
     enter.addEventListener("click", revealRemote);
-    remoteLeft.addEventListener("click", previewPreviousGame);
   }
 
   function initialize() {
@@ -156,6 +175,10 @@ export function createIntroController({ elements }) {
     );
     enter.disabled = true;
     setRemoteVisible(false);
+    setRemoteCorner(true);
+    remoteDirections.forEach((direction) => {
+      direction.disabled = true;
+    });
     delete root.dataset.remoteDirection;
     isAnimating = true;
     setAppInteractive(false);
