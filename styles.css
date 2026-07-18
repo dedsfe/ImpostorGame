@@ -107,8 +107,7 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 /* As quatro direcoes acompanham as teclas da foto. Os hotspots continuam
-   retangulares para toque, mas o estado indisponivel usa uma mancha difusa:
-   ela escurece e desfoca os pixels da foto sem redesenhar a seta. */
+   retangulares para toque e sem qualquer desenho proprio. */
 .remote-direction {
   position: absolute;
   z-index: 1;
@@ -126,72 +125,17 @@ body.is-hub-screen .game-remote.is-visible {
   overflow: visible;
 }
 
-/* Com todas as direcoes bloqueadas, uma unica penumbra envolve o direcional.
-   O centro fica mais limpo e nao surgem quatro manchas ou quatro setas falsas. */
-.game-remote:has(.remote-direction:disabled):not(
-    :has(.remote-direction:not(:disabled))
-  )::after {
+/* Cada tecla indisponivel recebe somente um pequeno vidro escuro e desfocado.
+   A borda tambem e borrada para a camada desaparecer dentro da propria tecla. */
+.remote-direction:disabled::before {
   content: "";
   position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 38.8%;
-  width: 68%;
-  height: 27%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
+  inset: 9% 5%;
+  border-radius: 48%;
   background: rgba(4, 3, 2, 0.06);
-  -webkit-backdrop-filter: brightness(0.5) saturate(0.68) blur(6px);
-  backdrop-filter: brightness(0.5) saturate(0.68) blur(6px);
-  filter: blur(6px);
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    transparent 0 10%,
-    rgba(0, 0, 0, 0.08) 18%,
-    rgba(0, 0, 0, 0.56) 34%,
-    rgba(0, 0, 0, 0.74) 46%,
-    rgba(0, 0, 0, 0.38) 70%,
-    rgba(0, 0, 0, 0.1) 86%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    ellipse at center,
-    transparent 0 10%,
-    rgba(0, 0, 0, 0.08) 18%,
-    rgba(0, 0, 0, 0.56) 34%,
-    rgba(0, 0, 0, 0.74) 46%,
-    rgba(0, 0, 0, 0.38) 70%,
-    rgba(0, 0, 0, 0.1) 86%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-/* Quando apenas parte do direcional estiver bloqueada, a mesma queda suave
-   acompanha somente as teclas que continuarem indisponiveis. */
-.game-remote:has(.remote-direction:not(:disabled))
-  .remote-direction:disabled::before {
-  content: "";
-  position: absolute;
-  inset: -35% -38%;
-  border-radius: 50%;
-  background: rgba(4, 3, 2, 0.12);
-  -webkit-backdrop-filter: brightness(0.42) saturate(0.62) blur(5px);
-  backdrop-filter: brightness(0.42) saturate(0.62) blur(5px);
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    #000 0 8%,
-    rgba(0, 0, 0, 0.72) 34%,
-    rgba(0, 0, 0, 0.34) 68%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    ellipse at center,
-    #000 0 8%,
-    rgba(0, 0, 0, 0.72) 34%,
-    rgba(0, 0, 0, 0.34) 68%,
-    transparent 100%
-  );
+  -webkit-backdrop-filter: brightness(0.7) saturate(0.82) blur(2.5px);
+  backdrop-filter: brightness(0.7) saturate(0.82) blur(2.5px);
+  filter: blur(2px);
   pointer-events: none;
 }
 
