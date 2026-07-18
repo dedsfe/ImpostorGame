@@ -6,6 +6,7 @@ export function getElements() {
       device: document.getElementById("intro-device"),
       enter: document.getElementById("intro-enter"),
       remote: document.getElementById("game-remote"),
+      remoteCornerHit: document.getElementById("remote-corner-hit"),
       remoteConfirm: document.getElementById("remote-ok"),
       remoteDirections: Array.from(
         document.querySelectorAll("[data-remote-direction]"),

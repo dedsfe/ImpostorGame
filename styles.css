@@ -68,12 +68,40 @@ body.is-intro-active {
   left: auto;
   right: max(0.75rem, env(safe-area-inset-right));
   bottom: max(0.75rem, env(safe-area-inset-bottom));
-  opacity: 0.94;
+  opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transform: translate3d(0, 0, 0) rotate(-2deg);
   transition:
     transform 440ms cubic-bezier(0.4, 0, 0.2, 1),
     opacity 180ms ease 240ms;
+}
+
+.game-remote.is-corner.is-corner-shaking {
+  animation: remote-corner-shake 320ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes remote-corner-shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+
+  18% {
+    transform: translate3d(-2px, 1px, 0) rotate(-4deg);
+  }
+
+  38% {
+    transform: translate3d(3px, -1px, 0) rotate(1deg);
+  }
+
+  58% {
+    transform: translate3d(-2px, -1px, 0) rotate(-3deg);
+  }
+
+  78% {
+    transform: translate3d(2px, 1px, 0) rotate(0deg);
+  }
 }
 
 .game-remote.is-corner.is-corner-leaving {
@@ -121,6 +149,32 @@ body.is-hub-screen .game-remote.is-visible {
   height: auto;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+.remote-corner-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.game-remote.is-corner .remote-corner-hit {
+  display: block;
+}
+
+.remote-corner-hit:focus-visible {
+  outline: 2px solid rgba(255, 238, 202, 0.82);
+  outline-offset: 3px;
 }
 
 /* As quatro direcoes acompanham as teclas da foto. Os hotspots continuam
@@ -793,7 +847,41 @@ body.is-hub-screen .game-remote.is-visible {
   }
 
   .game-remote {
-    --remote-width: clamp(11rem, min(68vw, 33vh), 18rem);
+    --remote-width: clamp(10rem, min(60vw, 29vh), 16rem);
+  }
+
+  .game-intro.is-game-preview .intro-screen-content {
+    padding: 8% 8% 10%;
+    transform: translateY(-1.5%);
+  }
+
+  .game-intro.is-game-preview:not([data-intro-game="impostor"]) .intro-title {
+    max-width: 92%;
+  }
+
+  .game-intro.is-game-preview:not([data-intro-game="impostor"])
+    .intro-title-main {
+    font-size: clamp(1.9rem, 8.4cqw, 2.45rem);
+    line-height: 0.88;
+  }
+
+  .game-intro.is-game-preview[data-intro-game="police"] .intro-title-main,
+  .game-intro.is-game-preview[data-intro-game="city"] .intro-title-main {
+    font-size: clamp(1.8rem, 7.8cqw, 2.25rem);
+  }
+
+  .game-intro.is-game-preview .intro-game-subtitle {
+    max-width: 88%;
+    margin-top: clamp(0.3rem, 1cqw, 0.55rem);
+    line-height: 1.22;
+  }
+
+  .game-intro.is-game-preview .intro-game-menu {
+    margin-top: clamp(0.35rem, 1.1cqw, 0.65rem);
+  }
+
+  .game-intro.is-game-preview .intro-game-menu-title {
+    margin-bottom: 0.2rem;
   }
 
 }
@@ -802,11 +890,11 @@ body.is-hub-screen .game-remote.is-visible {
    do vidro sem alterar o tamanho ou a entrada do controle. */
 @media (orientation: portrait) and (max-width: 340px) {
   .game-intro.is-game-preview .intro-screen-content {
-    transform: translateY(-2%);
+    transform: none;
   }
 
-  .intro-title-main {
-    font-size: 2.05rem;
+  .game-intro.is-game-preview .intro-title-main {
+    font-size: 1.8rem;
   }
 
   .game-intro.is-game-preview .intro-title-kicker {
@@ -832,6 +920,10 @@ body.is-hub-screen .game-remote.is-visible {
 
   .game-remote {
     transition-duration: 80ms;
+  }
+
+  .game-remote.is-corner.is-corner-shaking {
+    animation: none;
   }
 
   .intro-camera {

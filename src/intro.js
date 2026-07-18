@@ -12,7 +12,14 @@ export function createIntroController({
   onOpenSettings,
   onStartGame,
 }) {
-  const { root, enter, remote, remoteConfirm, remoteDirections } = elements.intro;
+  const {
+    root,
+    enter,
+    remote,
+    remoteConfirm,
+    remoteCornerHit,
+    remoteDirections,
+  } = elements.intro;
   const { shell } = elements;
   const titleKicker = root.querySelector(".intro-title-kicker");
   const titleMain = root.querySelector(".intro-title-main");
@@ -190,11 +197,29 @@ export function createIntroController({
 
   function setRemoteCorner(isCorner) {
     remote.classList.toggle("is-corner", isCorner);
-    remote.classList.remove("is-corner-leaving", "is-repositioning");
+    remote.classList.remove(
+      "is-corner-leaving",
+      "is-corner-shaking",
+      "is-repositioning",
+    );
+    remoteCornerHit.disabled = !isCorner;
 
     if (isCorner) {
       setRemoteVisible(false);
+      remote.inert = false;
+      remote.setAttribute("aria-hidden", "false");
     }
+  }
+
+  function shakeCornerRemote() {
+    if (isAnimating || !remote.classList.contains("is-corner")) {
+      return false;
+    }
+
+    remote.classList.remove("is-corner-shaking");
+    void remote.offsetWidth;
+    remote.classList.add("is-corner-shaking");
+    return true;
   }
 
   function finishRemoteEntrance() {
@@ -390,6 +415,12 @@ export function createIntroController({
 
   function bind() {
     enter.addEventListener("click", revealRemote);
+    remoteCornerHit.addEventListener("click", shakeCornerRemote);
+    remote.addEventListener("animationend", (event) => {
+      if (event.animationName === "remote-corner-shake") {
+        remote.classList.remove("is-corner-shaking");
+      }
+    });
     startMenuItem.addEventListener("click", startSelectedGame);
     settingsMenuItem.addEventListener("click", openSettings);
     remoteConfirm.addEventListener("click", confirmMenuSelection);
