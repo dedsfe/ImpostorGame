@@ -938,23 +938,40 @@ body.is-hub-screen .game-remote.is-visible {
   background: transparent;
   box-shadow: none;
   display: grid;
-  grid-template-rows: auto auto auto minmax(0.8rem, auto) auto;
-  align-content: stretch;
-  gap: clamp(0.42rem, 1.6cqh, 0.7rem);
+  grid-template-rows: repeat(5, auto);
+  align-content: start;
+  gap: 0;
   color: #3c2819;
 }
 
 .clipboard-form-slot .party-summary {
   margin-inline: 3.2%;
-  padding: 0 0 clamp(0.35rem, 1.4cqh, 0.55rem);
+  padding: 0 0 clamp(0.45rem, 1.7cqh, 0.65rem);
   border: 0;
   border-bottom: 2px solid rgba(64, 40, 23, 0.3);
   border-radius: 0;
   background: transparent;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.18rem 0.5rem;
+  align-items: center;
+  gap: clamp(0.16rem, 0.7cqh, 0.28rem) 0.5rem;
   transform: translateX(0.5%);
+}
+
+.clipboard-group-label {
+  display: none;
+}
+
+.clipboard-form-slot .clipboard-group-label {
+  display: block;
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(56, 34, 20, 0.8);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.65rem, 1.9cqh, 0.77rem);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .clipboard-form-slot .party-summary-count {
@@ -965,9 +982,13 @@ body.is-hub-screen .game-remote.is-visible {
 
 .clipboard-form-slot .party-summary-names {
   grid-column: 1 / -1;
-  min-height: 1em;
+  min-height: 0;
   color: rgba(62, 39, 23, 0.66);
   font-size: clamp(0.68rem, 2cqh, 0.82rem);
+}
+
+.clipboard-form-slot .party-summary-names:empty {
+  display: none;
 }
 
 .clipboard-form-slot .party-summary-edit {
@@ -989,6 +1010,7 @@ body.is-hub-screen .game-remote.is-visible {
 
 .clipboard-form-slot .field-group {
   gap: clamp(0.2rem, 0.9cqh, 0.35rem);
+  margin-top: clamp(0.65rem, 2.4cqh, 0.95rem);
   margin-inline: 1%;
 }
 
@@ -1022,9 +1044,11 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 .clipboard-form-slot .impostor-deck-status {
+  margin-top: clamp(0.22rem, 0.8cqh, 0.34rem);
   margin-inline: 1%;
-  padding: 0;
+  padding: 0 0 clamp(0.5rem, 1.9cqh, 0.72rem);
   border: 0;
+  border-bottom: 2px solid rgba(64, 40, 23, 0.3);
   border-radius: 0;
   background: transparent;
   display: grid;
@@ -1047,19 +1071,23 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 .clipboard-form-slot .feedback {
-  margin-inline: 0;
-  min-height: 0.9rem;
+  margin: clamp(0.3rem, 1.1cqh, 0.45rem) 0 0;
+  min-height: 0;
   color: #7b281e;
   font-size: clamp(0.64rem, 1.9cqh, 0.78rem);
   line-height: 1.15;
   transform: translateX(-0.8%);
 }
 
+.clipboard-form-slot .feedback:empty {
+  display: none;
+}
+
 .clipboard-form-slot .action-row {
-  width: 100%;
-  align-self: end;
+  width: 96%;
+  align-self: start;
   justify-self: center;
-  margin: 0;
+  margin: clamp(0.8rem, 3.2cqh, 1.25rem) 0 0;
   transform: translateX(-1%) rotate(0.8deg);
   transform-origin: center;
 }
@@ -1100,7 +1128,7 @@ body.is-hub-screen .game-remote.is-visible {
   }
 
   .clipboard-form-slot .setup-form.is-on-clipboard {
-    gap: 0.25rem;
+    gap: 0;
   }
 }
 
