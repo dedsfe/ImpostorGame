@@ -8,7 +8,7 @@ import {
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js?v=45";
-import { getElements } from "./views/elements.js?v=55";
+import { getElements } from "./views/elements.js?v=56";
 import { createIntroController } from "./intro.js?v=9";
 import { createClipboardScene } from "./clipboard-scene.js?v=8";
 import { createCityController } from "./games/city.js?v=45";
@@ -22,7 +22,7 @@ import {
   createPartyFlow,
   formatPartyNames,
   shouldConfirmPartyEdit,
-} from "./party-flow.js?v=47";
+} from "./party-flow.js?v=48";
 import { createRoleFlow } from "./role-flow.js?v=48";
 import { animateElement } from "./motion.js";
 import { track } from "./analytics.js?v=1";
@@ -32,7 +32,7 @@ document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v48";
+const APP_VERSION = "v49";
 
 const elements = getElements();
 let gameEntryCoordinator = null;
@@ -297,6 +297,18 @@ let clipboardSceneController = null;
 let returnToClipboardAfterParty = false;
 const impostorFormHomeMarker = document.createComment("impostor-form-home");
 elements.impostor.form.before(impostorFormHomeMarker);
+const partyPanelHomeMarker = document.createComment("party-panel-home");
+elements.party.panel.before(partyPanelHomeMarker);
+
+function setClipboardStep(step) {
+  const isPlayersStep = step === "players";
+  elements.clipboardScene.interfaceLayer.dataset.step = step;
+  elements.clipboardScene.stepNumber.textContent = isPlayersStep ? "01" : "02";
+  elements.clipboardScene.stepDescription.textContent = isPlayersStep
+    ? "Cadastre os jogadores"
+    : "Escolha o tema da rodada";
+  elements.clipboardScene.themeBack.hidden = isPlayersStep;
+}
 
 function mountImpostorFormOnClipboard() {
   elements.clipboardScene.formSlot.append(elements.impostor.form);
@@ -306,6 +318,76 @@ function mountImpostorFormOnClipboard() {
 function restoreImpostorFormHome() {
   impostorFormHomeMarker.after(elements.impostor.form);
   elements.impostor.form.classList.remove("is-on-clipboard");
+  elements.clipboardScene.themeBack.hidden = true;
+}
+
+function mountPartyPanelOnClipboard() {
+  elements.clipboardScene.formSlot.append(elements.party.panel);
+  elements.party.panel.classList.add("is-on-clipboard");
+  elements.party.cancel.hidden = true;
+  elements.party.useNumbers.hidden = true;
+}
+
+function restorePartyPanelHome() {
+  partyPanelHomeMarker.after(elements.party.panel);
+  elements.party.panel.classList.remove("is-on-clipboard");
+  elements.party.cancel.hidden = false;
+  elements.party.useNumbers.hidden = false;
+}
+
+function restoreClipboardContentHome() {
+  restoreImpostorFormHome();
+  restorePartyPanelHome();
+  delete elements.clipboardScene.interfaceLayer.dataset.step;
+}
+
+function showClipboardThemeStep({ openScene = false } = {}) {
+  restorePartyPanelHome();
+  mountImpostorFormOnClipboard();
+  setClipboardStep("theme");
+
+  if (openScene) {
+    clipboardSceneController.open();
+  }
+
+  void animateElement(
+    elements.impostor.form,
+    [{ transform: "translateX(5px)" }, { transform: "translateX(0)" }],
+    { duration: 180 },
+  );
+  if (!openScene) {
+    queueMicrotask(() => elements.impostor.wordCategory.focus());
+  }
+  return true;
+}
+
+function showClipboardPlayersStep({ openScene = false } = {}) {
+  const controller = gameControllersById.get("impostor");
+  if (!controller) {
+    return false;
+  }
+
+  restoreImpostorFormHome();
+  mountPartyPanelOnClipboard();
+  setClipboardStep("players");
+  returnToClipboardAfterParty = true;
+  gameEntryCoordinator.editGame({
+    continueLabel: "Continuar para o tema",
+    embedded: true,
+    minimumPlayers: controller.minimumPlayers,
+    screen: controller.setupScreen,
+  });
+
+  if (openScene) {
+    clipboardSceneController.open();
+  }
+
+  void animateElement(
+    elements.party.panel,
+    [{ transform: "translateX(-5px)" }, { transform: "translateX(0)" }],
+    { duration: 180 },
+  );
+  return true;
 }
 
 function reopenClipboardAfterParty(didOpen) {
@@ -314,8 +396,7 @@ function reopenClipboardAfterParty(didOpen) {
   }
 
   returnToClipboardAfterParty = false;
-  mountImpostorFormOnClipboard();
-  clipboardSceneController.open();
+  showClipboardThemeStep({ openScene: elements.clipboardScene.root.hidden });
   return didOpen;
 }
 
@@ -360,21 +441,18 @@ const introController = createIntroController({
       return openGameFromHubScreen(game.openScreen);
     }
 
-    const didOpen = openGameDirect(game.openScreen);
-
-    if (didOpen) {
-      mountImpostorFormOnClipboard();
-      clipboardSceneController.open();
-    }
-
-    return didOpen;
+    return showClipboardPlayersStep({ openScene: true });
   },
 });
 clipboardSceneController = createClipboardScene({
   ...elements.clipboardScene,
   backgroundContent: elements.shell,
-  onClose: () => introController.returnToIntro(),
-  onHide: restoreImpostorFormHome,
+  onClose: () => {
+    returnToClipboardAfterParty = false;
+    gameEntryCoordinator.cancel();
+    introController.returnToIntro();
+  },
+  onHide: restoreClipboardContentHome,
 });
 
 elements.impostor.form.addEventListener("impostorroundstarted", () => {
@@ -389,6 +467,10 @@ elements.impostor.form.querySelector("[data-party-edit]")?.addEventListener("cli
 
   returnToClipboardAfterParty = true;
   clipboardSceneController.dismiss();
+});
+
+elements.clipboardScene.themeBack.addEventListener("click", () => {
+  showClipboardPlayersStep();
 });
 
 gameControllers.forEach((controller) => {

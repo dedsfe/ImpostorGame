@@ -4631,3 +4631,236 @@ body:not(.is-whoami-reveal):not(.is-mimica-play) {
   background: #ead09b;
   color: #342014;
 }
+
+/* Fluxo da prancheta: jogadores primeiro, tema depois. */
+#clipboard-interface[data-step="players"] .clipboard-form-slot {
+  min-height: 0;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #3c2819;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.45rem, 1.7cqh, 0.7rem);
+  scrollbar-gutter: auto;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .panel-label {
+  display: none;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard #party-setup-title {
+  width: auto;
+  max-width: none;
+  margin: 0 2%;
+  color: #342014;
+  font-family: Baskerville, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(1.05rem, 4.4cqh, 1.55rem);
+  line-height: 1;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard #party-name-mode:not([hidden]) {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  align-content: start;
+  gap: clamp(0.35rem, 1.25cqh, 0.55rem);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-name-form,
+#clipboard-interface .party-panel.is-on-clipboard .party-name-form .field-group {
+  gap: 0;
+  margin: 0;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-name-entry {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(0.35rem, 1.5cqw, 0.55rem);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .text-input {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.3rem;
+  border: 0;
+  border-bottom: 2px solid rgba(64, 40, 23, 0.65);
+  border-radius: 0;
+  background: transparent;
+  color: #342014;
+  box-shadow: none;
+  font-family: Baskerville, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1rem;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .text-input::placeholder {
+  color: rgba(62, 39, 23, 0.55);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-name-entry .secondary-button {
+  min-height: 2.75rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(62, 39, 23, 0.62);
+  border-radius: 2px;
+  background: transparent;
+  color: #3c2819;
+  font-family: inherit;
+  font-size: clamp(0.72rem, 2.1cqh, 0.84rem);
+  box-shadow: none;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-name-entry .secondary-button:hover {
+  background: rgba(64, 40, 23, 0.1);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-player-list {
+  min-height: 0;
+  max-height: clamp(7.8rem, 29cqh, 10.5rem);
+  margin: 0;
+  overflow-y: auto;
+  gap: 0;
+  scrollbar-color: rgba(64, 40, 23, 0.45) transparent;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-player-row {
+  grid-template-columns: 1.3rem minmax(0, 1fr) auto;
+  gap: 0.3rem;
+  min-height: 2.8rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  box-shadow: inset 0 -1px rgba(64, 40, 23, 0.26);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-player-row::before {
+  color: rgba(62, 39, 23, 0.46);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.62rem, 1.8cqh, 0.72rem);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-player-name {
+  color: #342014;
+  font-family: Baskerville, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(0.78rem, 2.5cqh, 0.98rem);
+  font-weight: 700;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-player-actions {
+  gap: 0;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-row-action {
+  min-height: 2.75rem;
+  padding: 0.3rem 0.38rem;
+  color: rgba(62, 39, 23, 0.72);
+  font-family: inherit;
+  font-size: clamp(0.62rem, 1.8cqh, 0.72rem);
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-row-action--remove {
+  color: #7b281e;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .party-empty,
+#clipboard-interface .party-panel.is-on-clipboard #party-feedback {
+  margin: 0;
+  padding: 0;
+  color: rgba(62, 39, 23, 0.7);
+  font-size: clamp(0.7rem, 2.05cqh, 0.82rem);
+  line-height: 1.2;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard #party-feedback {
+  min-height: 1.1em;
+  color: #6a3424;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard #party-continue {
+  width: 100%;
+  min-height: 2.8rem;
+  margin: 0;
+  border: 1px solid #28180f;
+  border-radius: 2px;
+  background: #3b2719;
+  color: #f0d9ac;
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.72rem, 2.15cqh, 0.86rem);
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard #party-continue:disabled {
+  border-color: rgba(64, 40, 23, 0.36);
+  background: rgba(64, 40, 23, 0.15);
+  color: rgba(62, 39, 23, 0.56);
+  cursor: not-allowed;
+}
+
+#clipboard-interface .party-panel.is-on-clipboard .text-input:focus,
+#clipboard-interface .party-panel.is-on-clipboard button:focus-visible,
+#clipboard-interface .clipboard-theme-back:focus-visible {
+  outline: 2px solid #6d391a;
+  outline-offset: 2px;
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .party-summary,
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .impostor-deck-status {
+  display: none;
+}
+
+#clipboard-interface .clipboard-theme-back {
+  justify-self: start;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.25rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(62, 39, 23, 0.76);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.68rem, 2cqh, 0.8rem);
+}
+
+#clipboard-interface .clipboard-theme-back::before {
+  content: "←";
+  margin-right: 0.4rem;
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .setup-form.is-on-clipboard {
+  grid-template-rows: repeat(4, auto);
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .field-group {
+  margin-top: clamp(0.45rem, 1.8cqh, 0.7rem);
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .field-label {
+  font-size: clamp(0.75rem, 2.3cqh, 0.92rem);
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .select-input {
+  min-height: 3rem;
+  font-size: clamp(1rem, 3.4cqh, 1.22rem);
+}
+
+#clipboard-interface[data-step="theme"] .clipboard-form-slot .action-row {
+  margin-top: clamp(1.1rem, 4cqh, 1.6rem);
+}
+
+@media (orientation: portrait) {
+  #clipboard-interface .party-panel.is-on-clipboard .party-player-row {
+    min-height: 2.65rem;
+  }
+
+  #clipboard-interface .party-panel.is-on-clipboard .party-row-action {
+    padding-inline: 0.3rem;
+  }
+}

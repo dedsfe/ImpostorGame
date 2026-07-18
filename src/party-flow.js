@@ -213,7 +213,8 @@ export function createPartyFlow({
       players.length,
       currentRequest?.minimumPlayers ?? 1,
     );
-    elements.continue.textContent = getPartyContinueLabel(players.length);
+    elements.continue.textContent =
+      currentRequest?.continueLabel ?? getPartyContinueLabel(players.length);
     elements.continue.disabled = !validation.isValid;
     updateFeedback(validation.message);
     onChange(party);

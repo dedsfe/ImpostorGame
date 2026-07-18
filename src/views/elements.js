@@ -16,7 +16,10 @@ export function getElements() {
       stage: document.getElementById("clipboard-stage"),
       canvas: document.getElementById("clipboard-canvas"),
       interfaceLayer: document.getElementById("clipboard-interface"),
+      stepNumber: document.getElementById("clipboard-step-number"),
+      stepDescription: document.getElementById("clipboard-step-description"),
       formSlot: document.getElementById("clipboard-form-slot"),
+      themeBack: document.getElementById("clipboard-theme-back"),
       status: document.getElementById("clipboard-status"),
       fallback: document.getElementById("clipboard-fallback"),
       closeButton: document.getElementById("clipboard-scene-close"),
@@ -41,6 +44,7 @@ export function getElements() {
       end: document.getElementById("end-screen"),
     },
     party: {
+      panel: document.querySelector("#party-setup-screen .party-panel"),
       title: document.getElementById("party-setup-title"),
       nameMode: document.getElementById("party-name-mode"),
       nameForm: document.getElementById("party-name-form"),
