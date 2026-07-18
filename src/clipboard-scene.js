@@ -131,8 +131,8 @@ export function createClipboardScene({
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const duration = reducedMotion ? 140 : 1120;
     const portrait = window.innerWidth < window.innerHeight;
-    const targetScale = portrait ? 2.84 : 3.3;
-    const targetY = portrait ? 0.28 : 0.32;
+    const targetScale = portrait ? 3.08 : 3.74;
+    const targetY = 0.13;
     const targetZ = portrait ? 0.1 : 0.16;
     // Ao terminar a puxada, o papel fica paralelo ao plano da câmera.
     // O movimento continua tridimensional, mas a posição de leitura não
