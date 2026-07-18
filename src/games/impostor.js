@@ -268,6 +268,7 @@ export function createImpostorController({
         wordSource: selection.source,
       }),
     );
+    elements.form.dispatchEvent(new CustomEvent("impostorroundstarted"));
     return true;
   }
 

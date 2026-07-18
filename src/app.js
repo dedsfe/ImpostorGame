@@ -8,10 +8,11 @@ import {
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js?v=45";
-import { getElements } from "./views/elements.js?v=53";
+import { getElements } from "./views/elements.js?v=55";
 import { createIntroController } from "./intro.js?v=9";
+import { createClipboardScene } from "./clipboard-scene.js?v=8";
 import { createCityController } from "./games/city.js?v=45";
-import { createImpostorController } from "./games/impostor.js?v=48";
+import { createImpostorController } from "./games/impostor.js?v=49";
 import { createMimicaController } from "./games/mimica.js?v=45";
 import { createPoliceController } from "./games/police.js?v=45";
 import { createWhoAmIController } from "./games/whoami.js?v=45";
@@ -292,20 +293,47 @@ const gameControllersById = new Map(
 const gameControllersByScreen = new Map(
   gameControllers.map((controller) => [controller.setupScreen, controller]),
 );
+let clipboardSceneController = null;
+let returnToClipboardAfterParty = false;
+const impostorFormHomeMarker = document.createComment("impostor-form-home");
+elements.impostor.form.before(impostorFormHomeMarker);
+
+function mountImpostorFormOnClipboard() {
+  elements.clipboardScene.formSlot.append(elements.impostor.form);
+  elements.impostor.form.classList.add("is-on-clipboard");
+}
+
+function restoreImpostorFormHome() {
+  impostorFormHomeMarker.after(elements.impostor.form);
+  elements.impostor.form.classList.remove("is-on-clipboard");
+}
+
+function reopenClipboardAfterParty(didOpen) {
+  if (!didOpen || !returnToClipboardAfterParty) {
+    return didOpen;
+  }
+
+  returnToClipboardAfterParty = false;
+  mountImpostorFormOnClipboard();
+  clipboardSceneController.open();
+  return didOpen;
+}
+
 const partyFlow = createPartyFlow({
   elements: elements.party,
   onCancel: () => {
     const cancelledGame = gameEntryCoordinator.cancel();
 
     if (cancelledGame?.editing) {
-      openGameDirect(cancelledGame.screen);
+      reopenClipboardAfterParty(openGameDirect(cancelledGame.screen));
       return;
     }
 
+    returnToClipboardAfterParty = false;
     showHub();
   },
   onChange: renderPartySummaries,
-  onContinue: () => gameEntryCoordinator.resumeGame(),
+  onContinue: () => reopenClipboardAfterParty(gameEntryCoordinator.resumeGame()),
   partySession: state.partySession,
   setHero,
   showScreen: setActiveScreen,
@@ -322,7 +350,46 @@ const hubController = createHubController({
   rulesContent,
   state,
 });
-const introController = createIntroController({ elements });
+const introGames = hubGames.slice();
+const introController = createIntroController({
+  elements,
+  games: introGames,
+  onOpenSettings: (game) => openGameDirect(game.openScreen),
+  onStartGame: (game) => {
+    if (game.id !== "impostor") {
+      return openGameFromHubScreen(game.openScreen);
+    }
+
+    const didOpen = openGameDirect(game.openScreen);
+
+    if (didOpen) {
+      mountImpostorFormOnClipboard();
+      clipboardSceneController.open();
+    }
+
+    return didOpen;
+  },
+});
+clipboardSceneController = createClipboardScene({
+  ...elements.clipboardScene,
+  backgroundContent: elements.shell,
+  onClose: () => introController.returnToIntro(),
+  onHide: restoreImpostorFormHome,
+});
+
+elements.impostor.form.addEventListener("impostorroundstarted", () => {
+  returnToClipboardAfterParty = false;
+  clipboardSceneController.dismiss();
+});
+
+elements.impostor.form.querySelector("[data-party-edit]")?.addEventListener("click", () => {
+  if (elements.clipboardScene.root.hidden) {
+    return;
+  }
+
+  returnToClipboardAfterParty = true;
+  clipboardSceneController.dismiss();
+});
 
 gameControllers.forEach((controller) => {
   controller.bind();

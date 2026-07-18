@@ -49,7 +49,7 @@
         });
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css?v=86" />
+    <link rel="stylesheet" href="./styles.css?v=105" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -430,6 +430,11 @@
                 <span class="intro-title-kicker">Noite de</span>
                 <span class="intro-title-main">Jogos</span>
               </h1>
+              <p
+                id="intro-game-subtitle"
+                class="intro-game-subtitle"
+                hidden
+              ></p>
               <button
                 id="intro-enter"
                 class="intro-enter"
@@ -439,6 +444,34 @@
               >
                 Jogar
               </button>
+              <div
+                id="intro-game-menu"
+                class="intro-game-menu"
+                aria-label="Opções do jogo"
+                hidden
+              >
+                <div class="intro-game-menu-title" aria-hidden="true">
+                  Menu do jogo
+                </div>
+                <button
+                  class="intro-game-menu-item is-selected"
+                  type="button"
+                  data-intro-game-action="start"
+                  disabled
+                >
+                  <span class="intro-game-menu-number" aria-hidden="true">1.</span>
+                  <span>Iniciar jogo</span>
+                </button>
+                <button
+                  class="intro-game-menu-item"
+                  type="button"
+                  data-intro-game-action="settings"
+                  disabled
+                >
+                  <span class="intro-game-menu-number" aria-hidden="true">2.</span>
+                  <span>Ajustes</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -489,7 +522,71 @@
         aria-label="Direção para baixo indisponível"
         disabled
       ></button>
+      <button
+        id="remote-ok"
+        class="remote-confirm"
+        type="button"
+        aria-label="Confirmação indisponível"
+        disabled
+      ></button>
     </div>
+
+    <section
+      id="clipboard-scene"
+      class="clipboard-scene"
+      aria-labelledby="clipboard-scene-title"
+      hidden
+      inert
+    >
+      <h2 id="clipboard-scene-title" class="clipboard-scene-title">
+        Preparação do Impostor
+      </h2>
+      <img
+        class="clipboard-scene-background"
+        src="./assets/setup/living-room.webp"
+        width="1672"
+        height="941"
+        alt="Sala antiga iluminada por abajures, com uma mesa de centro de madeira"
+        decoding="async"
+      />
+      <div id="clipboard-stage" class="clipboard-stage">
+        <canvas
+          id="clipboard-canvas"
+          class="clipboard-canvas"
+          role="button"
+          tabindex="0"
+          aria-label="Prancheta tridimensional apoiada sobre a mesa"
+        ></canvas>
+        <span class="clipboard-key-hint" aria-hidden="true">
+          Enter para puxar
+        </span>
+        <section
+          id="clipboard-interface"
+          class="clipboard-interface"
+          aria-labelledby="clipboard-interface-title"
+          hidden
+          inert
+        >
+          <header class="clipboard-interface-header">
+            <span class="clipboard-case-number" aria-hidden="true">01</span>
+            <div>
+              <h3 id="clipboard-interface-title">Impostor</h3>
+              <p>Folha de preparação da rodada</p>
+            </div>
+          </header>
+          <div id="clipboard-form-slot" class="clipboard-form-slot"></div>
+        </section>
+        <p id="clipboard-status" class="clipboard-status" role="status">
+          Preparando a prancheta...
+        </p>
+        <p id="clipboard-fallback" class="clipboard-fallback" role="status" hidden>
+          A prancheta 3D não pôde ser exibida neste aparelho.
+        </p>
+      </div>
+      <button id="clipboard-scene-close" class="clipboard-scene-close" type="button">
+        Voltar à TV
+      </button>
+    </section>
 
     <div class="ambient ambient-left" aria-hidden="true"></div>
     <div class="ambient ambient-right" aria-hidden="true"></div>
@@ -1519,6 +1616,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=59"></script>
+    <script type="module" src="./script.js?v=66"></script>
   </body>
 </html>

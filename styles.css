@@ -98,6 +98,23 @@ body.is-hub-screen .game-remote.is-visible {
   transition-delay: 0s;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  body.is-hub-screen .game-remote.is-visible {
+    pointer-events: auto;
+  }
+
+  body.is-hub-screen .game-remote.is-visible.is-settled {
+    transform: translate3d(-50%, 66%, 0);
+    transition-duration: 320ms, 120ms, 0s;
+  }
+
+  body.is-hub-screen .game-remote.is-visible.is-settled:hover,
+  body.is-hub-screen .game-remote.is-visible.is-settled:has(.remote-direction:focus-visible),
+  body.is-hub-screen .game-remote.is-visible.is-settled:has(.remote-confirm:focus-visible) {
+    transform: translate3d(-50%, 50%, 0);
+  }
+}
+
 .game-remote img {
   display: block;
   width: 100%;
@@ -108,7 +125,8 @@ body.is-hub-screen .game-remote.is-visible {
 
 /* As quatro direcoes acompanham as teclas da foto. Os hotspots continuam
    retangulares para toque e sem qualquer desenho proprio. */
-.remote-direction {
+.remote-direction,
+.remote-confirm {
   position: absolute;
   z-index: 1;
   min-width: 44px;
@@ -125,31 +143,80 @@ body.is-hub-screen .game-remote.is-visible {
   overflow: visible;
 }
 
+.remote-confirm:disabled::before {
+  content: "";
+  position: absolute;
+  inset: 24%;
+  border-radius: 50%;
+  background: rgba(4, 3, 2, 0.14);
+  -webkit-backdrop-filter: brightness(0.35) saturate(0.74) blur(1.2px);
+  backdrop-filter: brightness(0.35) saturate(0.74) blur(1.2px);
+  filter: blur(1px);
+  pointer-events: none;
+}
+
 /* Cada tecla indisponivel recebe somente um pequeno vidro escuro e desfocado.
    A borda tambem e borrada para a camada desaparecer dentro da propria tecla. */
 .remote-direction:disabled::before {
   content: "";
   position: absolute;
-  inset: 9% 5%;
-  border-radius: 48%;
-  background: rgba(4, 3, 2, 0.06);
-  -webkit-backdrop-filter: brightness(0.7) saturate(0.82) blur(2.5px);
-  backdrop-filter: brightness(0.7) saturate(0.82) blur(2.5px);
-  filter: blur(2px);
+  inset: calc(28% - 0.5px) calc(26% - 0.5px);
+  border-radius: 0;
+  background: rgba(4, 3, 2, 0.14);
+  -webkit-backdrop-filter: brightness(0.35) saturate(0.74) blur(1.2px);
+  backdrop-filter: brightness(0.35) saturate(0.74) blur(1.2px);
+  -webkit-mask-image: var(--disabled-key-mask);
+  mask-image: var(--disabled-key-mask);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
   pointer-events: none;
 }
 
-.game-remote.is-corner .remote-direction {
+.remote-direction--left:disabled::before {
+  --disabled-key-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='b' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M14 50 86 12 86 88Z' fill='white' filter='url(%23b)'/%3E%3C/svg%3E");
+}
+
+.remote-direction--right:disabled::before {
+  --disabled-key-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='b' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M86 50 14 12 14 88Z' fill='white' filter='url(%23b)'/%3E%3C/svg%3E");
+}
+
+.remote-direction--up:disabled::before {
+  --disabled-key-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='b' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M50 14 88 86 12 86Z' fill='white' filter='url(%23b)'/%3E%3C/svg%3E");
+  transform: translateY(-2px);
+}
+
+.remote-direction--down:disabled::before {
+  --disabled-key-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='b' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M12 14 88 14 50 86Z' fill='white' filter='url(%23b)'/%3E%3C/svg%3E");
+  transform: translateY(2px);
+}
+
+.game-remote.is-corner .remote-direction,
+.game-remote.is-corner .remote-confirm {
   display: none;
 }
 
-.remote-direction:not(:disabled) {
+.remote-direction:not(:disabled),
+.remote-confirm:not(:disabled) {
   cursor: pointer;
 }
 
-.remote-direction:not(:disabled):focus-visible {
+.remote-direction:not(:disabled):focus-visible,
+.remote-confirm:not(:disabled):focus-visible {
   outline: 2px solid rgba(255, 238, 202, 0.72);
   outline-offset: 2px;
+}
+
+.remote-confirm {
+  top: 38.75%;
+  left: 42%;
+  width: 16%;
+  height: 7.7%;
+  border-radius: 50%;
+  transform: translateY(-50%);
 }
 
 .remote-direction--left,
@@ -316,7 +383,13 @@ body.is-hub-screen .game-remote.is-visible {
   justify-content: center;
   background: rgba(7, 9, 7, 0.14);
   opacity: 1;
-  transition: opacity 130ms ease;
+  transition:
+    opacity 130ms ease,
+    transform 130ms ease;
+}
+
+.game-intro.is-game-preview .intro-screen-content {
+  transform: translateY(-7%);
 }
 
 .intro-title {
@@ -343,6 +416,23 @@ body.is-hub-screen .game-remote.is-visible {
     0 0 6px rgba(236, 172, 93, 0.38);
 }
 
+.game-intro.is-game-preview .intro-title-kicker {
+  position: absolute;
+  top: auto;
+  right: 10%;
+  bottom: 11%;
+  color: rgba(239, 232, 211, 0.78);
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: clamp(0.62rem, 1.15cqw, 0.82rem);
+  font-style: normal;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow:
+    -0.5px 0 rgba(176, 61, 40, 0.34),
+    0.5px 0 rgba(98, 146, 117, 0.18),
+    0 0 3px rgba(238, 164, 76, 0.24);
+}
+
 .intro-title-main {
   color: #f6e6bd;
   font-size: clamp(2.6rem, 7.2cqw, 5.2rem);
@@ -356,6 +446,21 @@ body.is-hub-screen .game-remote.is-visible {
     0 0 2px rgba(255, 248, 218, 0.98),
     0 0 7px rgba(255, 177, 77, 0.78),
     0 0 17px rgba(205, 83, 33, 0.46);
+}
+
+.game-intro[data-intro-game="police"] .intro-title-main {
+  transform: translateY(0.08em);
+}
+
+.intro-screen-content .intro-game-subtitle {
+  max-width: 76%;
+  margin: clamp(0.45rem, 1.4cqw, 0.85rem) 0 0;
+  color: rgba(239, 232, 211, 0.82);
+  font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: clamp(0.72rem, 1.35cqw, 0.96rem);
+  line-height: 1.3;
+  text-align: center;
+  text-shadow: 0 0 4px rgba(236, 172, 93, 0.28);
 }
 
 .intro-enter {
@@ -415,6 +520,77 @@ body.is-hub-screen .game-remote.is-visible {
   border-color: rgba(242, 224, 181, 0.28);
   opacity: 0.58;
   cursor: wait;
+}
+
+.intro-game-menu {
+  width: min(78%, 18rem);
+  margin-top: clamp(0.55rem, 1.7cqw, 1rem);
+  display: grid;
+  gap: 0;
+}
+
+.intro-game-menu-title {
+  margin-bottom: clamp(0.28rem, 0.8cqw, 0.45rem);
+  padding: 0.18em 0.65em;
+  background: rgba(241, 233, 207, 0.9);
+  color: rgba(17, 16, 12, 0.92);
+  font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: clamp(0.68rem, 1.22cqw, 0.88rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.intro-game-menu-item {
+  width: 100%;
+  min-height: clamp(1.5rem, 3.5cqw, 2rem);
+  padding: 0.2em 0.55em;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  color: rgba(241, 233, 207, 0.84);
+  display: grid;
+  grid-template-columns: 2em 1fr;
+  align-items: center;
+  gap: 0.15em;
+  font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: clamp(0.7rem, 1.3cqw, 0.92rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  text-shadow:
+    -0.6px 0 rgba(176, 61, 40, 0.4),
+    0.6px 0 rgba(98, 146, 117, 0.2),
+    0 0 3px rgba(238, 164, 76, 0.28);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.intro-game-menu-item:hover,
+.intro-game-menu-item:focus-visible,
+.intro-game-menu-item.is-selected {
+  outline: none;
+  background: rgba(241, 233, 207, 0.9);
+  color: rgba(17, 16, 12, 0.94);
+  text-shadow: none;
+}
+
+.intro-game-menu-item:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.intro-game-menu-number {
+  text-align: center;
+  opacity: 0.72;
 }
 
 .intro-static {
@@ -656,8 +832,418 @@ body.is-hub-screen .game-remote.is-visible {
   }
 }
 
+/* A interface do Impostor usa o formulario real sobre a area de papel do GLB. */
+.clipboard-interface {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 52%;
+  width: min(54.5vh, calc(100vw - 2rem));
+  height: min(67.4vh, calc(100svh - 2rem));
+  padding: 3.5% 5% 4.5%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(0.55rem, 2cqh, 0.85rem);
+  color: #3c2819;
+  font-family: Baskerville, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  container-type: size;
+}
+
+.clipboard-interface[hidden] {
+  display: none !important;
+}
+
+.clipboard-interface-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(0.55rem, 3cqw, 0.9rem);
+  padding-bottom: clamp(0.35rem, 1.5cqh, 0.6rem);
+  border-bottom: 2px solid rgba(64, 40, 23, 0.68);
+}
+
+.clipboard-case-number {
+  color: rgba(79, 45, 24, 0.42);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(2rem, 10cqh, 3.25rem);
+  font-weight: 700;
+  line-height: 0.82;
+}
+
+.clipboard-interface-header h3,
+.clipboard-interface-header p {
+  margin: 0;
+}
+
+.clipboard-interface-header h3 {
+  color: #342014;
+  font-size: clamp(1.45rem, 5.4cqh, 2rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.clipboard-interface-header p {
+  margin-top: 0.2rem;
+  color: rgba(62, 39, 23, 0.72);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.68rem, 2.15cqh, 0.82rem);
+  line-height: 1.15;
+}
+
+.clipboard-form-slot {
+  min-height: 0;
+}
+
+.clipboard-form-slot .setup-form.is-on-clipboard {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0.8rem, auto) auto;
+  align-content: stretch;
+  gap: clamp(0.42rem, 1.6cqh, 0.7rem);
+  color: #3c2819;
+}
+
+.clipboard-form-slot .party-summary {
+  padding: 0 0 clamp(0.35rem, 1.4cqh, 0.55rem);
+  border: 0;
+  border-bottom: 2px solid rgba(64, 40, 23, 0.3);
+  border-radius: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.18rem 0.5rem;
+}
+
+.clipboard-form-slot .party-summary-count {
+  color: #342014;
+  font-size: clamp(0.78rem, 2.5cqh, 0.98rem);
+  font-weight: 700;
+}
+
+.clipboard-form-slot .party-summary-names {
+  grid-column: 1 / -1;
+  min-height: 1em;
+  color: rgba(62, 39, 23, 0.66);
+  font-size: clamp(0.68rem, 2cqh, 0.82rem);
+}
+
+.clipboard-form-slot .party-summary-edit {
+  align-self: center;
+  min-height: 2.75rem;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid rgba(62, 39, 23, 0.6);
+  border-radius: 2px;
+  color: #3c2819;
+  font-family: inherit;
+  font-size: clamp(0.66rem, 1.9cqh, 0.78rem);
+  line-height: 1;
+}
+
+.clipboard-form-slot .party-summary-edit:hover {
+  background: rgba(64, 40, 23, 0.1);
+  color: #2a180e;
+}
+
+.clipboard-form-slot .field-group {
+  gap: clamp(0.2rem, 0.9cqh, 0.35rem);
+}
+
+.clipboard-form-slot .field-label {
+  color: rgba(56, 34, 20, 0.8);
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.65rem, 1.9cqh, 0.77rem);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.clipboard-form-slot .select-input {
+  min-height: clamp(2.25rem, 6.5cqh, 2.8rem);
+  padding: 0 1.9rem 0 0.25rem;
+  border: 0;
+  border-bottom: 2px solid rgba(64, 40, 23, 0.65);
+  border-radius: 0;
+  background-color: transparent;
+  color: #342014;
+  font-family: inherit;
+  font-size: clamp(0.84rem, 2.8cqh, 1.05rem);
+  font-weight: 700;
+}
+
+.clipboard-form-slot .select-input:focus,
+.clipboard-form-slot .party-summary-edit:focus-visible,
+.clipboard-form-slot .primary-button:focus-visible {
+  outline: 2px solid #6d391a;
+  outline-offset: 2px;
+}
+
+.clipboard-form-slot .impostor-deck-status {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.clipboard-form-slot .impostor-deck-progress,
+.clipboard-form-slot .impostor-deck-status .field-hint {
+  margin: 0;
+  color: rgba(58, 36, 21, 0.68);
+  font-size: clamp(0.62rem, 1.8cqh, 0.75rem);
+  line-height: 1.2;
+  text-align: left;
+}
+
+.clipboard-form-slot .impostor-deck-progress {
+  color: #3c2819;
+  font-weight: 700;
+}
+
+.clipboard-form-slot .feedback {
+  min-height: 0.9rem;
+  color: #7b281e;
+  font-size: clamp(0.64rem, 1.9cqh, 0.78rem);
+  line-height: 1.15;
+}
+
+.clipboard-form-slot .action-row {
+  align-self: end;
+  margin: 0;
+}
+
+.clipboard-form-slot .setup-card--spotlight .primary-button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #28180f;
+  border-radius: 2px;
+  background: #3b2719;
+  color: #f0d9ac;
+  font-family: "American Typewriter", Rockwell, "Courier New", monospace;
+  font-size: clamp(0.78rem, 2.4cqh, 0.95rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.clipboard-form-slot .setup-card--spotlight .primary-button:hover {
+  background: #26170f;
+}
+
+@media (orientation: portrait) {
+  .clipboard-interface {
+    width: min(83vw, calc(100vw - 1.5rem));
+    height: min(95vw, 54svh);
+    padding: 3.5% 5% 4.5%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .clipboard-interface {
+    gap: 0.35rem;
+    padding-block: 2.5% 3.5%;
+  }
+
+  .clipboard-interface-header {
+    padding-bottom: 0.25rem;
+  }
+
+  .clipboard-form-slot .setup-form.is-on-clipboard {
+    gap: 0.25rem;
+  }
+}
+
 [hidden] {
   display: none !important;
+}
+
+body.is-clipboard-scene {
+  overflow: hidden !important;
+}
+
+.clipboard-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  isolation: isolate;
+  background: #120904;
+}
+
+.clipboard-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(12, 6, 2, 0.36);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms ease;
+}
+
+.clipboard-scene-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.clipboard-scene-background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  user-select: none;
+  transform: scale(1);
+  filter: brightness(1) blur(0);
+  transition:
+    transform 1120ms cubic-bezier(0.2, 0.75, 0.22, 1),
+    filter 900ms ease;
+}
+
+.clipboard-stage {
+  position: absolute;
+  left: 45.5%;
+  top: 82.5%;
+  width: min(46vw, 40rem);
+  height: min(46vh, 29rem);
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: auto;
+  transition:
+    left 1120ms cubic-bezier(0.2, 0.75, 0.22, 1),
+    top 1120ms cubic-bezier(0.2, 0.75, 0.22, 1),
+    width 1120ms cubic-bezier(0.2, 0.75, 0.22, 1),
+    height 1120ms cubic-bezier(0.2, 0.75, 0.22, 1);
+}
+
+.clipboard-scene.is-pulling-clipboard .clipboard-stage {
+  left: 50%;
+  top: 50%;
+  width: 100vw;
+  height: 100svh;
+  will-change: left, top, width, height;
+}
+
+.clipboard-scene.is-pulling-clipboard::after {
+  opacity: 1;
+}
+
+.clipboard-scene.is-pulling-clipboard .clipboard-scene-background {
+  transform: scale(1.012);
+  filter: brightness(0.68) blur(1.2px);
+}
+
+.clipboard-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  touch-action: manipulation;
+}
+
+.clipboard-canvas.is-over-clipboard {
+  cursor: grab;
+}
+
+.clipboard-canvas.is-outside-clipboard {
+  cursor: zoom-out;
+}
+
+.clipboard-canvas:focus-visible {
+  outline: none;
+}
+
+.clipboard-key-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  padding: 0.35rem 0.48rem;
+  border-radius: 0.25rem;
+  background: rgba(18, 9, 4, 0.86);
+  color: #f3ddbd;
+  font: 650 0.72rem/1 system-ui, sans-serif;
+  opacity: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.clipboard-canvas:focus-visible + .clipboard-key-hint {
+  opacity: 1;
+}
+
+.clipboard-scene.is-pulling-clipboard .clipboard-key-hint {
+  opacity: 0;
+}
+
+.clipboard-status,
+.clipboard-fallback {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: min(24rem, 80vw);
+  margin: 0;
+  transform: translateX(-50%);
+  color: rgba(255, 237, 207, 0.9);
+  font: 600 0.82rem/1.4 system-ui, sans-serif;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+}
+
+.clipboard-scene-close {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  left: max(1rem, env(safe-area-inset-left));
+  min-height: 2.75rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(255, 226, 187, 0.3);
+  border-radius: 0.35rem;
+  background: rgba(20, 11, 6, 0.74);
+  color: #f3ddbd;
+  font: 650 0.84rem/1 system-ui, sans-serif;
+  box-shadow: 0 3px 4px rgba(7, 3, 1, 0.24);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.clipboard-scene-close:hover {
+  background: rgba(36, 20, 10, 0.84);
+  border-color: rgba(255, 226, 187, 0.46);
+}
+
+.clipboard-scene-close:focus-visible {
+  outline: 2px solid #f3ddbd;
+  outline-offset: 3px;
+}
+
+@media (orientation: portrait) {
+  .clipboard-scene-background {
+    object-position: 45.5% 50%;
+  }
+
+  .clipboard-stage {
+    left: 49%;
+    top: 83%;
+    width: min(78vw, 32rem);
+    height: min(37vh, 27rem);
+  }
 }
 
 * {
@@ -3955,4 +4541,25 @@ body:not(.is-whoami-reveal):not(.is-mimica-play) {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Mantem os campos com aparencia de tinta sobre papel, acima do tema da app. */
+#clipboard-interface .clipboard-form-slot .field-label {
+  color: rgba(56, 34, 20, 0.8);
+}
+
+#clipboard-interface .clipboard-form-slot .select-input {
+  min-height: clamp(2.25rem, 6.5cqh, 2.8rem);
+  border: 0;
+  border-bottom: 2px solid rgba(64, 40, 23, 0.65);
+  border-radius: 0;
+  background: transparent;
+  color: #342014;
+  box-shadow: none;
+  color-scheme: light;
+}
+
+#clipboard-interface .clipboard-form-slot .select-input option {
+  background: #ead09b;
+  color: #342014;
 }
