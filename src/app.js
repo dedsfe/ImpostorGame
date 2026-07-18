@@ -10,7 +10,7 @@ import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
 import { createInitialState } from "./state.js?v=45";
 import { getElements } from "./views/elements.js?v=56";
 import { createIntroController } from "./intro.js?v=9";
-import { createClipboardScene } from "./clipboard-scene.js?v=8";
+import { createClipboardScene } from "./clipboard-scene.js?v=9";
 import { createCityController } from "./games/city.js?v=45";
 import { createImpostorController } from "./games/impostor.js?v=49";
 import { createMimicaController } from "./games/mimica.js?v=45";
@@ -32,7 +32,7 @@ document.documentElement.dataset.catalogSource = "local";
 const catalogRuntimePromise = hydrateCatalogFromApi();
 
 const state = createInitialState();
-const APP_VERSION = "v49";
+const APP_VERSION = "v50";
 
 const elements = getElements();
 let gameEntryCoordinator = null;

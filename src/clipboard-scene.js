@@ -134,7 +134,10 @@ export function createClipboardScene({
     const targetScale = portrait ? 2.84 : 3.3;
     const targetY = portrait ? 0.28 : 0.32;
     const targetZ = portrait ? 0.1 : 0.16;
-    const targetTilt = portrait ? 0.57 : 0.6;
+    // Ao terminar a puxada, o papel fica paralelo ao plano da câmera.
+    // O movimento continua tridimensional, mas a posição de leitura não
+    // disputa perspectiva com a interface HTML sobreposta.
+    const targetTilt = 0.96;
     let startedAt = null;
 
     function finishPull() {
