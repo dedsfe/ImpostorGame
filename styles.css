@@ -888,8 +888,10 @@ body.is-hub-screen .game-remote.is-visible {
   grid-template-columns: auto minmax(0, 1fr);
   align-items: end;
   gap: clamp(0.55rem, 3cqw, 0.9rem);
+  margin-inline: 2.2%;
   padding-bottom: clamp(0.35rem, 1.5cqh, 0.6rem);
   border-bottom: 2px solid rgba(64, 40, 23, 0.68);
+  transform: translateX(1.2%);
 }
 
 .clipboard-case-number {
@@ -943,6 +945,7 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 .clipboard-form-slot .party-summary {
+  margin-inline: 0.7%;
   padding: 0 0 clamp(0.35rem, 1.4cqh, 0.55rem);
   border: 0;
   border-bottom: 2px solid rgba(64, 40, 23, 0.3);
@@ -951,6 +954,7 @@ body.is-hub-screen .game-remote.is-visible {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.18rem 0.5rem;
+  transform: translateX(0.6%);
 }
 
 .clipboard-form-slot .party-summary-count {
@@ -985,6 +989,7 @@ body.is-hub-screen .game-remote.is-visible {
 
 .clipboard-form-slot .field-group {
   gap: clamp(0.2rem, 0.9cqh, 0.35rem);
+  margin-inline: -1.5%;
 }
 
 .clipboard-form-slot .field-label {
@@ -1017,12 +1022,14 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 .clipboard-form-slot .impostor-deck-status {
+  margin-inline: -3.2%;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   display: grid;
   gap: 0.1rem;
+  transform: translateX(-0.6%);
 }
 
 .clipboard-form-slot .impostor-deck-progress,
@@ -1040,15 +1047,20 @@ body.is-hub-screen .game-remote.is-visible {
 }
 
 .clipboard-form-slot .feedback {
+  margin-inline: -4.2%;
   min-height: 0.9rem;
   color: #7b281e;
   font-size: clamp(0.64rem, 1.9cqh, 0.78rem);
   line-height: 1.15;
+  transform: translateX(-1%);
 }
 
 .clipboard-form-slot .action-row {
+  width: 110%;
   align-self: end;
+  justify-self: center;
   margin: 0;
+  transform: translateX(-1.2%);
 }
 
 .clipboard-form-slot .setup-card--spotlight .primary-button {
