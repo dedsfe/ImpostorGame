@@ -745,7 +745,9 @@ body.is-hub-screen .game-remote.is-visible {
   .game-intro {
     --intro-frame-origin-y: 38.3%;
     --intro-frame-scale: 1.24;
-    --intro-frame-shift-y: 8.5svh;
+    /* Mantem imagem e HUD acima do controle no mobile. O controle vive em
+       outra camada fixa, portanto sua posicao nao muda com este ajuste. */
+    --intro-frame-shift-y: 3.5svh;
   }
 
   /* arte de portrait: outra imagem, logo outro vidro.
@@ -785,6 +787,22 @@ body.is-hub-screen .game-remote.is-visible {
     --remote-width: clamp(11rem, min(68vw, 33vh), 18rem);
   }
 
+}
+
+/* Em telas muito estreitas, preserva o titulo e o contador inteiros dentro
+   do vidro sem alterar o tamanho ou a entrada do controle. */
+@media (orientation: portrait) and (max-width: 340px) {
+  .game-intro.is-game-preview .intro-screen-content {
+    transform: translateY(-2%);
+  }
+
+  .intro-title-main {
+    font-size: 2.05rem;
+  }
+
+  .game-intro.is-game-preview .intro-title-kicker {
+    bottom: 3.5%;
+  }
 }
 
 @media (min-aspect-ratio: 2 / 1) {
