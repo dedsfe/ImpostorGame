@@ -533,11 +533,9 @@ elements.party.cancelEdit.addEventListener("click", () => {
 elements.party.confirmEdit.addEventListener("click", discardRoundAndEditParty);
 
 elements.navHome.addEventListener("click", () => {
-  if (state.currentScreen === "hub" && !introController.isVisible()) {
-    introController.returnToIntro();
-    return;
-  }
-
+  // "Home" agora significa a lista de jogos, e só. Antes, estando no hub, este
+  // botão devolvia para a cena da TV — com o hub virando a tela principal isso
+  // passaria a ser um caminho de volta para lugar nenhum.
   roleFlow.openHub();
 });
 partyFlow.bind();
@@ -549,7 +547,9 @@ renderPartySummaries();
 hubController.bind();
 hubController.initialize();
 setActiveScreen("hub");
-introController.initialize();
+// A lista de jogos é a tela principal. `initialize()` abriria com a cena da TV
+// por cima dela; `skip()` deixa a intro pronta, porém fora do caminho.
+introController.skip();
 
 track("app_loaded", { version: APP_VERSION });
 initAds();

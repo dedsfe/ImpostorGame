@@ -3,6 +3,32 @@ import {
   buildRevealResultPrompt,
 } from "./games/impostor-ux.js";
 import { animateElement } from "./motion.js";
+import { randomIndex } from "./shared/utils.js";
+
+/// Sorteia quem dá a primeira pista, **excluindo os impostores**.
+///
+/// Antes era `Math.random()` sobre todos os jogadores, então o impostor podia
+/// ser o primeiro a falar — e abrir a rodada tendo que inventar uma pista sobre
+/// uma palavra que ele não conhece, sem nenhuma fala anterior para se apoiar,
+/// é praticamente entregar o jogo.
+///
+/// Usa o mesmo `randomIndex` do resto do app (crypto + rejection sampling), e
+/// não `Math.random()`: não faz sentido o sorteio dos papéis ser criptográfico
+/// e o de quem começa não ser.
+function pickStarterIndex(game) {
+  const roles = Array.isArray(game?.roles) ? game.roles : [];
+  const candidates = roles
+    .map((role, index) => (role?.value === "IMPOSTOR" ? -1 : index))
+    .filter((index) => index >= 0);
+
+  // Sem candidato (todos impostores, ou papéis ainda não montados) o jogo não
+  // teria quem começar — cair no sorteio geral é melhor que travar a tela.
+  if (candidates.length === 0) {
+    return randomIndex(Math.max(1, game?.totalPlayers ?? 1));
+  }
+
+  return candidates[randomIndex(candidates.length)];
+}
 
 const ROLE_TONE_CLASSES = [
   "is-impostor",
@@ -308,7 +334,7 @@ export function createRoleFlow({
     if (isImpostor) {
       const starterIndex = Number.isInteger(state.currentGame.starterIndex)
         ? state.currentGame.starterIndex
-        : Math.floor(Math.random() * state.currentGame.totalPlayers);
+        : pickStarterIndex(state.currentGame);
       state.currentGame.starterIndex = starterIndex;
       const starterName =
         state.playerNames[starterIndex] || `Jogador ${starterIndex + 1}`;

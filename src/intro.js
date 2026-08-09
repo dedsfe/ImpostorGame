@@ -478,10 +478,37 @@ export function createIntroController({
     startFraming();
   }
 
+  /// Deixa a cena da TV no estado "já assistida", sem tocar a animação.
+  ///
+  /// Existe porque a lista de jogos virou a tela principal: a intro passou de
+  /// porta de entrada obrigatória a cena opcional. `initialize()` continua ali
+  /// inteiro — chamá-lo no lugar deste `skip()` traz a TV de volta como
+  /// abertura, sem nenhuma outra mudança.
+  function skip() {
+    clearTimers();
+    isAnimating = false;
+    root.hidden = true;
+    root.classList.remove(
+      "is-framed",
+      "is-framing",
+      "is-leaving",
+      "is-resetting",
+      "is-returning",
+      "is-tuning",
+      "is-zooming",
+    );
+    enter.disabled = true;
+    setRemoteVisible(false);
+    setRemoteMenuEnabled(false);
+    delete root.dataset.remoteDirection;
+    setAppInteractive(true);
+  }
+
   return {
     bind,
     enterApp: revealRemote,
     initialize,
+    skip,
     isVisible: () => !root.hidden,
     returnToIntro,
   };
