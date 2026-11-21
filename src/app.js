@@ -17,7 +17,7 @@ import { createMimicaController } from "./games/mimica.js?v=45";
 import { createPoliceController } from "./games/police.js?v=45";
 import { createWhoAmIController } from "./games/whoami.js?v=45";
 import { createHubController } from "./hub.js";
-import { createSlider } from "./slider.js?v=7";
+import { createSlider } from "./slider.js?v=8";
 import {
   createGameEntryCoordinator,
   createPartyFlow,

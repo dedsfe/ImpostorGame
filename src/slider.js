@@ -138,6 +138,28 @@ export function createSlider({ root, games, shell, onPick }) {
 
   function bind() {
     track.addEventListener("scroll", agenda, { passive: true });
+    // iPhone (Safari): o scroll-snap às vezes deixa a capa parada no meio do caminho e o Safari não tem "scrollend".
+    // Então, quando a rolagem para e o dedo já saiu, o próprio código centraliza a capa mais perto.
+    let dedo = false;
+    let parou = 0;
+    const fimDaRolagem = () => {
+      if (dedo || root.hidden) return;
+      alvo = null;
+      const meio = track.scrollLeft + track.clientWidth / 2;
+      let perto = 0;
+      let menor = Infinity;
+      slides.forEach((sl, k) => {
+        const dist = Math.abs(sl.offsetLeft + sl.offsetWidth / 2 - meio);
+        if (dist < menor) { menor = dist; perto = k; }
+      });
+      if (menor > 3) vaiPara(perto);
+      agenda();
+    };
+    track.addEventListener("scroll", () => { clearTimeout(parou); parou = setTimeout(fimDaRolagem, 140); }, { passive: true });
+    track.addEventListener("touchstart", () => { dedo = true; clearTimeout(parou); }, { passive: true });
+    const soltou = () => { dedo = false; clearTimeout(parou); parou = setTimeout(fimDaRolagem, 140); };
+    track.addEventListener("touchend", soltou, { passive: true });
+    track.addEventListener("touchcancel", soltou, { passive: true });
     ["pointerdown", "touchstart", "wheel", "keydown"].forEach((n) => root.addEventListener(n, () => { tocou = true; }, { passive: true }));
     window.addEventListener("resize", () => {
       if (!root.hidden) {
