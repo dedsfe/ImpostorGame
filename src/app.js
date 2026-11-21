@@ -4,10 +4,10 @@ import {
   mimicaPools,
   whoAmIPools,
   wordPools,
-} from "./data/catalogs.js?v=43";
+} from "./data/catalogs.js?v=44";
 import { rulesContent } from "./data/tutorials.js?v=43";
 import { hydrateCatalogFromApi } from "./data/remote-catalog.js?v=41";
-import { createInitialState } from "./state.js?v=45";
+import { createInitialState } from "./state.js?v=46";
 import { getElements } from "./views/elements.js?v=57";
 import { createIntroController } from "./intro.js?v=10";
 import { createClipboardScene } from "./clipboard-scene.js?v=11";

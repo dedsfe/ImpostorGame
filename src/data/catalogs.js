@@ -1,3 +1,4 @@
+import { mimicaSimples } from "./mimica-simples.js";
 export const wordPools = {
   geral: {
     facil: ["bola", "casa", "pao", "sol", "carro", "flor", "mesa", "praia", "janela", "porta", "computador", "celular", "caneta", "papel", "livro", "relogio", "sapato", "camisa", "chave", "telefone", "lapis", "mochila", "oculos", "cama", "travesseiro", "espelho", "faca", "garfo", "colher", "prato", "copo", "garrafa", "arvore", "nuvem", "chuva", "vento", "fogo", "agua", "terra", "areia", "pedra", "montanha"],
@@ -3117,6 +3118,10 @@ mimicaPools["estudios-animacao"] = {
   ),
 };
 
+// 20/11: a Mímica usa só a lista escrita à mão (src/data/mimica-simples.js).
+// A lista antiga gerava combinações absurdas ("trocar pneu na biblioteca") e ficou de fora.
+replaceCatalog(mimicaPools, mimicaSimples);
+
 export const hubGames = [
   {
     id: "impostor",
@@ -3194,7 +3199,7 @@ export function applyRemoteCatalogs(snapshot) {
 
   replaceCatalog(wordPools, snapshot.wordPools);
   replaceCatalog(whoAmIPools, snapshot.whoAmIPools);
-  replaceCatalog(mimicaPools, snapshot.mimicaPools);
+  // Mímica: o banco ainda tem a lista antiga cheia de combinações absurdas; fica a lista local escrita à mão.
 }
 
 export const heroContent = {

@@ -22,10 +22,10 @@ export function createInitialState({
     },
     mimica: {
       category: "geral",
-      difficulty: "dificil",
+      difficulty: "facil",
       timePerRound: 45,
       currentWord: "",
-      deckKey: "geral:dificil",
+      deckKey: "geral:facil",
       remainingWords: [],
       timerId: null,
       timeRemaining: 45,
