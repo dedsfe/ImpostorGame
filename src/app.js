@@ -17,7 +17,7 @@ import { createMimicaController } from "./games/mimica.js?v=45";
 import { createPoliceController } from "./games/police.js?v=45";
 import { createWhoAmIController } from "./games/whoami.js?v=45";
 import { createHubController } from "./hub.js";
-import { createSlider } from "./slider.js?v=8";
+import { createSlider } from "./slider.js?v=9";
 import {
   createGameEntryCoordinator,
   createPartyFlow,
@@ -132,7 +132,7 @@ function setActiveScreen(screen) {
   if (screen === "hub" && slider && !slider.isVisible()) slider.show();
   elements.navHome.setAttribute(
     "aria-label",
-    screen === "hub" ? "Voltar para a sala" : "Voltar para a home",
+    screen === "hub" ? "Voltar aos jogos" : "Voltar aos jogos",
   );
   document.body.classList.toggle("is-whoami-reveal", screen === "whoamiReveal");
   document.body.classList.toggle("is-mimica-play", screen === "mimicaPlay");
@@ -452,7 +452,7 @@ slider = createSlider({
   games: hubGames,
   shell: elements.shell,
   onPick: (game) => {
-    slider.hide();
+    // o próprio carrossel some em fade depois que a tela do jogo abre por trás
     track("slider_pick", { game: game.id });
     if (game.id !== "impostor") {
       return openGameFromHubScreen(game.openScreen);
@@ -549,7 +549,7 @@ elements.party.cancelEdit.addEventListener("click", () => {
 elements.party.confirmEdit.addEventListener("click", discardRoundAndEditParty);
 
 elements.navHome.addEventListener("click", () => {
-  roleFlow.openHub();
+  roleFlow.openHub(); // abrir o "hub" mostra o carrossel (setActiveScreen)
   slider.show();
 });
 partyFlow.bind();

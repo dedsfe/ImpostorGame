@@ -110,30 +110,45 @@ export function createSlider({ root, games, shell, onPick }) {
   function escolhe(i) {
     if (i !== atual) return vaiPara(i);
     if (root.classList.contains("saindo")) return;
-    // a capa cresce na direção da pessoa, o resto apaga, e o jogo abre
     if (navigator.vibrate) navigator.vibrate(12);
+    // 1) a capa cresce e o resto apaga, mas o FUNDO continua opaco (antes ficava transparente e vazava a tela velha)
     root.classList.add("saindo");
-    setTimeout(() => onPick(games[i]), reduz.matches ? 0 : 320);
+    setTimeout(() => {
+      // 2) com o carrossel ainda cobrindo tudo, o jogo abre por trás
+      liberaApp();
+      onPick(games[i]);
+      // 3) só depois que a tela do jogo já está montada, o carrossel some em fade
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        root.classList.add("some");
+        setTimeout(hide, reduz.matches ? 0 : 280);
+      }));
+    }, reduz.matches ? 0 : 300);
+  }
+
+  function liberaApp() {
+    shell.inert = false;
+    shell.removeAttribute("aria-hidden");
+    document.body.classList.remove("is-slider-active");
   }
 
   function show() {
+    if (!root.hidden && !root.classList.contains("some")) return; // já está na tela: não reinicia a animação
+    // tudo no mesmo quadro: aparece já com a animação de entrada ligada (antes piscava pronto e depois a animação recomeçava = o "corte")
+    root.classList.remove("entrou", "saindo", "some");
     root.hidden = false;
     shell.inert = true;
     shell.setAttribute("aria-hidden", "true");
     document.body.classList.add("is-slider-active");
-    requestAnimationFrame(() => {
-      vaiPara(atual < 0 ? 0 : atual, false);
-      pinta();
-      root.classList.add("entrou");
-    });
+    vaiPara(atual < 0 ? 0 : atual, false);
+    pinta();
+    void root.offsetWidth;
+    root.classList.add("entrou");
   }
 
   function hide() {
     root.hidden = true;
-    root.classList.remove("entrou", "saindo");
-    shell.inert = false;
-    shell.removeAttribute("aria-hidden");
-    document.body.classList.remove("is-slider-active");
+    root.classList.remove("entrou", "saindo", "some");
+    liberaApp();
   }
 
   function bind() {

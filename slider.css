@@ -116,8 +116,11 @@
 .slider-home.saindo .slider-info,
 .slider-home.saindo .slider-topo,
 .slider-home.saindo .slider-seta { opacity: 0 !important; transition: opacity 0.2s ease; }
-.slider-home.saindo { animation: apaga 0.32s ease-in 0.1s forwards; }
-@keyframes apaga { to { opacity: 0; } }
+/* depois que o jogo abriu por trás, o carrossel inteiro some em fade (sem vazar a tela velha) */
+.slider-home.some { opacity: 0; transition: opacity 0.28s ease; pointer-events: none; }
+/* ao voltar pra tela inicial: entra em fade junto com as capas subindo, sem corte */
+.slider-home.entrou { animation: aparece 0.3s ease-out; }
+@keyframes aparece { from { opacity: 0; } }
 
 /* bolinhas */
 .slider-dots { display: flex; justify-content: center; gap: 8px; padding: 6px 0 0; }
@@ -185,3 +188,6 @@ body.is-slider-active { overflow: hidden; }
 /* sem textos pequenos: só o nome do jogo e o botão (pedido do André, 20/11) */
 .slider-label, .slider-copy { display: none; }
 .slider-info { padding-top: 16px; gap: 0; }
+
+/* a grade antiga de jogos (#hub-screen) não é mais usada: o carrossel é a tela inicial. Escondida pra não vazar nas transições */
+#hub-screen { visibility: hidden !important; }
