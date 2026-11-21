@@ -1,0 +1,187 @@
+/* Tela inicial: carrossel de capas (src/slider.js) */
+.slider-home {
+  --tinta: #f4f7ff;
+  --apoio: rgba(228, 236, 255, 0.72);
+  --w: min(70vw, 320px, calc((100svh - 270px) * 0.6667));
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: #0a1230;
+  color: var(--tinta);
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow: hidden;
+  padding: max(16px, env(safe-area-inset-top)) 0 max(18px, env(safe-area-inset-bottom));
+}
+.slider-home[hidden] { display: none; }
+
+/* fundo: a capa atual bem desfocada (imagem minúscula esticada), com cross-fade */
+.slider-bg {
+  position: absolute;
+  inset: -10%;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 0.6s ease, transform 1.2s ease;
+}
+.slider-bg.on { opacity: 0.9; transform: scale(1); }
+.slider-home::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% 40%, transparent 0%, rgba(6, 10, 30, 0.55) 70%),
+    linear-gradient(180deg, rgba(6, 10, 30, 0.35), transparent 30%, transparent 55%, rgba(6, 10, 30, 0.92));
+  pointer-events: none;
+}
+.slider-home > :not(.slider-bg) { position: relative; z-index: 1; }
+
+/* topo */
+.slider-topo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 20px 0;
+}
+.slider-marca {
+  margin: 0;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  opacity: 0.9;
+}
+.slider-marca span { opacity: 0.6; font-weight: 700; }
+
+/* trilho */
+.slider-palco { display: grid; align-content: center; min-height: 0; }
+.slider-track {
+  position: relative;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* embaixo sobra espaço pra sombra não ser cortada pelo trilho (era a linha reta) */
+  padding: 20px calc((100% - var(--w)) / 2) 56px;
+  margin-bottom: -40px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+  perspective: 1100px; /* dá profundidade pras capas que giram (rotateY no JS) */
+}
+.slider-track::-webkit-scrollbar { display: none; }
+.slider-track.arrastando { scroll-snap-type: none; cursor: grabbing; }
+.slide {
+  flex: 0 0 var(--w);
+  aspect-ratio: 2 / 3;
+  scroll-snap-align: center;
+  padding: 0;
+  margin: 0 -4px;
+  border: 0;
+  border-radius: 28px;
+  background: #1a2350;
+  overflow: hidden;
+  cursor: pointer;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+  box-shadow: 0 16px 34px -14px rgba(4, 8, 30, 0.55);
+  -webkit-tap-highlight-color: transparent;
+}
+.slide-arte { display: block; width: 100%; height: 100%; }
+.slide img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; will-change: transform; }
+.slide:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+
+/* entrada da tela: capas sobem em leque, com mola; depois o nome e o botão */
+.slider-home.entrou .slide { animation: slide-entra 0.9s cubic-bezier(0.18, 1.25, 0.4, 1) backwards; }
+.slider-home.entrou .slide:nth-child(2) { animation-delay: 0.07s; }
+.slider-home.entrou .slide:nth-child(3) { animation-delay: 0.14s; }
+@keyframes slide-entra { from { opacity: 0; translate: 0 90px; rotate: 6deg; } }
+.slider-home.entrou .slider-topo { animation: sobe 0.6s ease-out 0.05s backwards; }
+.slider-home.entrou .slider-dots { animation: sobe 0.6s ease-out 0.3s backwards; }
+.slider-home.entrou .slider-play { animation: sobe 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 0.38s backwards; }
+@keyframes sobe { from { opacity: 0; translate: 0 18px; } }
+
+/* a capa do meio respira de leve, parada ela não fica morta */
+.slide[aria-current="true"] .slide-arte { animation: flutua 4.5s ease-in-out infinite; }
+@keyframes flutua { 50% { translate: 0 -5px; scale: 1.015; } }
+
+/* ao tocar em Jogar: a capa cresce pra perto, o resto some, a tela apaga */
+.slider-home.saindo .slide[aria-current="true"] { scale: 1.08; transition: scale 0.32s cubic-bezier(0.3, 0, 0.2, 1); }
+.slider-home.saindo .slide:not([aria-current="true"]),
+.slider-home.saindo .slider-dots,
+.slider-home.saindo .slider-info,
+.slider-home.saindo .slider-topo,
+.slider-home.saindo .slider-seta { opacity: 0 !important; transition: opacity 0.2s ease; }
+.slider-home.saindo { animation: apaga 0.32s ease-in 0.1s forwards; }
+@keyframes apaga { to { opacity: 0; } }
+
+/* bolinhas */
+.slider-dots { display: flex; justify-content: center; gap: 8px; padding: 6px 0 0; }
+.slider-dots i {
+  width: 8px; height: 8px; border-radius: 99px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: width 0.45s cubic-bezier(0.2, 1.4, 0.4, 1), background 0.3s ease;
+}
+.slider-dots i.on { width: 24px; background: #fff; }
+
+/* texto + botão */
+.slider-info { display: grid; justify-items: center; gap: 6px; padding: 10px 24px 0; text-align: center; }
+.slider-label {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #9fc0ff;
+}
+.slider-title { font-family: "Nunito", system-ui, sans-serif; color: var(--tinta); text-transform: none; margin: 0; font-size: clamp(30px, 8.4vw, 44px); font-weight: 900; line-height: 1.02; letter-spacing: -0.01em; }
+.slider-copy {
+  margin: 2px 0 0; max-width: 34ch; font-size: 15px; line-height: 1.4; color: var(--apoio);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.8em;
+}
+.slider-home.trocou .slider-label,
+.slider-home.trocou .slider-title,
+.slider-home.trocou .slider-copy { animation: info-troca 0.42s cubic-bezier(0.2, 1, 0.3, 1) backwards; }
+.slider-home.trocou .slider-title { animation-delay: 0.03s; }
+.slider-home.trocou .slider-copy { animation-delay: 0.06s; }
+@keyframes info-troca { from { opacity: 0; translate: calc(var(--dir, 1) * 26px) 0; } }
+
+.slider-play {
+  margin-top: 12px;
+  width: min(100%, 340px);
+  height: 58px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #0a1230;
+  font: 900 18px "Nunito", system-ui, sans-serif;
+  cursor: pointer;
+  transition: scale 0.25s cubic-bezier(0.2, 1.6, 0.4, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+.slider-play:active { scale: 0.95; transition-duration: 0.08s; }
+.slider-play:focus-visible { outline: 3px solid #9fc0ff; outline-offset: 3px; }
+
+/* setas: só onde tem mouse */
+.slider-seta {
+  position: absolute; top: 50%; translate: 0 -50%;
+  width: 52px; height: 52px; border-radius: 99px; border: 0;
+  background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 22px; cursor: pointer;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: none;
+}
+.slider-seta:disabled { opacity: 0.25; cursor: default; }
+.slider-seta[data-slider-prev] { left: max(16px, calc(50% - var(--w, 300px) / 2 - 90px)); }
+.slider-seta[data-slider-next] { right: max(16px, calc(50% - var(--w, 300px) / 2 - 90px)); }
+@media (hover: hover) and (pointer: fine) { .slider-seta { display: grid; place-items: center; } }
+
+body.is-slider-active { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slider-home *, .slider-home { animation: none !important; transition: none !important; }
+}
+
+/* sem textos pequenos: só o nome do jogo e o botão (pedido do André, 20/11) */
+.slider-label, .slider-copy { display: none; }
+.slider-info { padding-top: 16px; gap: 0; }

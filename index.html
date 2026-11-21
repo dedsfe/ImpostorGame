@@ -50,6 +50,11 @@
       })();
     </script>
     <link rel="stylesheet" href="./styles.css?v=132" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" />
+    <link rel="stylesheet" href="./slider.css?v=5" />
+    <link rel="preload" as="image" href="./assets/capas/impostor.webp" />
     <style>
       body:not(.is-whoami-reveal):not(.is-mimica-play) {
         background: #040404 !important;
@@ -389,9 +394,27 @@
     </style>
   </head>
   <body>
+    <section id="slider-home" class="slider-home" aria-label="Escolha um jogo" hidden>
+      <div class="slider-bg" data-slider-bg="a" aria-hidden="true"></div>
+      <div class="slider-bg" data-slider-bg="b" aria-hidden="true"></div>
+      <header class="slider-topo"><p class="slider-marca"><span>Noite de</span> Jogos</p></header>
+      <div class="slider-palco">
+        <div class="slider-track" data-slider-track></div>
+        <div class="slider-dots" data-slider-dots></div>
+        <button class="slider-seta" type="button" data-slider-prev aria-label="Jogo anterior">&#8249;</button>
+        <button class="slider-seta" type="button" data-slider-next aria-label="Próximo jogo">&#8250;</button>
+      </div>
+      <div class="slider-info" aria-live="polite">
+        <span class="slider-label" data-slider-label></span>
+        <h1 class="slider-title" data-slider-title></h1>
+        <p class="slider-copy" data-slider-copy></p>
+        <button class="slider-play" type="button" data-slider-play>Jogar</button>
+      </div>
+    </section>
     <section
       id="game-intro"
       class="game-intro"
+      hidden
       aria-labelledby="intro-title"
     >
       <div class="intro-camera">
@@ -1627,6 +1650,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./script.js?v=73"></script>
+    <script type="module" src="./script.js?v=79"></script>
   </body>
 </html>

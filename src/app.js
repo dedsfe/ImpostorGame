@@ -17,6 +17,7 @@ import { createMimicaController } from "./games/mimica.js?v=45";
 import { createPoliceController } from "./games/police.js?v=45";
 import { createWhoAmIController } from "./games/whoami.js?v=45";
 import { createHubController } from "./hub.js";
+import { createSlider } from "./slider.js?v=7";
 import {
   createGameEntryCoordinator,
   createPartyFlow,
@@ -36,6 +37,7 @@ const APP_VERSION = "v53";
 
 const elements = getElements();
 let gameEntryCoordinator = null;
+let slider = null; // tela inicial (carrossel de capas); toda volta pra "hub" mostra ela
 
 function renderPartySummaries() {
   const party = state.partySession.getParty();
@@ -127,6 +129,7 @@ function setActiveScreen(screen) {
   const previousScreen = state.currentScreen;
   state.currentScreen = screen;
   document.body.classList.toggle("is-hub-screen", screen === "hub");
+  if (screen === "hub" && slider && !slider.isVisible()) slider.show();
   elements.navHome.setAttribute(
     "aria-label",
     screen === "hub" ? "Voltar para a sala" : "Voltar para a home",
@@ -444,13 +447,26 @@ const introController = createIntroController({
     return showClipboardPlayersStep({ openScene: true });
   },
 });
+slider = createSlider({
+  root: document.getElementById("slider-home"),
+  games: hubGames,
+  shell: elements.shell,
+  onPick: (game) => {
+    slider.hide();
+    track("slider_pick", { game: game.id });
+    if (game.id !== "impostor") {
+      return openGameFromHubScreen(game.openScreen);
+    }
+    return showClipboardPlayersStep({ openScene: true });
+  },
+});
 clipboardSceneController = createClipboardScene({
   ...elements.clipboardScene,
   backgroundContent: elements.shell,
   onClose: () => {
     returnToClipboardAfterParty = false;
     gameEntryCoordinator.cancel();
-    introController.returnToIntro();
+    slider.show();
   },
   onHide: restoreClipboardContentHome,
 });
@@ -533,12 +549,8 @@ elements.party.cancelEdit.addEventListener("click", () => {
 elements.party.confirmEdit.addEventListener("click", discardRoundAndEditParty);
 
 elements.navHome.addEventListener("click", () => {
-  if (state.currentScreen === "hub" && !introController.isVisible()) {
-    introController.returnToIntro();
-    return;
-  }
-
   roleFlow.openHub();
+  slider.show();
 });
 partyFlow.bind();
 roleFlow.bind();
@@ -549,7 +561,8 @@ renderPartySummaries();
 hubController.bind();
 hubController.initialize();
 setActiveScreen("hub");
-introController.initialize();
+slider.bind();
+slider.show();
 
 track("app_loaded", { version: APP_VERSION });
 initAds();
